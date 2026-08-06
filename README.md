@@ -1,4 +1,4 @@
-![SNAPACK Logo](images.jpeg)
+![SNAPACK Logo](actual sample case.jpeg)
 File Photo
 # SNAPACK
 
