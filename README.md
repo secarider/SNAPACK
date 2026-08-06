@@ -5,7 +5,7 @@
 
 <p align="center">
   <img src="headway_38120_specs.webp" width="340">
-  <img src="headway_38120.webp" width="340">
+  <img src="headway_38120.png" width="340">
 </p>
 
 # SNAPACK
