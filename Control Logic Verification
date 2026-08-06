@@ -1,0 +1,156 @@
+=========================================================
+STATE WITNESSES
+=========================================================
+
+The controller should compare several independent observations
+before concluding that the pack is operating in the expected state.
+
+WITNESS 1 — SOFTWARE COMMAND
+
+• What the ESP32 requested.
+
+Examples:
+  - 12V commanded
+  - 16V commanded
+  - All contactors commanded OFF
+
+---------------------------------------------------------
+
+WITNESS 2 — CONTACTOR AUXILIARY CONTACTS
+
+• LEV100 auxiliary contacts indicate mechanical contactor state.
+
+• Auxiliary contacts support the decision but do not by
+  themselves prove the actual output voltage.
+
+---------------------------------------------------------
+
+WITNESS 3 — FINAL OUTPUT VOLTAGE
+
+• Measure the final positive and final negative output
+  immediately before the jump cables leave the enclosure.
+
+• Software calculates the actual cable-to-cable output voltage.
+
+• This provides the strongest evidence of whether the pack is
+  actually producing 12V, 16V, or neither.
+
+---------------------------------------------------------
+
+WITNESS 4 — CURRENT MEASUREMENT
+
+• OTC current sensor indicates both current magnitude and
+  direction.
+
+• Used to confirm:
+
+  - Load/cranking event started
+  - Heavy-current event ended
+  - Reverse charging current detected
+  - Cold-charge protection events
+  - Pack resistance calculations
+
+=========================================================
+EXPECTED AGREEMENT
+=========================================================
+
+12V EXPECTED
+
+Command:
+  12V ON
+  16V OFF
+
+Auxiliary:
+  LEV100 engaged
+  EV200 released
+
+Output:
+  Approximately 4-cell output voltage
+
+
+16V EXPECTED
+
+Command:
+  12V OFF
+  16V ON
+
+Auxiliary:
+  LEV100 released
+  EV200 engaged
+
+Output:
+  Approximately 5-cell output voltage
+
+=========================================================
+DISAGREEMENT EXAMPLES
+=========================================================
+
+Example:
+
+Command:
+  16V
+
+Auxiliary:
+  EV200 engaged
+
+Output:
+  12V
+
+Possible causes:
+
+• Failed contactor
+• Loose busbar
+• Wiring fault
+• Failed output path
+• Incorrect voltage measurement
+
+
+Example:
+
+Command:
+  16V
+
+Auxiliary:
+  Open
+
+Output:
+  16V
+
+Possible causes:
+
+• Failed auxiliary contact
+• Auxiliary wiring fault
+• Welded contactor
+• Mechanical mismatch
+
+
+Example:
+
+Command:
+  12V
+
+Auxiliary:
+  Both contactors indicate engaged
+
+Possible action:
+
+• Immediate processor lockout
+• Remove positive authorization
+• Log critical interlock fault
+• Display fault information
+
+=========================================================
+CASE-MOUNTED BOOST BUTTON
+=========================================================
+
+The case-mounted BOOST button shall request 16V operation
+through the normal break-before-make sequence.
+
+Press:
+  Request 16V.
+
+Release:
+  Request return to 12V.
+
+The BOOST button shall never bypass hardware interlocks or
+break-before-make timing.
