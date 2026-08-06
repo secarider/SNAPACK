@@ -4,6 +4,22 @@ MASTER HARDWARE MANIFEST
 
 =============================Read This New Added==============================================================
 
+## ADS1115 ALERT Safety Interface
+
+The ADS1115 ALERT output shall not directly energize any relay coil.
+
+A single-channel 5V opto-isolated relay module with onboard transistor
+driver and flyback protection shall be used as the interface between
+the ADS1115 ALERT output and the contactor authorization circuit.
+
+This relay module replaces the previously proposed automotive relay,
+eliminating unnecessary hardware while protecting the ADS1115 from
+relay-coil current.
+
+The relay module shall interrupt the contactor authorization path upon
+an ALERT condition, placing the system into its safe shutdown state.
+
+
 ============================================================
 SNAPACK - NEXT HARDWARE SOLDERING TASKS
 ============================================================
