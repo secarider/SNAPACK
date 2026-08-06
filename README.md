@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="images/images.jpeg" width="340">
-  <img src="images/display front.jpg" width="340">
+  <img src="images.jpeg" width="340">
+  <img src="display front.jpg" width="340">
 </p>
 
 <p align="center">
-  <img src="images/headway 38120 specs.webp" width="340">
-  <img src="images/headway_38120.webp" width="340">
+  <img src="headway 38120 specs.webp" width="340">
+  <img src="headway_38120.webp" width="340">
 </p>
 
 # SNAPACK
