@@ -1,4 +1,30 @@
 # SNAPACK Display Layout (Version 1.0)
+=================================== read this added ==========================================
+## Hardware Implementation Status
+
+Most sensor-interface hardware is built.
+
+Completed:
+- Five protected cumulative pack-voltage divider channels
+- Two ADS1115 boards
+- OTC current-sensor input
+- Five-temperature-sensor wiring
+- Display power and communications interface
+
+Pending hardware addition:
+- Final output positive-voltage sensing channel
+- Final output negative-voltage sensing channel
+
+The two pending output-sense channels will duplicate the existing protected
+47kΩ / 18kΩ / 100nF / P6KE18A divider design and connect to the two unused
+ADS1115 inputs.
+
+Functions depending on these channels include:
+- Actual cable-to-cable output-voltage display
+- 12V / 16V output confirmation
+- Loaded-voltage sag measurement
+- Pack-path resistance estimation
+==================================== end new added info =======================================
 
 ## Pack Resistance Monitoring —
 
@@ -203,7 +229,8 @@ Detailed temperature page.
 
 Displays all five named sensors.
 
-Example:
+These names or the like will do nicely for now. 
+Hopefully, if needed, changing a few labels later will be no big deal.
 
 POS CABLE
 
@@ -263,6 +290,12 @@ Derived values:
 * Hottest Sensor
 * Peak Current
 * Operating Mode (from measured output voltage)
+Apparantly this is not ready yet /\
+
+The five pack-tap divider channels and OTC current channel are built. 
+Two additional identical protected divider channels for final output positive 
+and final output negative are now specified but not yet installed. 
+They will use the two remaining ADS1115 inputs.
 
 ---
 
@@ -357,11 +390,10 @@ Animation rules:
 * Important numeric values must remain clearly visible at all times.
 * Normal conditions use calm motion and subdued colors.
 * Warning conditions use stronger contrast and pulsing 
-with posibly another ring within the ring.
-* Critical conditions use red and a more urgent animation.
+with another ring within the ring.
+* Critical conditions use red and a more urgent animation/pulsing.
 with posibly another ring within the other 2 for 3 rings withing each other ring
 * Crank-current colors follow the configured Green / Yellow / Red thresholds.
 * Temperature warnings may highlight the named abnormal sensor with a pulsing ring.
 * If animation ever interferes with reliable sampling or display updates, 
 the animation is reduced or disabled before any monitoring function is compromised.
-
