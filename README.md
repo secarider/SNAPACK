@@ -1,5 +1,13 @@
-![SNAPACK Logo](images.jpeg)
-File Photo
+<p align="center">
+  <img src="images/images.jpeg" width="340">
+  <img src="images/display front.jpg" width="340">
+</p>
+
+<p align="center">
+  <img src="images/headway 38120 specs.webp" width="340">
+  <img src="images/headway_38120.webp" width="340">
+</p>
+
 # SNAPACK
 
 ## Intelligent 12V / 16V LiFePO₄ Jump Pack Monitor
