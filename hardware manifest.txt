@@ -1,6 +1,98 @@
 =========================================================
 SNAPACK PROJECT GOAL AND
 MASTER HARDWARE MANIFEST
+
+=============================Read This New Added==============================================================
+
+============================================================
+SNAPACK - NEXT HARDWARE SOLDERING TASKS
+============================================================
+
+□ 1. Install dedicated 3.3V regulator
+------------------------------------
+Parts:
+- AMS1117-3.3 regulator module
+- Feed from existing regulated 5V rail
+
+Output powers:
+- Level shifter LV
+- Five DS18B20 sensors
+- OneWire 4.7k pull-up
+- Future GPIO pull-ups (LEV AUX, etc.)
+
+Retire the resistor-divider "3.3V reference" from use as a supply rail.
+
+
+□ 2. Build TWO additional protected voltage-divider channels
+-------------------------------------------------------------
+Use EXACTLY the same circuit already proven for the existing
+five cumulative-voltage channels.
+
+Each channel contains:
+
+    47k upper resistor
+    18k lower resistor
+    100nF capacitor
+    P6KE18A TVS diode
+
+No component value changes.
+
+
+□ 3. Connect the new ADS1115 inputs
+-----------------------------------
+
+ADS1115 #2
+
+A0 = B1 cumulative pack voltage      (existing)
+A1 = FINAL OUTPUT POSITIVE voltage   (new)
+A2 = OTC current sensor              (existing)
+A3 = FINAL OUTPUT NEGATIVE voltage   (new)
+
+10-Pin To Breakout Output Header
+
+Pin 08  Final Output (+) Sense
+          → ADS1115 #2 A1
+
+Pin 09  Final Output (-) Sense
+          → ADS1115 #2 A3
+
+Pin 10  Reserved
+          (Future LEV AUX input or other digital I/O)
+
+
+□ 4. Sense wire locations
+-------------------------
+
+A1 wire:
+Final POS output stud
+(last point before cable exits pack)
+
+A3 wire:
+Final NEG output stud
+(last point before cable exits pack)
+
+
+□ 5. Software will later use these channels for:
+------------------------------------------------
+
+- Actual cable-to-cable output voltage
+- 12V / 16V mode confirmation
+- Loaded voltage sag
+- Pack resistance calculation
+- Future charging behavior analysis
+
+
+Future (NOT required yet)
+
+□ LEV100 auxiliary contact input
+    (digital input using internal pull-up or external 10k)
+
+□ Heater pad integration (if adopted)
+
+============================================================
+
+
+
 ---------------------------------------------------------
 NEGATIVE SWITCHING ONLY.
 POSITIVE PATH REMAINS UNINTERRUPTED.
@@ -652,6 +744,7 @@ Wing LED Lights
             DISPLAY / CONTROLLER
 =========================================================
 ELECROW ESP32-S3 Round Display
+Model Number 	DHE03921D
 480x480 Touchscreen
 
 Rotary Encoder:
@@ -777,4 +870,3 @@ Normal/Default Voltage or State:
 Wire Color If Helpful:
 Connector and Pin:
 Notes:
-
