@@ -1,4 +1,5 @@
 ![SNAPACK Logo](images.jpeg)
+File Photo
 # SNAPACK
 
 ## Intelligent 12V / 16V LiFePO₄ Jump Pack Monitor
