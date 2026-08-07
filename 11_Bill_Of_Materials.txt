@@ -1,0 +1,402 @@
+Component
+
+Isolated DC-DC Converter
+
+Manufacturer
+
+MORNSUN
+
+Manufacturer Part Number
+
+B0509S-1WR3
+
+Quantity
+
+1
+
+Purpose
+
+Generate Isolated +9V / -9V Supply For OTC Current Sensor
+
+Vendor
+
+Amazon
+
+ASIN
+
+XXXXXXXXXX
+
+Component
+
+Main Contactor
+
+Manufacturer
+
+TE Connectivity
+
+Manufacturer Part Number
+
+EV200AAANA
+
+Quantity
+
+2
+
+Purpose
+
+Main Battery Switching
+
+Component
+
+Boost Contactor
+
+Manufacturer
+
+TE Connectivity
+
+Manufacturer Part Number
+
+LEV100H5CNG03
+
+Quantity
+
+5
+
+Purpose
+
+12V / 16V Switching
+
+Vendor
+
+eBay
+
+Component
+
+Boost Contactor
+
+Manufacturer
+
+TE Connectivity
+
+Manufacturer Part Number
+
+LEV100H5CNG02
+
+Quantity
+
+3
+
+Purpose
+
+Existing Inventory
+
+============================================================
+      11_BILL_OF_MATERIALS.TXT
+============================================================
+
+SNAPACK Hardware Specification
+
+Status: Authoritative
+Revision: Draft 1
+
+============================================================
+PURPOSE
+============================================================
+
+This Specification Defines The Major Components
+Used Throughout SNAPACK.
+
+Whenever Possible, Components Shall Be Identified
+By Their Manufacturer And Manufacturer Part Number.
+
+Vendor Information Is Included As A Procurement
+Reference Only.
+
+============================================================
+IDENTIFICATION STANDARD
+============================================================
+
+Each Entry Shall Include
+
+Component Name
+
+Manufacturer
+
+Manufacturer Part Number
+
+Quantity
+
+Purpose
+
+Hardware Specification Reference
+
+Vendor (Optional)
+
+Vendor Part Number (Optional)
+
+ASIN (Amazon Only, Optional)
+
+eBay Item Number (Optional)
+
+Notes (Optional)
+
+============================================================
+COMPONENT LIST
+============================================================
+
+Component
+
+Main Display
+
+Manufacturer
+
+ELECROW
+
+Part Number
+
+ESP32-S3 Rotary Display
+(Record Exact Model Number)
+
+Quantity
+
+1
+
+Purpose
+
+Primary Human Machine Interface
+
+Reference
+
+03_Display_Interface.txt
+
+------------------------------------------------------------
+
+Component
+
+Isolated DC-DC Converter
+
+Manufacturer
+
+MORNSUN
+
+Part Number
+
+B0509S-1WR3
+
+Quantity
+
+1
+
+Purpose
+
+OTC Isolated ±9V Supply
+
+Reference
+
+02_Power_Architecture.txt
+
+------------------------------------------------------------
+
+Component
+
+3.3V Regulator
+
+Manufacturer
+
+AMS
+
+Part Number
+
+AMS1117-3.3 Module
+
+Quantity
+
+1
+
+Purpose
+
+System 3.3V Rail
+
+Reference
+
+02_Power_Architecture.txt
+
+------------------------------------------------------------
+
+Component
+
+ADC
+
+Manufacturer
+
+Texas Instruments
+
+Part Number
+
+ADS1115
+
+Quantity
+
+2
+
+Purpose
+
+Analog Data Acquisition
+
+Reference
+
+04_ADS1115_Analog_Front_End.txt
+
+------------------------------------------------------------
+
+Component
+
+Main Contactor
+
+Manufacturer
+
+TE Connectivity
+
+Part Number
+
+EV200AAANA
+
+Quantity
+
+2
+
+Purpose
+
+Main Battery Switching
+
+Reference
+
+07_Contactor_Control.txt
+
+------------------------------------------------------------
+
+Component
+
+Boost Contactor
+
+Manufacturer
+
+TE Connectivity
+
+Part Number
+
+LEV100H5CNG02
+
+Quantity
+
+3
+
+Purpose
+
+12V / 16V Switching
+
+Reference
+
+07_Contactor_Control.txt
+
+------------------------------------------------------------
+
+Component
+
+Boost Contactor
+
+Manufacturer
+
+TE Connectivity
+
+Part Number
+
+LEV100H5CNG03
+
+Quantity
+
+5
+
+Purpose
+
+12V / 16V Switching
+
+Reference
+
+07_Contactor_Control.txt
+
+------------------------------------------------------------
+
+Component
+
+Temperature Sensor
+
+Manufacturer
+
+Maxim
+
+Part Number
+
+DS18B20
+
+Quantity
+
+5
+
+Purpose
+
+Temperature Monitoring
+
+Reference
+
+06_Temperature_Monitoring.txt
+
+------------------------------------------------------------
+
+Component
+
+TVS Diode
+
+Part Number
+
+P6KE18A
+
+------------------------------------------------------------
+
+Component
+
+Schottky Diode
+
+Part Number
+
+BAT43
+
+------------------------------------------------------------
+
+Component
+
+Relay Module
+
+Manufacturer
+
+AITRIP
+
+Description
+
+1-Channel 5V Opto-Isolated Relay Module
+
+Quantity
+
+1
+
+Purpose
+
+Authorization Interruption
+
+Reference
+
+08_Protection_And_Fault_Response.txt
+
+============================================================
+END OF SPECIFICATION
+============================================================

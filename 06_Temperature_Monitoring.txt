@@ -1,0 +1,213 @@
+============================================================
+    06_TEMPERATURE_MONITORING.TXT
+============================================================
+
+Purpose
+
+Defines Temperature Monitoring And Protection.
+
+Contents
+
+• Five DS18B20 Sensors
+• Sensor Names
+• Averaging Logic
+• Fault Detection
+• Freeze Charge Protection
+
+Design Rules
+
+• Display Average Temperature During Normal Operation.
+• Ignore Outlier Sensor When Computing Average.
+• Identify Faulted Sensor By Name.
+• Display Temperatures In Degrees Fahrenheit.
+• Charging Below Freezing Shall Be Inhibited.
+• Discharging Shall Remain Permitted.
+
+Verification
+
+□ All Sensors Detected
+□ Names Correct
+□ Average Correct
+□ Fault Detection Correct
+□ Freeze Protection Correct
+
+============================================================
+
+SNAPACK Hardware Specification
+
+Status: Authoritative
+Revision: Draft 1
+
+============================================================
+PURPOSE
+============================================================
+
+This Specification Defines The Hardware Used To
+Monitor Temperature Throughout SNAPACK.
+
+It Covers:
+
+• Five DS18B20 Temperature Sensors
+• Sensor Locations
+• OneWire Data Bus
+• 3.3V Sensor Supply
+• Pull-Up Resistor
+• Physical Installation
+
+Electrical Connections Are Defined In:
+
+    01_Authoritative_Pin_Mapping.txt
+
+============================================================
+HARDWARE
+============================================================
+
+Temperature Sensor
+
+DS18B20 Waterproof Probe
+
+Quantity
+
+5
+
+Interface
+
+OneWire
+
+Supply
+
+3.3V Regulated
+
+============================================================
+SENSOR LOCATIONS
+============================================================
+
+Sensor 1
+
+POS CABLE
+
+Main Positive Cable-To-Bus Connection
+
+------------------------------------------------------------
+
+Sensor 2
+
+NEG CABLE
+
+Main Negative Cable-To-Bus Connection
+
+------------------------------------------------------------
+
+Sensor 3
+
+EV200 BUS
+
+EV200 Bus / Main Negative Output Area
+
+------------------------------------------------------------
+
+Sensor 4
+
+LEFT LEV100
+
+Left LEV100 Bank Cable-To-Bus Area
+
+------------------------------------------------------------
+
+Sensor 5
+
+RIGHT LEV100
+
+Right LEV100 Bank Cable-To-Bus Area
+
+============================================================
+ONEWIRE BUS
+============================================================
+
+All Five DS18B20 Sensors Share One Common
+OneWire Data Line.
+
+The Data Line Connects To The Display Through
+The Assigned Temperature Data Connection.
+
+All Sensor Grounds Connect To System Ground.
+
+All Sensor VCC Wires Connect To The Regulated
+3.3V Rail.
+
+============================================================
+PULL-UP RESISTOR
+============================================================
+
+One Master Pull-Up Resistor Is Used For The
+Entire OneWire Bus.
+
+Value
+
+4.7kΩ
+
+Connection
+
+Regulated 3.3V Rail
+        |
+      4.7kΩ
+        |
+OneWire Data Line
+
+============================================================
+MECHANICAL INSTALLATION
+============================================================
+
+Temperature Probes Shall Be Mounted At The
+Specified Cable-To-Bus And Bus Connection Areas.
+
+Probe Placement May Be Adjusted Slightly To
+Accommodate Final Mechanical Fit While Preserving
+The Intended Measurement Location.
+
+Probes Shall Be Secured Against Movement.
+
+Sensor Wiring Shall Be Routed Away From High
+Current Conductors Where Practical.
+
+============================================================
+MEASUREMENT PURPOSE
+============================================================
+
+Temperature Measurements Support
+
+• Normal Temperature Display
+
+• Individual Sensor Identification
+
+• High Temperature Protection
+
+• Temperature Agreement Monitoring
+
+• Cold Charge Protection
+
+• Event Logging
+
+============================================================
+VERIFICATION
+============================================================
+
+Verify
+
+□ All Five Sensors Detected
+
+□ Sensor Names Match Physical Locations
+
+□ 3.3V Sensor Supply
+
+□ 4.7kΩ Pull-Up
+
+□ Common Ground
+
+□ OneWire Data Continuity
+
+□ Stable Temperature Readings
+
+============================================================
+END OF SPECIFICATION
+============================================================
