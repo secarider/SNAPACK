@@ -1,1 +1,399 @@
+# SNAPACK Display Layout (Version 1.0)
+=================================== read this added ==========================================
+## Hardware Implementation Status
 
+Most sensor-interface hardware is built.
+
+Completed:
+- Five protected cumulative pack-voltage divider channels
+- Two ADS1115 boards
+- OTC current-sensor input
+- Five-temperature-sensor wiring
+- Display power and communications interface
+
+Pending hardware addition:
+- Final output positive-voltage sensing channel
+- Final output negative-voltage sensing channel
+
+The two pending output-sense channels will duplicate the existing protected
+47kΩ / 18kΩ / 100nF / P6KE18A divider design and connect to the two unused
+ADS1115 inputs.
+
+Functions depending on these channels include:
+- Actual cable-to-cable output-voltage display
+- 12V / 16V output confirmation
+- Loaded-voltage sag measurement
+- Pack-path resistance estimation
+==================================== end new added info =======================================
+
+## Pack Resistance Monitoring —
+
+SNAPACK shall estimate overall pack-path resistance during suitable high-current load events, including engine cranking.
+
+The calculation shall use the measured change in final output voltage and measured change in output current:
+
+**Estimated Resistance = Voltage Change ÷ Current Change**
+
+The measurement represents the complete active output path, including:
+
+* Battery cells
+* Cell and pack interconnections
+* Bus bars
+* Active contactors
+* Internal high-current wiring
+* Output cables and connections included within the measurement points
+
+### Required Behavior
+
+* Continuously monitor output voltage and current.
+* Detect suitable current-load events automatically.
+* Capture stable pre-load voltage and current values.
+* Capture loaded voltage and current values during the event.
+* Calculate estimated pack-path resistance in milliohms.
+* Reject results from events that do not provide a sufficient or stable current change.
+* Record the peak current and minimum loaded voltage associated with each accepted measurement.
+* Store accepted resistance results in nonvolatile memory.
+* Retain resistance history for comparison over time.
+* Display the latest valid resistance estimate.
+* Identify increasing resistance as a possible indication of battery aging, loose connections, contactor degradation, cable degradation, or another high-current-path problem.
+
+### Measurement Record
+
+Each accepted resistance measurement should include:
+
+* Estimated resistance in milliohms
+* Pre-load voltage
+* Loaded voltage
+* Pre-load current
+* Loaded or peak current
+* Temperature at the time of measurement
+* 12V or 16V operating mode
+* Event number or timestamp, when available
+* Valid or rejected measurement status
+
+### Accuracy Expectation
+
+This is a practical DC load-event resistance estimate intended for pack-health trending and high-current-path diagnostics. It is not required to duplicate laboratory AC impedance testing.
+
+The implementation shall use the existing final-output voltage and OTC current measurements. No additional resistance-measurement hardware is required unless testing proves that the installed sensors cannot provide a repeatable result.
+
+
+## Design Philosophy
+
+* Favor simple, readable information over maximum data density.
+* Show only information requiring attention.
+* Use summary displays whenever all systems are healthy.
+* Reveal detailed information only when requested or when an abnormal condition exists.
+* Build from the existing Elecrow demo rather than redesigning the interface.
+
+## Features
+
+* Cell voltage detail page
+* Internal resistance estimation
+* Lifetime peak current
+* Lifetime highest temperature
+* Event logging
+* Battery health statistics
+* Configuration screen
+* Additional diagnostics
+
+---
+
+## Screen 0 — Splash
+
+* SNAPACK logo.
+* Brief startup animation.
+* Automatic transition to Main Menu.
+
+---
+
+## Screen 1 — Main Menu
+
+Three primary selections:
+Duplicate and mod for extra Screen needs
+
+* MONITOR
+* TEMPS
+* CRANK AMPS
+
+The existing rotary carousel navigation will be retained.
+
+---
+
+## Screen 2 — MONITOR
+
+Normal operating screen.
+
+Display:
+
+* Pack Voltage
+* Output Current
+* Average Temperature (°F)
+* Operating Mode (12V / 16V determined from measured output voltage)
+
+Example:
+
+PACK ........ 16.42 V
+
+CURRENT ..... 248 A
+
+TEMP ........ 88.5°F
+
+MODE ........ 16V
+
+---
+
+## Temperature Behavior
+
+## Low Temperature Charge Protection
+
+Purpose:
+
+Protect LiFePO4 cells from charging at temperatures below the configured
+minimum safe charging temperature.
+
+Required Behavior:
+
+• Continuously monitor all five temperature sensors.
+
+• The lowest measured sensor shall determine pack charging eligibility.
+
+• If every measured temperature is above the configured limit,
+  normal operation continues.
+
+• If one or more sensors are below the configured limit:
+
+    • Pack discharge remains fully permitted.
+
+    • Pack charging remains permitted until reverse current is detected.
+
+• If reverse current is detected while any temperature is below the
+  configured charging limit:
+
+    • Remove positive authorization.
+    • De-energize both contactor banks.
+    • Display:
+
+        COLD CHARGE BLOCKED
+
+    • Record the event in the event log.
+
+• The system shall continue monitoring temperature and current.
+
+• Operation shall automatically resume only after:
+
+    • all temperatures exceed the release threshold, and
+    • reverse current is no longer present.
+
+Configuration:
+
+• Charge Inhibit Temperature
+• Charge Release Temperature (hysteresis)
+• Reverse Current Threshold
+• Enable / Disable Cold Charge Protection
+
+---
+
+Read all five temperature sensors continuously.
+
+If all sensors agree within a configurable temperature spread:
+
+* Display only the average temperature.
+* Indicate "ALL NORMAL."
+
+If any sensor exceeds the allowable spread:
+
+* Automatically display the hottest sensor name.
+* Highlight the abnormal reading.
+* Continue monitoring all sensors.
+
+Example Normal:
+
+TEMP
+88.5°F
+
+ALL NORMAL
+
+Example Warning:
+
+EV200 BUS
+146.2°F
+
+HIGH TEMP
+
+---
+
+## Screen 3 — TEMPS
+
+Detailed temperature page.
+
+Displays all five named sensors.
+
+These names or the like will do nicely for now. 
+Hopefully, if needed, changing a few labels later will be no big deal.
+
+POS CABLE
+
+NEG CABLE
+
+EV200 BUS
+
+LEFT LEV100
+
+RIGHT LEV100
+
+All temperatures displayed in degrees Fahrenheit.
+
+---
+
+## Screen 4 — CRANK AMPS
+
+Dedicated high-visibility current screen.
+
+Large full-screen amperage display.
+
+Color ranges:
+
+* Green below 300 A
+* Yellow from 300–799 A
+* Red at 800 A and above
+
+Also display:
+
+Peak Current
+
+Example:
+
+642
+
+AMPS
+
+PEAK 817
+
+This screen may initially be selected manually from the menu.
+
+Automatic switching during high-current events may be added later if it remains simple and reliable.
+
+---
+
+## Version 1 Sensor Summary
+
+Primary measurements:
+
+* Pack Voltage
+* Output Current
+* Five Temperature Sensors
+
+Derived values:
+
+* Average Temperature
+* Hottest Sensor
+* Peak Current
+* Operating Mode (from measured output voltage)
+Apparantly this is not ready yet /\
+
+The five pack-tap divider channels and OTC current channel are built. 
+Two additional identical protected divider channels for final output positive 
+and final output negative are now specified but not yet installed. 
+They will use the two remaining ADS1115 inputs.
+
+---
+
+## Project Rule
+
+The display exists to answer one question:
+
+"Is everything OK?"
+
+If the answer is yes, the display remains simple.
+
+If the answer is no, the display immediately identifies what requires attention.
+
+## Planned Configuration Settings (Version 1)
+
+Configuration values will be stored in ESP32 non-volatile memory (flash) and survive power loss. 
+Future configuration may be performed from the display, 
+Bluetooth is available but will be probably a simple Wi-Fi setup page at least for now in ver. 1.
+
+### Display
+
+* Temperature Units (°F / °C)
+* Display Brightness
+* Screen Timeout
+* Default Startup Screen
+* Automatic Return to Monitor Screen
+
+### Temperature
+
+* High Temperature Alarm
+* Temperature Sensor Agreement Threshold
+* Temperature Warning Flash Enable
+* Sensor Name Assignment
+
+### Current / Cranking
+
+* Crank Screen Entry Current
+* Crank Screen Exit Current
+* Peak Current Hold Time
+* Green / Yellow / Red Current Thresholds
+
+### Voltage
+
+* 12V / 16V Detection Thresholds
+* Low Voltage Warning
+* Low Cell Warning (future)
+
+### Lifetime Records
+
+* Reset Peak Current
+* Reset Highest Temperature
+* Reset Lifetime Statistics
+* Clear Event Log (future)
+
+### Communications
+
+* Bluetooth Enable / Disable
+* Wi-Fi Enable / Disable
+* Device Name
+* Firmware Version
+* Hardware Revision
+
+### Version 1 Defaults
+
+* Temperature Units: °F
+* Main Menu:
+
+  * MONITOR
+  * TEMPS
+  * CRANK AMPS
+* Crank Screen: Manual selection (automatic entry optional later)
+* Temperature Display: Average temperature unless a sensor exceeds the allowed spread.
+* Current Display: Large full-screen amperage with Green / Yellow / Red color bands.
+* Sensor Names:
+
+  * POS CABLE
+  * NEG CABLE
+  * EV200 BUS
+  * LEFT LEV100
+  * RIGHT LEV100
+
+## Animated Ring and Semantic Color Behavior
+
+Existing Elecrow ring and arc animations should be retained wherever practical.
+
+The ESP32-S3 hardware is expected to support simple LVGL ring rotation, pulsing, 
+color changes, and screen transitions without affecting sensor monitoring.
+
+Animation rules:
+
+* Animation must remain secondary to readability.
+* Important numeric values must remain clearly visible at all times.
+* Normal conditions use calm motion and subdued colors.
+* Warning conditions use stronger contrast and pulsing 
+with another ring within the ring.
+* Critical conditions use red and a more urgent animation/pulsing.
+with posibly another ring within the other 2 for 3 rings withing each other ring
+* Crank-current colors follow the configured Green / Yellow / Red thresholds.
+* Temperature warnings may highlight the named abnormal sensor with a pulsing ring.
+* If animation ever interferes with reliable sampling or display updates, 
+the animation is reduced or disabled before any monitoring function is compromised.
