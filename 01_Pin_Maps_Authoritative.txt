@@ -50,78 +50,52 @@ Pin 10: Output Voltage Sense (−)
               12 PIN RIBBON CABLE
 ============================================================
 
-Pin 12: GND
-        System Common Ground
+Pin 12: System Common Ground
 
-Pin 11: GND
-        System Common Ground
+Pin 11: System Common Ground
 
-Pin 10: D+
-        USB Data Positive — Leave Empty
+Pin 10: D+ USB Data Positive — Leave Empty
 
-Pin 09: D-
-        USB Data Negative — Leave Empty
+Pin 09: D- USB Data Negative — Leave Empty
 
-Pin 08: SCL
-        3.3V I2C Clock
+Pin 08: SCL 3.3V I2C Clock
 
-Pin 07: SDA
-        3.3V I2C Data
+Pin 07: SDA 3.3V I2C Data
 
-Pin 06: TX
-        Temperature Sensor Data Target
+Pin 06: TX Temperature Sensor Data Target
 
-Pin 05: RX
-        No Connection — Leave Empty
+Pin 05: RX No Connection — Leave Empty
 
-Pin 04: NC
-        No Connection — Leave Empty
+Pin 04: NC No Connection — Leave Empty
 
-Pin 03: NC
-        No Connection — Leave Empty
+Pin 03: NC No Connection — Leave Empty
 
-Pin 02: 5V
-        5V Main Power Input
+Pin 02: 5V 5V Main Power Input
 
-Pin 01: 5V
-        5V Main Power Input
+Pin 01: 5V 5V Main Power Input
 
 ============================================================
                10 PIN INPUT HEADER
 ============================================================
 
-Pin  1: +V IN
-        B0509S Chip Pin 2
-        +5V Input
+Pin  1: +5V Input B0509S Chip Pin 2
 
-Pin  2: -V OUT
-        B0509S Chip Pin 3
-        Isolated -9V Output
+Pin  2: Isolated -9V Output B0509S Chip Pin 3
 
-Pin  3: +V OUT
-        B0509S Chip Pin 4
-        Isolated +9V Output
+Pin  3: Isolated +9V Output B0509S Chip Pin 4
 
-Pin  4: -V IN
-        B0509S Chip Pin 1
-        -5V Input / System Ground
+Pin  4: -5V Input / System Ground B0509S Chip Pin 1
 
-Pin  5: B0
-        Pack Ground / System Ground
+Pin  5: B0 Pack Ground / System Ground
 
-Pin  6: B1
-        Cell 1 Cumulative Voltage ~3V
+Pin  6: B1 Cell 1 Cumulative Voltage ~3V
 
-Pin  7: B2
-        Cell 2 Cumulative Voltage ~6V
+Pin  7: B2 Cell 2 Cumulative Voltage ~6V
 
-Pin  8: B3
-        Cell 3 Cumulative Voltage ~9V
+Pin  8: B3 Cell 3 Cumulative Voltage ~9V
 
-Pin  9: B4
-        Cell 4 Cumulative Voltage ~12V
+Pin  9: B4 Cell 4 Cumulative Voltage ~12V
 
-Pin 10: B5
-        Cell 5 Cumulative Voltage ~16V
+Pin 10: B5 Cell 5 Cumulative Voltage ~16V
 
 ============================================================
