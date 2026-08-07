@@ -44,9 +44,9 @@ Nominal Pack Voltage
 
     Approximately 16 Volts
 
-The Midpoint Of The Pack Provides The Normal 12-Volt Output.
+The 4S Point Of The Pack Provides The Normal 12-Volt Output.
 
-The Full Pack Provides The 16-Volt Boost Output.
+The 5S Pack Provides The 16-Volt Boost Output.
 
 ============================================================
 PRIMARY POWER RAILS
@@ -78,9 +78,9 @@ The Primary 5-Volt Rail Powers:
 
 • ADS1115 Modules
 
-• Relay Module
+• Voltage Divider Isolation Relay Module
 
-• AMS1117 Regulator
+• AMS1117 5v to 3.3v Regulator
 
 • Other 5V Peripheral Devices
 
@@ -106,7 +106,7 @@ The 3.3V Rail Powers:
 
 Isolated Supplies
 
-A B0509S Isolated DC-DC Converter Produces
+A B0509S-1WR3 Isolated DC-DC Converter Produces
 
 • +9V Isolated
 
@@ -147,7 +147,7 @@ Low Power Electronics
 
 • Temperature Sensors
 
-• Relay Module
+• Relays And Relay Module
 
 ============================================================
 GROUND SYSTEMS
@@ -203,26 +203,6 @@ The AMS1117 Shall Be The Only Source Of Regulated
 All Power Conversion Modules Shall Be Mounted To
 Permit Replacement Without Redesign Of Adjacent
 Subsystems.
-
-============================================================
-VERIFICATION
-============================================================
-
-Verify:
-
-□ 5V Rail
-
-□ 3.3V Rail
-
-□ +9V Isolated Rail
-
-□ -9V Isolated Rail
-
-□ Isolation Between System Ground And Isolated Ground
-
-□ Correct Voltage At Each Distribution Point
-
-□ No Excessive Regulator Heating
 
 ============================================================
 END OF SPECIFICATION
