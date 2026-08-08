@@ -402,4 +402,3 @@ with posibly another ring within the other 2 for 3 rings withing each other ring
 * Temperature warnings may highlight the named abnormal sensor with a pulsing ring.
 * If animation ever interferes with reliable sampling or display updates, 
 the animation is reduced or disabled before any monitoring function is compromised.
-
