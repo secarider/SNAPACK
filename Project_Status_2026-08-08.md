@@ -1,5 +1,5 @@
 
-To: Tehsin Udin Wazir
+To: all prospective hires
 
 If you happen to check the repository over the weekend, I wanted to briefly explain the recent activity.
 
