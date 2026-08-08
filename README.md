@@ -14,20 +14,21 @@
 
 SNAPACK is a custom high-current LiFePO₄ jump pack built around an ESP32-S3 touchscreen controller. The project combines battery instrumentation, high-current contactor control, temperature monitoring, current monitoring, and a modern round touchscreen interface into a compact portable jump-start system.
 
-The hardware design is substantially complete. This repository exists primarily to support firmware and user interface development.
-
+The electrical architecture is defined and the hardware prototype is actively being built and tested. This repository contains the current build references, firmware requirements, and supporting engineering documentation.
 ---
 
 ## Project Status
 
-* Hardware prototype assembled
+* Hardware prototype actively being built and tested
 * Electrical architecture defined
-* Existing Elecrow ESP32-S3 demonstration project
-* Hardware Manifest complete
-* Software Manifest complete
+* Existing Elecrow ESP32-S3 demonstration project available
+* Authoritative hardware build sheet maintained
+* Authoritative pin mapping maintained separately
+* Software requirements documented
+* Modular engineering documentation under development
 * Firmware implementation in progress
 
-This is **not** a project starting from a blank sheet of paper. The hardware exists, the system architecture has been designed, and the expected firmware behavior has been documented.
+This is **not** a project starting from a blank sheet of paper. The hardware architecture exists, major interface circuits have been built, and the expected firmware behavior has been documented. Hardware documentation continues to be verified against the physical build.
 
 ---
 
@@ -48,21 +49,37 @@ The existing Elecrow demonstration project is intended to serve as the starting 
 
 ## Repository Contents
 
-### Hardware_Manifest.txt
+### hardware_manifest_revised.txt
 
-The Hardware Manifest is the authoritative engineering reference for:
+The Hardware Manifest is the current authoritative build sheet and primary hardware reference for:
 
 * electrical architecture
 * wiring
-* pin assignments
 * sensors
 * contactors
 * power supplies
 * protection
 * signal routing
-* connector assignments
+* connector implementation
+* working wire-number plan
 
-If hardware documentation and source code ever disagree, the Hardware Manifest is considered authoritative.
+It is intentionally maintained as a detailed working build document rather than a condensed engineering specification.
+
+### 01_Pin_Maps_Authoritative.txt
+
+This file is the authoritative reference for connector and display pin assignments.
+
+If a pin-number reference elsewhere in the repository conflicts with this file, **01_Pin_Maps_Authoritative.txt takes precedence.**
+
+Display ribbon pin numbers refer to the silkscreen numbering on the back of the Elecrow display PCB. The breakout board is treated only as a straight-through extension and is not assigned a separate numbering system.
+
+### documentation/
+
+The `documentation` folder contains the modular engineering specification set currently being developed from the working hardware documentation.
+
+These files are useful engineering references but remain **in-process documentation** while the physical build is being completed and verified.
+
+Where an in-process modular document conflicts with the current Hardware Manifest or authoritative pin map, the current build references take precedence.
 
 ---
 
@@ -88,8 +105,7 @@ Application behavior should follow the Software Manifest unless an engineering i
 ## Design Philosophy
 
 The project intentionally separates engineering responsibilities.
-
-* Hardware design is documented in the Hardware Manifest.
+* Hardware implementation is defined by the current Hardware Manifest, with `01_Pin_Maps_Authoritative.txt` controlling pin assignments.
 * Firmware behavior is documented in the Software Manifest.
 * SquareLine is used for interface generation.
 * Application logic should remain outside SquareLine-generated files whenever practical.
@@ -145,6 +161,6 @@ If the answer is no, the display should immediately identify what requires atten
 
 ## Project State
 
-This repository documents an actively developed hardware project.
+This repository documents an actively developed hardware and firmware project.
 
-The engineering documentation is considered substantially complete, while firmware implementation continues as hardware testing progresses.
+The electrical architecture is established, while physical construction, verification, and firmware implementation continue. The Hardware Manifest serves as the current working build reference, the authoritative pin map records verified connector assignments, and the modular engineering documents are being refined as the physical build is verified.
