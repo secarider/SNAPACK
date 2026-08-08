@@ -491,9 +491,8 @@ Connect 3.3V+ To The LV Pin, And Connect The Main 5V+ Rail To The HV Pin.
 Common Ground: Tie The GND Pins On Both Sides Of The Shifter To Pack Ground/Negative.
 
 Board 1: (B2 Through B5 Cumulative Pack Voltage Taps):
-We Got Lucky Here As Apparently The 1115 Board Will Auto Address Itself If The 
-Address Hole Is Left Empty Which Is What Happened, So No Harm No Foul, 
-It Should Adress Itself To Address 0x48
+Solder A Tiny Jumper Wire From The ADDR Pin Straight To The SYS GND Pin On This Board. 
+This Names It Address 0x48
 
 Board 2: (B1 + Final Output Positive + OTC Current + Final Output Negative): 
 Solder A Tiny Jumper Wire From The ADDR Pin Straight To The 5v+ VDD Pin On This Board. 
@@ -683,8 +682,8 @@ Rocker Switch Center Off, Timer, *Always On* <----*
 And Will ALWAYS Turn Itself Off After Timer Expires*
 Depending On Switch Mount Location 
 A Different Switch Can Be Employed
-So No Dead Zone Switch Need Be Used As The 
-Switch In This Timer Module Is Removable. Yay!
+So No Dead Zone Switch Need Be Used As 
+The Switch In This Timer Module Is Removable. Yay!
 
 Leave:
 OFF And TIMER Positions Active Only
