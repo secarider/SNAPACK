@@ -1,0 +1,102 @@
+============================================================
+            PIN NUMBERING CONVENTION
+============================================================
+
+Unless Specifically Stated Otherwise:
+
+All ELECROW Display Pin Numbers Refer To The 12-Pin Ribbon Cable
+Connector Pin Numbers As Identified By The Silkscreen On The Back
+Of The Display PCB.
+
+The Ribbon Breakout Board Is Treated Strictly As A Straight-Through
+Extension Of The Display Ribbon Cable.
+
+Breakout Board Pin Numbers Are Intentionally NOT Used In This
+Manifest Unless Absolutely Required For Physical Construction.
+
+The Two Custom Perfboard Headers Are Identified Separately As:
+
+10 Pin Input Header
+10 Pin Output Header
+
+The Following Three Pin Maps Are Authoritative And Supersede Any
+Older Or Conflicting Pin Number References Elsewhere.
+
+============================================================
+              10 PIN OUTPUT HEADER
+============================================================
+
+Pin  1: System Ground
+
+Pin  2: BMS / Voltage Divider Isolation Coils Positive 12V+
+
+Pin  3: Alert / Alarm From ADS1115 Board 1
+
+Pin  4: System Ground
+
+Pin  5: 5V Power
+
+Pin  6: SCL 3.3V Logic
+
+Pin  7: SDA 3.3V Logic
+
+Pin  8: Temperature Sensor Data
+
+Pin  9: Output Voltage Sense (+)
+
+Pin 10: Output Voltage Sense (−)
+
+============================================================
+              12 PIN RIBBON CABLE
+============================================================
+
+Pin 12: System Common Ground
+
+Pin 11: System Common Ground
+
+Pin 10: D+ USB Data Positive — Leave Empty
+
+Pin 09: D- USB Data Negative — Leave Empty
+
+Pin 08: SCL 3.3V I2C Clock
+
+Pin 07: SDA 3.3V I2C Data
+
+Pin 06: TX Temperature Sensor Data Target
+
+Pin 05: RX No Connection — Leave Empty
+
+Pin 04: NC No Connection — Leave Empty
+
+Pin 03: NC No Connection — Leave Empty
+
+Pin 02: 5V 5V Main Power Input
+
+Pin 01: 5V 5V Main Power Input
+
+============================================================
+               10 PIN INPUT HEADER
+============================================================
+
+Pin  1: +5V Input B0509S Chip Pin 2
+
+Pin  2: Isolated -9V Output B0509S Chip Pin 3
+
+Pin  3: Isolated +9V Output B0509S Chip Pin 4
+
+Pin  4: -5V Input / System Ground B0509S Chip Pin 1
+
+Pin  5: B0 Pack Ground / System Ground
+
+Pin  6: B1 Cell 1 Cumulative Voltage ~3V
+
+Pin  7: B2 Cell 2 Cumulative Voltage ~6V
+
+Pin  8: B3 Cell 3 Cumulative Voltage ~9V
+
+Pin  9: B4 Cell 4 Cumulative Voltage ~12V
+
+Pin 10: B5 Cell 5 Cumulative Voltage ~16V
+
+============================================================
+

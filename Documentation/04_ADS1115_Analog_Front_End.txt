@@ -1,0 +1,212 @@
+============================================================
+      04_ADS1115_ANALOG_FRONT_END.TXT
+============================================================
+
+Purpose
+
+Defines All Voltage Measurement Hardware.
+
+Contents
+
+• ADS1115 Board 1
+• ADS1115 Board 2
+• TVS Protection
+• 47K / 18K Divider Networks
+• 100nF Input Filtering
+• B0–B5 Pack Monitoring
+• OTC Current Sensor Input
+• Final Output Positive Sense
+• Final Output Negative Sense
+• Pack Resistance Monitoring Support
+
+Design Rules
+
+• Every Analog Input Uses The Same Protected Divider Network.
+• Final Output Positive And Negative Occupy The Remaining ADS1115 Channels.
+• ALERT Output Shall Drive A 5V Opto-Isolated Relay Module.
+• ADS1115 ALERT Shall Never Drive A Relay Coil Directly.
+
+Verification
+
+□ Divider Ratios Correct
+□ TVS Installed
+□ ADS Addresses Verified
+□ I2C Communication Verified
+□ ALERT Output Verified
+□ All Eight Analog Channels Verified
+
+============================================================
+
+SNAPACK Hardware Specification
+
+Status: Authoritative
+Revision: Draft 1
+
+============================================================
+PURPOSE
+============================================================
+
+This Specification Defines The Complete Analog Voltage
+Measurement System Used By SNAPACK.
+
+It Covers:
+
+• ADS1115 Data Acquisition
+• Voltage Divider Networks
+• Input Protection
+• Current Sensor Interface
+• Pack Voltage Measurement
+• Output Voltage Measurement
+
+Connector Assignments Are Defined In:
+
+    01_Authoritative_Pin_Mapping.txt
+
+============================================================
+SYSTEM OVERVIEW
+============================================================
+
+The Analog Front End Continuously Measures Battery,
+Output And Current Sensor Signals.
+
+Two ADS1115 16-Bit Analog-To-Digital Converters
+Provide Eight Measurement Channels.
+
+All External Voltage Inputs Use An Identical
+Protection Network Prior To Entering The ADS1115.
+
+============================================================
+HARDWARE
+============================================================
+
+Analog-To-Digital Converter
+
+Manufacturer Part Number
+
+ADS1115
+
+Quantity
+
+2
+
+Interface
+
+I²C
+
+Resolution
+
+16 Bit
+
+============================================================
+CHANNEL ALLOCATION
+============================================================
+
+ADS1115 Board 1
+
+A0  B1   Cell 1
+
+A1  B2   Cell 2
+
+A2  B3   Cell 3
+
+A3  B4   Cell 4
+
+------------------------------------------------------------
+
+ADS1115 Board 2
+
+A0  B5   Cell 5
+
+A1  Final Output Positive
+
+A2  OTC Current Sensor
+
+A3  Final Output Negative
+
+============================================================
+INPUT PROTECTION
+============================================================
+
+Every Voltage Measurement Channel Uses The Same
+Protection Network.
+
+Components
+
+P6KE18A TVS Diode
+
+47kΩ 1W Series Resistor
+
+18kΩ Divider Resistor
+
+100nF Filter Capacitor
+
+This Network Is Used For Every Battery And Output
+Voltage Measurement Channel.
+
+============================================================
+CURRENT SENSOR INPUT
+============================================================
+
+The OTC Hall Current Sensor Provides An Analog
+Voltage To ADS1115 Board 2.
+
+The Current Sensor Uses Its Own Isolated Power
+Supply Defined In:
+
+    05_Current_Monitoring.txt
+
+============================================================
+OUTPUT VOLTAGE MONITORING
+============================================================
+
+The Remaining Two ADS1115 Channels Monitor
+
+• Final Output Positive
+
+• Final Output Negative
+
+These Measurements Allow Firmware To Determine
+
+Output Voltage
+
+Voltage Drop
+
+Pack Internal Resistance
+
+System Performance Under Load
+
+============================================================
+I²C INTERFACE
+============================================================
+
+Both ADS1115 Boards Operate On The Shared I²C Bus.
+
+Communication Is Through The Logic Level Shifter.
+
+============================================================
+ALERT OUTPUT
+============================================================
+
+ADS1115 Board 1 ALERT Output Connects To
+
+AITRIP 5V Opto-Isolated Relay Module
+
+The Relay Module Interrupts The Contactor
+Authorization Circuit During Hardware Fault
+Conditions.
+
+============================================================
+DESIGN REQUIREMENTS
+============================================================
+
+All Voltage Inputs Shall Use Identical Protection
+Networks.
+
+Only Protected Signals Shall Enter The ADS1115.
+
+All Analog Measurements Shall Reference System
+Ground Except The Isolated OTC Interface.
+
+============================================================
+END OF SPECIFICATION
+============================================================

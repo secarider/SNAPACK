@@ -1,0 +1,188 @@
+============================================================
+       05_CURRENT_MONITORING.TXT
+============================================================
+
+Purpose
+
+Defines The OTC Hall Current Sensor.
+
+Contents
+
+• OTC 3500-01 Clamp Sensor
+• Isolated Supply
+• Calibration
+• Zero Offset
+• Clamp Orientation
+• Positive Current
+• Reverse Current
+
+Design Rules
+
+• OTC Uses The Isolated ±9V Supply Only.
+• Clamp Orientation May Be Corrected In Software.
+• Current Shall Be Displayed In Amps.
+• High Current Automatically Calls The Large Amp Display.
+
+Verification
+
+□ Zero Offset
+□ Positive Direction
+□ Reverse Direction
+□ Full Scale
+□ Isolation Verified
+
+============================================================
+
+SNAPACK Hardware Specification
+
+Status: Authoritative
+Revision: Draft 1
+
+============================================================
+PURPOSE
+============================================================
+
+This Specification Defines The Hardware Used To
+Measure Pack Current.
+
+It Covers:
+
+• OTC Hall Effect Current Sensor
+• Isolated Power Supply
+• Analog Signal Interface
+• Mechanical Installation
+
+Electrical Connections Are Defined In:
+
+    01_Authoritative_Pin_Mapping.txt
+
+============================================================
+SYSTEM OVERVIEW
+============================================================
+
+SNAPACK Uses A Hall Effect Clamp Current Sensor
+To Measure Charge And Discharge Current Without
+Direct Electrical Connection To The Main Power
+Conductors.
+
+The Sensor Provides A Continuous Analog Output
+To The ADS1115 Analog Front End.
+
+============================================================
+HARDWARE
+============================================================
+
+Current Sensor
+
+OTC 3500-01 Hall Effect Clamp
+
+Measurement Type
+
+Bi-Directional DC Current
+
+Output
+
+Analog Voltage
+
+============================================================
+POWER
+============================================================
+
+The Current Sensor Operates From An Isolated
+Power Supply.
+
+Power Converter
+
+Manufacturer Part Number
+
+B0509S-1WR3
+
+Outputs
+
++9V Isolated
+
+-9V Isolated
+
+The Isolated Supply Exists Solely For The OTC
+Current Sensor Circuit.
+
+============================================================
+SIGNAL INTERFACE
+============================================================
+
+The OTC Analog Output Connects To
+
+ADS1115 Board 2
+
+Channel A2
+
+Signal Conditioning Is Defined In
+
+04_ADS1115_Analog_Front_End.txt
+
+============================================================
+MECHANICAL INSTALLATION
+============================================================
+
+The Clamp Shall Be Installed Around The Main
+Output Conductor. Positive Path is the better fit.
+
+The Clamp Orientation Shall Be Recorded During
+Assembly.
+
+Cable Exit Direction Shall Be Determined By
+Final Mechanical Layout.
+
+Adequate Strain Relief Shall Be Provided For
+The Sensor Cable.
+
+============================================================
+MEASUREMENT PURPOSE
+============================================================
+
+Current Measurement Supports
+
+• Output Current
+
+• Charge Current
+
+• Reverse Current
+
+• Cranking Current
+
+• Internal Resistance Calculations
+
+• Protection Functions
+
+============================================================
+CALIBRATION
+============================================================
+
+The Sensor Shall Be Zeroed During Initial
+Calibration.
+
+Calibration Values Shall Be Stored By Software.
+
+============================================================
+VERIFICATION
+============================================================
+
+Verify
+
+□ Isolated ±9V Supply
+
+□ Zero Offset
+
+□ Positive Current
+
+□ Reverse Current
+
+□ Full Scale Operation
+
+□ Stable Analog Output
+
+□ Cable Strain Relief
+
+============================================================
+END OF SPECIFICATION
+============================================================

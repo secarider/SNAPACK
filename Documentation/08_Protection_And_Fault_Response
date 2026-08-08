@@ -1,0 +1,168 @@
+============================================================
+08_PROTECTION_AND_FAULT_RESPONSE.TXT
+============================================================
+
+Purpose
+
+Defines Automatic Hardware Protection.
+
+Monitored Conditions
+
+• Over Temperature
+• Reverse Charging Current
+• Sensor Failure
+• ADS1115 ALERT
+• System Fault
+
+Design Rules
+
+• ADS1115 ALERT Operates A 5V Opto-Isolated Relay Module.
+• Relay Interrupts The Contactor Authorization Circuit.
+• Reverse Charging Below Freezing Shall Open Authorization.
+• Fault Recovery By Software Or Power Cycle.
+
+Verification
+
+□ ALERT Verified
+□ Relay Verified
+□ Fault Shutdown Verified
+□ Recovery Verified
+
+============================================================
+
+SNAPACK Hardware Specification
+
+Status: Authoritative
+Revision: Draft 1
+
+============================================================
+PURPOSE
+============================================================
+
+This Specification Defines The Hardware Protection
+Systems Incorporated Into SNAPACK.
+
+It Covers:
+
+• Hardware Fault Detection
+• ADS1115 ALERT Circuit
+• Authorization Interruption
+• Temperature Protection Support
+• Reverse Current Protection Support
+
+Electrical Connections Are Defined In:
+
+    01_Authoritative_Pin_Mapping.txt
+
+============================================================
+SYSTEM OVERVIEW
+============================================================
+
+SNAPACK Uses Independent Hardware Protection
+Circuits To Interrupt The Positive Authorization
+Circuit When A Protection Condition Exists.
+
+The Protection Hardware Operates Independently
+Of The Main High Current Switching Components.
+
+============================================================
+HARDWARE
+============================================================
+
+Fault Detection
+
+ADS1115 ALERT Output
+
+------------------------------------------------------------
+
+Protection Relay
+
+AITRIP 5V Single Channel
+Opto-Isolated Relay Module
+
+Quantity
+
+1
+
+============================================================
+AUTHORIZATION CIRCUIT
+============================================================
+
+The Positive Authorization Circuit Passes
+Through The Opto-Isolated Relay Module.
+
+Removal Of Authorization Prevents Contactor
+Operation.
+
+============================================================
+SUPPORTED PROTECTION FUNCTIONS
+============================================================
+
+Hardware Supports
+
+• Over Temperature Shutdown
+
+• Reverse Charge Protection
+
+• Sensor Fault Response
+
+• Manual Emergency Shutdown
+
+• Controller Initiated Shutdown
+
+============================================================
+TEMPERATURE SUPPORT
+============================================================
+
+Temperature Hardware Provides The Information
+Required To Support Automatic Cold Charge
+Protection.
+
+Protection Logic Is Defined In
+
+Software Manifest
+
+============================================================
+CURRENT SUPPORT
+============================================================
+
+Current Measurement Hardware Provides The
+Information Required To Detect Reverse Current.
+
+Protection Logic Is Defined In
+
+Software Manifest
+
+============================================================
+FAULT INDICATION
+============================================================
+
+Hardware Fault Status May Be Presented To
+
+• Display
+
+• RGB Status Ring
+
+• Relay Output
+
+============================================================
+VERIFICATION
+============================================================
+
+Verify
+
+□ ADS1115 ALERT Operation
+
+□ Opto Relay Operation
+
+□ Authorization Interruption
+
+□ Manual Shutdown
+
+□ Fault Indication
+
+□ System Recovery
+
+============================================================
+END OF SPECIFICATION
+============================================================
