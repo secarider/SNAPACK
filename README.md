@@ -10,7 +10,7 @@
 
 # SNAPACK
 
-## Intelligent 12V / 16V LiFePO₄ Jump Pack Monitor
+## Intelligent 12V / 16V LiFePO₄  Jump Pack Monitor
 
 SNAPACK is a custom high-current LiFePO₄ jump pack built around an ESP32-S3 touchscreen controller. The project combines battery instrumentation, high-current contactor control, temperature monitoring, current monitoring, and a modern round touchscreen interface into a compact portable jump-start system.
 
