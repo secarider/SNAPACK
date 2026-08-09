@@ -61,7 +61,7 @@ Quantity
 2
 
 Purpose
-Main Battery Switching
+12V / 16V Switching
 
 ------------------------------------------------------------
 
@@ -78,7 +78,7 @@ Quantity
 8
 
 Purpose
-12V / 16V Switching
+Main Battery Switching
 
 Reference
 07_Contactor_Control.txt
@@ -130,9 +130,6 @@ ASIN 	B0C5TKKDWJ
 12 Pin 0.5mm 1mm Pitch to DIP 2.0mm PCB Converter Board Couple Extend Adapter 
 ASIN 	B07RVD1J1K 
 
-Automotive Relay Coil Protection:
-1N4007 Rectifier / Flyback Diode — Qty 5
-
 =========================================================
 
 Component
@@ -157,14 +154,14 @@ Reference
 
 Component
 AMS1117-3.3 Module
-Anmbest_MD01 
+
 ASIN 	B07CP4P5XJ 
 
 3.3V Regulator
 3 Pins AMS1117-3.3 DC 4.75V-12V to 3.3V Voltage Regulated Buck Module 800mA
 
 Manufacturer
-AMS
+Anmbest
 
 Part Number
 Anmbest_MD01
@@ -240,14 +237,6 @@ Temperature Monitoring
 
 Reference
 06_Temperature_Monitoring.txt
-
-------------------------------------------------------------
-
-Component
-TVS Diode
-
-Part Number
-P6KE18A
 
 ------------------------------------------------------------
 Component
