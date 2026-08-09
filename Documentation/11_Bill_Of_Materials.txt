@@ -178,7 +178,7 @@ Reference
 ------------------------------------------------------------
 
 Component
-ADC
+ADS1115 16 Bit 4 Channel I2C Analog-to-Digital Converter
 
 Manufacturer
 Texas Instruments
