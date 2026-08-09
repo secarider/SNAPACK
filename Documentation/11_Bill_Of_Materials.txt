@@ -1,94 +1,3 @@
-Component
-
-Isolated DC-DC Converter
-
-Manufacturer
-
-MORNSUN
-
-Manufacturer Part Number
-
-B0509S-1WR3
-
-Quantity
-
-1
-
-Purpose
-
-Generate Isolated +9V / -9V Supply For OTC Current Sensor
-
-Vendor
-
-Amazon
-
-ASIN
-
-XXXXXXXXXX
-
-Component
-
-Main Contactor
-
-Manufacturer
-
-TE Connectivity
-
-Manufacturer Part Number
-
-EV200AAANA
-
-Quantity
-
-2
-
-Purpose
-
-Main Battery Switching
-
-Component
-
-Boost Contactor
-
-Manufacturer
-
-TE Connectivity
-
-Manufacturer Part Number
-
-LEV100H5CNG03
-
-Quantity
-
-5
-
-Purpose
-
-12V / 16V Switching
-
-Vendor
-
-eBay
-
-Component
-
-Boost Contactor
-
-Manufacturer
-
-TE Connectivity
-
-Manufacturer Part Number
-
-LEV100H5CNG02
-
-Quantity
-
-3
-
-Purpose
-
-Existing Inventory
 
 ============================================================
       11_BILL_OF_MATERIALS.TXT
@@ -130,13 +39,8 @@ Purpose
 
 Hardware Specification Reference
 
-Vendor (Optional)
-
-Vendor Part Number (Optional)
-
 ASIN (Amazon Only, Optional)
 
-eBay Item Number (Optional)
 
 Notes (Optional)
 
@@ -145,256 +49,227 @@ COMPONENT LIST
 ============================================================
 
 Component
-
-Main Display
-
-Manufacturer
-
-ELECROW
-
-Part Number
-
-ESP32-S3 Rotary Display
-(Record Exact Model Number)
-
-Quantity
-
-1
-
-Purpose
-
-Primary Human Machine Interface
-
-Reference
-
-03_Display_Interface.txt
-
-------------------------------------------------------------
-
-Component
-
-Isolated DC-DC Converter
+Main Contactor
 
 Manufacturer
-
-MORNSUN
-
-Part Number
-
-B0509S-1WR3
-
-Quantity
-
-1
-
-Purpose
-
-OTC Isolated ±9V Supply
-
-Reference
-
-02_Power_Architecture.txt
-
-------------------------------------------------------------
-
-Component
-
-3.3V Regulator
-
-Manufacturer
-
-AMS
+TE Connectivity
 
 Part Number
-
-AMS1117-3.3 Module
-
-Quantity
-
-1
-
-Purpose
-
-System 3.3V Rail
-
-Reference
-
-02_Power_Architecture.txt
-
-------------------------------------------------------------
-
-Component
-
-ADC
-
-Manufacturer
-
-Texas Instruments
-
-Part Number
-
-ADS1115
+EV200AAANA
 
 Quantity
-
 2
 
 Purpose
+Main Battery Switching
 
+------------------------------------------------------------
+
+Component
+Boost Contactor
+
+Manufacturer
+TE Connectivity
+
+Part Number
+LEV100H5CNG03
+
+Quantity
+8
+
+Purpose
+12V / 16V Switching
+
+Reference
+07_Contactor_Control.txt
+
+------------------------------------------------------------
+
+Component
+Main Display
+
+Manufacturer
+ELECROW ESP32-S3 Rotary Display
+
+Part Number: DHE03921D
+
+ASIN: B0G3TZGRC4
+
+Quantity
+1
+
+Purpose
+Primary Human Machine Interface
+
+Reference
+03_Display_Interface.txt
+
+=========================================================
+            SMALL COMPONENTS / PASSIVES
+=========================================================
+
+Voltage Sense / Divider Channels — Qty 7 Each:
+47kΩ  1% Metal Film Resistor
+18kΩ  1% Metal Film Resistor
+100nF Ceramic Capacitor
+P6KE18A TVS Diode
+
+Temperature Sensor Bus:
+4.7kΩ Pull-Up Resistor
+(Yellow-Violet-Red-Gold)
+
+1N4007 Rectifier / Flyback Diode — Qty 5
+B0509S-1WR3 Isolated 9V Supply Filtering:
+4.7µF Polarized Capacitor — 5V Input
+2.2µF Polarized Capacitor — 9V Isolated Output
+100nF Ceramic Capacitor — Qty 2
+
+12 Pin Flexible Flat Cable, 0.5mm Pitch 150mm Type A
+ASIN 	B0C5TKKDWJ 
+
+12 Pin 0.5mm 1mm Pitch to DIP 2.0mm PCB Converter Board Couple Extend Adapter 
+ASIN 	B07RVD1J1K 
+
+Automotive Relay Coil Protection:
+1N4007 Rectifier / Flyback Diode — Qty 5
+
+=========================================================
+
+Component
+Isolated DC-DC Converter
+
+Manufacturer
+MORNSUN
+
+Part Number
+B0509S-1WR3
+
+Quantity
+1
+
+Purpose
+OTC Isolated ±9V Supply
+
+Reference
+02_Power_Architecture.txt
+
+------------------------------------------------------------
+
+Component
+AMS1117-3.3 Module
+Anmbest_MD01 
+ASIN 	B07CP4P5XJ 
+
+3.3V Regulator
+3 Pins AMS1117-3.3 DC 4.75V-12V to 3.3V Voltage Regulated Buck Module 800mA
+
+Manufacturer
+AMS
+
+Part Number
+Anmbest_MD01
+
+Quantity
+1
+
+Purpose
+System 3.3V Rail
+
+Reference
+02_Power_Architecture.txt
+
+------------------------------------------------------------
+
+Component
+ADC
+
+Manufacturer
+Texas Instruments
+
+ASIN: 	B0DP43DDZG
+
+Part Number: ADS115-1 
+
+Quantity
+2
+
+Purpose
 Analog Data Acquisition
 
 Reference
-
 04_ADS1115_Analog_Front_End.txt
 
 ------------------------------------------------------------
 
 Component
+Logic Level Shifter Converter Module 
+4 Channel Bidirectional 3.3V to 5V, 5V to 3.3V
 
-Main Contactor
+ASIN: B0CCF6TCSJ
+UPC:  705252403509
 
-Manufacturer
-
-TE Connectivity
-
-Part Number
-
-EV200AAANA
-
-Quantity
-
-2
-
-Purpose
-
-Main Battery Switching
-
-Reference
-
-07_Contactor_Control.txt
+Part Number: WWZMDiB 
 
 ------------------------------------------------------------
 
 Component
+DPDT Relay 12V Coil 
+2NO 2NC Mini PCB Power Relays HK19F-12V
+8 Pin, DC 12V Coil, 1A 125VAC/2A 30VDC
 
-Boost Contactor
-
-Manufacturer
-
-TE Connectivity
-
-Part Number
-
-LEV100H5CNG02
-
-Quantity
-
-3
-
-Purpose
-
-12V / 16V Switching
-
-Reference
-
-07_Contactor_Control.txt
+ASIN: 	B09P1D1K64
+UPC: 	770240350141 
 
 ------------------------------------------------------------
 
 Component
-
-Boost Contactor
-
-Manufacturer
-
-TE Connectivity
-
-Part Number
-
-LEV100H5CNG03
-
-Quantity
-
-5
-
-Purpose
-
-12V / 16V Switching
-
-Reference
-
-07_Contactor_Control.txt
-
-------------------------------------------------------------
-
-Component
-
 Temperature Sensor
 
 Manufacturer
-
 Maxim
 
-Part Number
+Part Number: DS18B20
 
-DS18B20
+ASIN: ‎B0FLDRNB4R
 
 Quantity
-
 5
 
 Purpose
-
 Temperature Monitoring
 
 Reference
-
 06_Temperature_Monitoring.txt
 
 ------------------------------------------------------------
 
 Component
-
 TVS Diode
 
 Part Number
-
 P6KE18A
 
 ------------------------------------------------------------
-
-Component
-
-Schottky Diode
-
-Part Number
-
-BAT43
-
-------------------------------------------------------------
-
 Component
 
 Relay Module
+ASIN 	B096M77HCJ
+UPC 	701715466746
 
 Manufacturer
-
 AITRIP
 
 Description
-
 1-Channel 5V Opto-Isolated Relay Module
+5V Quiescent Current: 4mA Working Current: 65mA Trigger Voltage: 0-2V Trigger Current: 2mA 
 
 Quantity
-
 1
 
 Purpose
-
 Authorization Interruption
 
 Reference
-
 08_Protection_And_Fault_Response.txt
 
 ============================================================
