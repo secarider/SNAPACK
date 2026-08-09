@@ -6,7 +6,7 @@
 SNAPACK Hardware Specification
 
 Status: Authoritative
-Revision: Draft 1
+Revision: Draft 08-09-2026
 
 ============================================================
 PURPOSE
@@ -41,68 +41,7 @@ Hardware Specification Reference
 
 ASIN (Amazon Only, Optional)
 
-
 Notes (Optional)
-
-============================================================
-COMPONENT LIST
-============================================================
-
-Component
-Main Contactor
-
-Manufacturer
-TE Connectivity
-
-Part Number
-EV200AAANA
-
-Quantity
-2
-
-Purpose
-12V / 16V Switching
-
-------------------------------------------------------------
-
-Component
-Boost Contactor
-
-Manufacturer
-TE Connectivity
-
-Part Number
-LEV100H5CNG03
-
-Quantity
-8
-
-Purpose
-Main Battery Switching
-
-Reference
-07_Contactor_Control.txt
-
-------------------------------------------------------------
-
-Component
-Main Display
-
-Manufacturer
-ELECROW ESP32-S3 Rotary Display
-
-Part Number: DHE03921D
-
-ASIN: B0G3TZGRC4
-
-Quantity
-1
-
-Purpose
-Primary Human Machine Interface
-
-Reference
-03_Display_Interface.txt
 
 =========================================================
             SMALL COMPONENTS / PASSIVES
@@ -130,13 +69,87 @@ ASIN 	B0C5TKKDWJ
 12 Pin 0.5mm 1mm Pitch to DIP 2.0mm PCB Converter Board Couple Extend Adapter 
 ASIN 	B07RVD1J1K 
 
-=========================================================
+============================================================
+COMPONENT LIST
+============================================================
+
+Component
+Boost Contactor
+
+Manufacturer
+TE Connectivity / Kilovac
+
+Part Number
+EV200AAANA
+
+Quantity
+2
+
+Purpose
+12V / 16V Switching
+
+Reference
+07_Contactor_Control.txt
+
+------------------------------------------------------------
+
+Component
+Boost Contactor
+
+Manufacturer
+TE Connectivity / Kilovac
+
+Part Numbers / Quantities
+LEV100H5CNG03 — Qty 6
+LEV100H5CNG02 — Qty 2
+
+Quantity
+8
+
+Purpose
+Main Battery Switching
+
+Notes
+Both Part Numbers Are LEV100H5CNG 24V-Coil High-Current Contactors
+And Are Used Together In The Same Main Contactor / Busbar Assembly.
+
+LEV100H5CNG03 Is Documented As The Auxiliary-Contact Version.
+The Minor G02 / G03 Variant Difference Does Not Affect The
+Main High-Current Switching Function Used By SNAPACK.
+
+Reference
+07_Contactor_Control.txt
+
+------------------------------------------------------------
+
+Component
+Main Display
+
+Manufacturer
+ELECROW ESP32-S3 Rotary Display
+
+Part Number: DHE03921D
+
+ASIN: B0G3TZGRC4
+
+Quantity
+1
+
+Purpose
+Primary Human Machine Interface
+
+Reference
+03_Display_Interface.txt
+
+------------------------------------------------------------
 
 Component
 Isolated DC-DC Converter
 
 Manufacturer
 MORNSUN
+
+ASIN 	B0F4DN8JDY 
 
 Part Number
 B0509S-1WR3
