@@ -79,7 +79,7 @@ Negative-Side Switched Control Path
 
 Fail-Safe Behavior:
 Opening Either Positive Permission Or Negative Control
-De-Energizes Power Path For All Contactors Banks, Both EV200 And Lev100.
+De-Energizes Power Path For All Contactor Banks, Both EV200 And Lev100.
 
 Purpose:
 Full Pack: 5S (~16V Nominal) Main High-Current Contactors
@@ -472,11 +472,11 @@ Logic Level Shifter Sketch
              │ 3.3V         │ SYS GND          │ SCL       │ SDA
              ▼              ▼                  ▼           ▼
        ┌─────┴──────────────┴──────────────────┴───────────┴────┐
-       │  [LV]          [SYS GND]             [LV1]       [LV2] │
+       │    [LV]        [SYS GND]             [LV4]       [LV3] │
        │                                                        │
        │             4-CHANNEL LOGIC LEVEL SHIFTER              │
        │                                                        │
-       │  [HV]          [SYS GND]             [HV1]       [HV2] │
+       │    [HV]        [SYS GND]             [HV4]       [HV3] │
        └─────┬──────────────┬──────────────────┬───────────┬────┘
              ▲              ▲                  ▲           ▲
              │ 5V           │ SYS GND          │ SCL       │ SDA
@@ -498,22 +498,22 @@ Board 2: (B1 + Final Output Positive + OTC Current + Final Output Negative):
 Solder A Tiny Jumper Wire From The ADDR Pin Straight To The 5v+ VDD Pin On This Board. 
 This Names It Address 0x49
 
-The Data Path: SDA And SCL From The Twin ADS1115 Boards Are Tied Together Then They Go Into HV1 And HV2. 
-They Exit Cleanly Through LV1 And LV2 Straight To The Elecrow Display
+The Data Path: SDA And SCL From The Twin ADS1115 Boards Are Tied Together Then They Go Into HV3 And HV4. 
+They Exit Cleanly Through LV3 And LV4 Straight To The Elecrow Display
 
 The Power References: HV Gets The Clean 5V+ Rail (From The Buck Converter), 
 And LV Gets Regulated 3.3V+ From The AMS1117-3.3 Module
 
 The Ground Plane: Both Grounds On The Shifter Tie Together Right Into The Central System Ground
 
-The Spares: Channels 3 And 4 (LV3, LV4, HV3, HV4) Stay Completely Empty And Unpopulated, 
+The Spares: Channels 1 And 2 (LV1, LV2, HV1, HV2) Stay Completely Empty And Unpopulated, 
 Serving As Perfect Backups If A Channel Ever Gets Cooked 
 
 Direct Channel Passthrough: 
 Align The Data Lines Perfectly. 
-If Clock (SCL) Goes Into LV1, 
-It Must Exit Through HV1 To Go To The ADS1115 Boards. 
-If Data (SDA) Goes Into LV2, It Must Exit Through HV2.
+If Clock (SCL) Goes Into LV4, 
+It Must Exit Through HV4 To Go To The ADS1115 Boards. 
+If Data (SDA) Goes Into LV3, It Must Exit Through HV3.
 Dont Forget To Set The Address Of The Boards Before You Stack Them.
 
 =========================================================
@@ -581,18 +581,18 @@ Input / Output Bypass Components.
 
 The 12-Pin Ribbon Sequential Pin Map:                                      10 Pin Output Header #:
                                                                             ───┐
-Pin 12:  GND (System Common Ground)                                         04 │─── Connected At Breakout Board
-Pin 11:  GND (System Common Ground)                                         04 │─── These Are The Same Just One Pin#
+Pin 12:  GND (System Common Ground)-----------------------------------------04 │─── Connected At Breakout Board
+Pin 11:  GND (System Common Ground)-----------------------------------------04 │─── These Are The Same Just One Pin#
 Pin 10:  D+ (USB Data Positive — Leave Empty)                               ───┘
 Pin 09:  D- (USB Data Negative — Leave Empty)                               ───┐
-Pin 08:  SCL (3.3V I2C Clock)                                               06 │─── Output 10Pin Header Pin# 06
-Pin 07:  SDA (3.3V I2C Data)                                                07 │─── Output 10Pin Header Pin# 07
-Pin 06:  TX (The Temp Sensor Data Target)                                   08 │─── Output 10Pin Header Pin# 08
+Pin 08:  SCL (3.3V I2C Clock)-----------------------------------------------06 │─── Output 10Pin Header Pin# 06
+Pin 07:  SDA (3.3V I2C Data)------------------------------------------------07 │─── Output 10Pin Header Pin# 07
+Pin 06:  TX (The Temp Sensor Data Target)-----------------------------------08 │─── Output 10Pin Header Pin# 08
 Pin 05:  RX (No Connection — Leave Empty)                                   ───┘
 Pin 04:  NC (No Connection — Leave Empty)
 Pin 03:  NC (No Connection — Leave Empty)                                   ───┐
-Pin 02:  5V (5V Main Power Input)                                           05 │─── Connected At Breakout Board
-Pin 01:  5V (5V Main Power Input)                                           05 │─── These Are The Same Just One Pin#
+Pin 02:  5V (5V Main Power Input)-------------------------------------------05 │─── Connected At Breakout Board
+Pin 01:  5V (5V Main Power Input)-------------------------------------------05 │─── These Are The Same Just One Pin#
                                                                             ───┘
 
 Output Header Pin 1 Is Also System Ground For Local / Service Grounding.
@@ -630,11 +630,11 @@ This Connects The Main 5V Power Rail To 12-Pin Ribbon Pins 1 And 2
 For The Elecrow Display.
 
 Pin 6 Is SCL 3.3V Logic.
-This Connects Directly To The LV1 Pin On The Low Side Of The Logic Level Shifter
+This Connects Directly To The LV4 Pin On The Low Side Of The Logic Level Shifter
 And Routes To 12-Pin Ribbon Pin 8 SCL.
 
 Pin 7 Is SDA 3.3V Logic.
-This Connects Directly To The LV2 Pin On The Low Side Of The Logic Level Shifter
+This Connects Directly To The LV3 Pin On The Low Side Of The Logic Level Shifter
 And Routes To 12-Pin Ribbon Pin 7 SDA.
 
 Pin 8 Is Temperature Sensor Data.
