@@ -1,12 +1,24 @@
+To: Prospective Hires / Interested Developers
 
-To: all prospective hires
+A brief update for anyone who has been following this project or reviewing the repository:
 
-If you happen to check the repository over the weekend, I wanted to briefly explain the recent activity.
+I had selected a candidate and attempted to begin the contract through Upwork. Unfortunately, an account-verification issue prevented the transaction from being completed, and I have decided not to continue using that platform.
 
-I clicked the HIRE button today. Unfortunately, while attempting to fund the contract, The Websites automated payment verification unexpectedly restricted my account before the transaction could be completed. I have already contacted Upwork Support and hope to have the matter resolved as soon as possible.
+This was an issue between myself and the hiring platform and had nothing to do with the candidates or their proposals.
 
-Nothing about my interest in this project or in working with you has changed. I simply wanted to explain the unexpected delay in case you happened to check on these continued repository updates.
+The SNAPACK firmware project is still active, and I am still interested in hiring a qualified embedded developer.
 
-Thank you for your patience.
+The documentation in this repository continues to be revised and improved. Recent work has clarified the hardware pin mapping, sensor architecture, safety behavior, diagnostic requirements, and the separation between application logic and the LVGL/SquareLine presentation layer.
 
+The immediate goal remains Tier 1: establish the permanent production firmware architecture using a deliberately simple diagnostic interface. This is not intended to be throwaway prototype code. Later presentation work should build upon the same underlying measurement, safety, storage, and hardware-control architecture.
+
+Experience with ESP32-S3, LVGL/SquareLine, PlatformIO/Arduino, sensor integration, and embedded hardware/firmware development would be particularly relevant.
+
+If you previously discussed this project with me through Upwork and happen to see this update, my interest in working with you has not changed. The inability to proceed there was solely the result of the platform/account issue.
+
+Likewise, if you have simply discovered this repository and believe the project fits your experience, you are welcome to contact me.
+
+Contact:
 secarider@protonmail.com
+
+Thank you for your interest in SNAPACK.
