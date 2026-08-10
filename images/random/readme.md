@@ -127,4 +127,5 @@
 
 <p align="center">
   <img src="top_balance2.jpg" width="340">
+  <img src="headway_38120_specs.webp" width="340">
 </p>
