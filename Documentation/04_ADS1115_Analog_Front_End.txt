@@ -100,28 +100,27 @@ Resolution
 ============================================================
 CHANNEL ALLOCATION
 ============================================================
+Board 1
 
-ADS1115 Board 1
+A3 = B5 ≈ 16 V
 
-A0  B1   Cell 1
+A2 = B4 ≈ 12 V
 
-A1  B2   Cell 2
+A1 = B3 ≈ 9 V
 
-A2  B3   Cell 3
-
-A3  B4   Cell 4
+A0 = B2 ≈ 6 V
 
 ------------------------------------------------------------
 
-ADS1115 Board 2
+Board 2
 
-A0  B5   Cell 5
+A0 = B1 ≈ 3 V
 
-A1  Final Output Positive
+A1 = Final Output +
 
-A2  OTC Current Sensor
+A2 = OTC Current
 
-A3  Final Output Negative
+A3 = Final Output −
 
 ============================================================
 INPUT PROTECTION
