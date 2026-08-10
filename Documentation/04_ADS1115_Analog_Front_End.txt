@@ -207,6 +207,15 @@ Only Protected Signals Shall Enter The ADS1115.
 All Analog Measurements Shall Reference System
 Ground Except The Isolated OTC Interface.
 
+The B0509S-1WR3 isolated 5V → 9V converter requires a minimum output load
+for operation within its specified performance range.
+
+Bench testing confirmed successful 5V → 9V operation with two 1 kΩ resistors
+connected in parallel across the isolated 9V output.
+
+The two 1 kΩ resistors shall remain installed as a permanent minimum-load
+preload rather than being treated as temporary test components.
+
 ============================================================
 END OF SPECIFICATION
 ============================================================
