@@ -282,23 +282,29 @@ On The PCB Only And The Solder Joints Is Warranted )
                     └.───.───.───.─┘
         Chip Pin# ──>1   2   3   4
                      │   │   │   │
-                     │   │   │   │ 
-                    Input Header Pin #
-                     │   │   │   │
-                    \/   /\  /\  /\
-                     │   │   │   │
-          SYS GND ──>4   1<─ 2<─ 3<────Input Header Pin #
 
-Chip Pin #                             10Pin Input Header Pin
-                        System Ground Is A Passthrough From The 12v to 5v Converter, So...
-Chip Pin 1 = -V IN    (-5 V Input) Same As Sys Ground Because /\ Input  Header Pin   4   verified
-Chip Pin 2 = +V IN    (+5 V Input)                               Input  Header Pin   1   verified
-Chip Pin 3 = -V OUT   (Isolated -9 V Output)                     Input  Header Pin   2   verified
-Chip Pin 4 = +V OUT   (Isolated +9 V Output)                     Input  Header Pin   3   verified
+Chip Pin #            10-Pin Input Header Pins 1-4: Retired / No Connection / Empty
 
-The Input Header Pin Numbers Shown Above Are Still Active. 
-However, Each Has Been Duplicated And Replaced By Its Own Perf Board Mounted Two-Pin Header. 
-So, The Plus And Negative 5V Input And The Plus And Negative 9V Output Are Not Being Sent Through The Input Header. 
+Chip Pin 1 = -V IN    (-5 V Input)   Same As Sys Ground/System Ground Is A Passthrough
+Chip Pin 2 = +V IN    (+5 V Input)
+Chip Pin 3 = -V OUT   (Isolated -9 V Output)
+Chip Pin 4 = +V OUT   (Isolated +9 V Output)
+
+Notice:
+10-Pin Input Header Pins 1-4:
+Retired / No Connection In Current Build.
+
+These Pins Were Previously Used As Duplicate Access
+For The B0509S-1WR3 5V Input And Isolated 9V Output.
+
+The B0509S-1WR3 Now Uses Dedicated Perfboard-Mounted
+Two-Pin Headers For Each: 
+5V +- Input
+Isolated 9V +- Output
+
+Pins 5-10:
+Remain The Active 6S BMS / Battery Tap Connection.
+
 The Remaining Six BMS Input Lines Are Attached With A Standard 6S JST Battery BMS Cable 
 To The Appropriate Side Of The Input Header.This Standardizes The BMS Output Cable Of The Battery Pack.
 
@@ -309,6 +315,29 @@ Observe Capacitor Polarity Here, The Longer Leg (No Stripe Is Positive)
 A 2.2uF Polarized Capacitor Should Be Located Across The + - 
 Near The 9V Output Pins Of The B0509S-1WR3.
 Observe Capacitor Polarity Here, The Shorter Leg (White Stripe Is Negative)
+### B0509S-1WR3 Permanent Minimum Load
+
+The B0509S-1WR3 isolated 5V → 9V converter requires a minimum output load
+for operation within its specified performance range.
+Bench testing confirmed successful 5V → 9V operation with two 1 kΩ resistors
+connected in parallel across the isolated 9V output.
+
+Permanent preload:
+
+* Resistor 1: 1 kΩ across 9V output
+* Resistor 2: 1 kΩ across 9V output
+* Effective resistance: approximately 500 Ω
+* Preload current at 9V: approximately 18 mA
+* Dissipation per 1 kΩ resistor: approximately 0.081 W
+
+The two 1 kΩ resistors shall remain installed as a permanent minimum-load
+preload rather than being treated as temporary test components.
+
+This preload is included in the converter's total output load and therefore
+counts toward the B0509S-1WR3 maximum output-current capability of 111ma.
+
+The OTC circuitry and permanent preload combined shall remain within the
+converter's rated output-current capability of 111ma.
 
 The Two 100 NF Ceramic Capacitors Go In Parallel With Them,
 Also Close To The Converter Pins. Across The + - 
@@ -386,49 +415,57 @@ Output Header Pin 10 = Final Output (-) Sense → ADS1115 Board 2 A3
 Sense Wire Locations:
 Final Output (+): Last Internal Positive Connection Before The Jump Cable Leaves The Pack
 Final Output (-): Last Internal Negative Connection Before The Jump Cable Leaves The Pack
+Obtain These From Last High Current Connection
+Do Not Obtain These From Any Other Location
+Use Bigger Wire As Well
 
 The Two Final Output Sense Channels Use The Same
 47k / 18k / 100nF / P6KE18A Protected Divider Circuit
 As The Five Existing Cumulative Pack Voltage Channels.
 
-10 Pin Input Header JST-XH                                          ─┐
+10 Pin Input Header JST-XH
+                                                                    ─┐
 Pin 10 B5 (Pack +)16v: Connects To Divider → Goes To Board 1, Pin A3 |
 Pin  9 B4 (Cell 4)12v: Connects To Divider → Goes To Board 1, Pin A2 | Only This 6S BMS Lead Plugs
-Pin  8 B3 (Cell 3) 9v: Connects To Divider → Goes To Board 1, Pin A1 | Into This 10Pin Now
-Pin  7 B2 (Cell 2) 6v: Connects To Divider → Goes To Board 1, Pin A0 |
+Pin  8 B3 (Cell 3) 9v: Connects To Divider → Goes To Board 1, Pin A1 | Into The 10 Pin Input Header
+Pin  7 B2 (Cell 2) 6v: Connects To Divider → Goes To Board 1, Pin A0 | Comprised Of Pin5-Pin10
 Pin  6 B1 (Cell 1) 3v: Connects To Divider → Goes To Board 2, Pin A0 |
 Pin  5 B0 (Pack Ground): System Ground Rail On The Perfboard.        |
                                                                     ─┘
-                                                 ─┐
-Pin 4 -V IN   Chip Pin 1  (-5 V Input) Sys Grnd   | These Each Have Their Own 2Pin Header Now
-Pin 1 +V IN   Chip Pin 2  (+5 V Input)            | But Are Still Active In The Input 10Pin Header
-Pin 2 -V OUT  Chip Pin 3  (Isolated -9 V Output)  | B0509S-1WR3 DC-DC 5V to 9V Isolated Power Converter
-Pin 3 +V OUT  Chip Pin 4  (Isolated +9 V Output)  | Mounted On Perf-Board With Voltage Divider
-                                                 ─┘
+Chip Pins:
+                                            ─┐
+Chip Pin 1  -V IN     (-5 V Input) Sys Grnd  | These Each Have Their Own 2Pin Header Now
+Chip Pin 2  +V IN     (+5 V Input)           | They Are NOT Active In The 10 Pin Input Header
+Chip Pin 3  -V OUT    (Isolated -9 V Output) | B0509S-1WR3 DC-DC 5V to 9V Isolated Power Converter
+Chip Pin 4  +V OUT    (Isolated +9 V Output) | Mounted On Perf-Board With Voltage Divider
+                                            ─┘
+
 Isolated 9V+- Output Is Power For The OTC Clamp Only
 Single Row Divider Sketch: 1 Each Protected Voltage Input = x7
-(5 Cumulative Pack Voltage Inputs + Final Output Positive + Final Output Negative)
+(5 Cumulative Pack Voltage Inputs + Final Output Positive + Final Output Negative) =7
 
                TVS Protection Shield
-                    +    |  \/      +        +                    +            +
-BMS TAP ───| |───────────●─────────────────► [ 47kΩ Resistor ] ───●─WIRE/HOLE────────────► To ADS1115 Pin
-            |            │                                        │
-            |           +│      /\                                │────────────┐
-        Isolation   [ P6KE18A ] (Stripe To Pos)                [ 18kΩ ]     [ 100nF ]
+                    +    |  \/      +        +                    +      +      +
+BMS TAP ───| |───────────●──────────────────►[ 47kΩ Resistor ] <───●─WIRE/HOLE────────► To ADS1115 Pin
+            |           +│\                /                      │\                /
+            |           +│ * SAME HOLE AS *                       │ * SAME HOLE AS *                                  
+            |           +│    +/\+               +/\+             │
+            |           +│     ││                 ││              │────────────┐
+        Isolation   [ P6KE18A ] \ (Stripe To Pos) /            [ 18kΩ ]     [ 100nF ]
           Relay       TVS Diode                                  Lower        Filter
-                   Observe Polarity                             Resistor     Capacitor
-                         │                                        │────────────┘      
+                   OBSERVE POLARITY                             Resistor     Capacitor
+                        -│                                        │────────────┘      
+                        -│                                        │
                         -│                                       -│           -
-SYSTEM GND ──────────────┴────────────────────────────────────────┴──────────────────────► SYSTEM GND
-                         -                                       -            -
-
+SYSTEM GND ──────────────┴────────────────────────────────────────┴──────────────────► SYSTEM GND
+                        -                                        -            -
 
 The End Of The P6KE18A Diode With The Painted Stripe Must Face Each Positive BMS Tap Wire
 All TVS Diodes Terminate At Sys Ground. 
 For The Five BMS Tap Channels, Insure The P6KE18A Diode Striped Ends
 Remain Inboard Of The Existing Voltage-Divider Isolation Relay.
 
-For Absolute Protection Of The ESP32 Controller:
+For Absolute Protection Of The ESP32 Controller
 A Logic Level Shifter Converter Module 4 Channel 
 Bidirectional 3.3V to 5V, 5V to 3.3V
 For The SDA And SCL Lines. 
@@ -490,30 +527,35 @@ Connect 3.3V+ To The LV Pin, And Connect The Main 5V+ Rail To The HV Pin.
 
 Common Ground: Tie The GND Pins On Both Sides Of The Shifter To Pack Ground/Negative.
 
-Board 1: (B2 Through B5 Cumulative Pack Voltage Taps):
+Board 1: 
+(B2 Through B5 Cumulative Pack Voltage Taps):
 Solder A Tiny Jumper Wire From The ADDR Pin Straight To The SYS GND Pin On This Board. 
 This Names It Address 0x48
 
-Board 2: (B1 + Final Output Positive + OTC Current + Final Output Negative): 
+Board 2: 
+(B1 + Final Output Positive + OTC Current + Final Output Negative): 
 Solder A Tiny Jumper Wire From The ADDR Pin Straight To The 5v+ VDD Pin On This Board. 
 This Names It Address 0x49
 
-The Data Path: SDA And SCL From The Twin ADS1115 Boards Are Tied Together Then They Go Into HV3 And HV4. 
+The Data Path: 
+SDA And SCL From The Twin ADS1115 Boards Are Tied Together Then They Go Into HV3 And HV4. 
 They Exit Cleanly Through LV3 And LV4 Straight To The Elecrow Display
 
-The Power References: HV Gets The Clean 5V+ Rail (From The Buck Converter), 
-And LV Gets Regulated 3.3V+ From The AMS1117-3.3 Module
+The Power References: 
+HV Gets The Clean 5V+ Rail (From The Buck Converter), 
+LV Gets Regulated 3.3V+ From The AMS1117-3.3 Module
 
-The Ground Plane: Both Grounds On The Shifter Tie Together Right Into The Central System Ground
+The Ground Plane: 
+Both Grounds On The Shifter Tie Together Right Into The Central System Ground
 
-The Spares: Channels 1 And 2 (LV1, LV2, HV1, HV2) Stay Completely Empty And Unpopulated, 
+The Spares: 
+Channels 1 And 2 (LV1, LV2, HV1, HV2) Stay Completely Empty And Unpopulated, 
 Serving As Perfect Backups If A Channel Ever Gets Cooked 
 
 Direct Channel Passthrough: 
 Align The Data Lines Perfectly. 
-If Clock (SCL) Goes Into LV4, 
-It Must Exit Through HV4 To Go To The ADS1115 Boards. 
-If Data (SDA) Goes Into LV3, It Must Exit Through HV3.
+If Clock (SCL) Goes Into LV4, It Must Exit Through HV4 To Go To The ADS1115 Boards. 
+If  Data (SDA) Goes Into LV3, It Must Exit Through HV3 To Go To The ADS1115 Boards.
 Dont Forget To Set The Address Of The Boards Before You Stack Them.
 
 =========================================================
@@ -594,7 +636,6 @@ Pin 03:  NC (No Connection — Leave Empty)                                   �
 Pin 02:  5V (5V Main Power Input)-------------------------------------------05 │─── Connected At Breakout Board
 Pin 01:  5V (5V Main Power Input)-------------------------------------------05 │─── These Are The Same Just One Pin#
                                                                             ───┘
-
 Output Header Pin 1 Is Also System Ground For Local / Service Grounding.
 Output Header Pins 9 And 10 Are Final Output Voltage Sense Lines 
 And Do Not Route To The Display Ribbon.
