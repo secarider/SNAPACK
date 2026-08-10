@@ -1,0 +1,1499 @@
+SNAPACK BUILD NOTES AND THOUGHTS
+================================
+
+PURPOSE
+-------
+Archive practical construction notes, bench observations, build choices,
+unfinished ideas, and superseded methods found across the old Hardware
+Manifest, revised Hardware Manifest, Software Manifest, and Operational
+Specification.
+
+This is NOT the authoritative pin map or wiring specification. The revised
+Hardware Manifest and 01_Pin_Maps_Authoritative.txt take precedence for the
+current physical build.
+
+Historical notes are deliberately retained. "Archived" or "superseded"
+means the note explains an earlier physical build or design path; it does
+not mean that method should be used now.
+
+
+============================================================
+CURRENT / USEFUL BUILD NOTES
+============================================================
+
+GENERAL PHYSICAL BUILD
+----------------------
+- Main high-current positive path remains uninterrupted; high-current
+  switching is on the negative side.
+- Low-current control and terminating connections are intended to live in
+  the service-hatch area where practical.
+- LEV100 mounting plan: four contactors in the left wing and four in the
+  right wing, with 3/16-inch 110 copper bus bars.
+- EV200 contactors are a parallel pair for the 5S / ~16V path.
+- LEV100 contactors form the 4S / ~12V path.
+- Use female connectors on live/source-side connections where practical;
+  male connectors on passive-side connections.
+- Wire numbers are a working physical-wire plan and should be confirmed
+  against the actual mockup.
+
+RELAY SOCKETS / FLYBACK
+-----------------------
+- Automotive relay terminal 86+ is positive coil supply; 85- is
+  negative/control return.
+- 1N4007 flyback diode stripe faces terminal 86+.
+- Relay sockets were de-pinned at 85 and 86 and diode leads soldered
+  directly to the wire crimps.
+- Five sockets were originally prepared. Four remain used by the current
+  automotive-relay design. The fifth gatekeeper socket was replaced by
+  the 5V opto-isolated relay module.
+
+BREAK-BEFORE-MAKE CONTACTOR INTERLOCK
+-------------------------------------
+- Physical relay interlock prevents the 12V LEV100 bank and 16V EV200
+  bank from being intentionally energized together.
+- Relay transit time is deliberately used in both directions to create a
+  break-before-make interval.
+- Original working estimate: roughly 50-100 ms.
+- Bench mockup should measure the actual transition timing using the
+  final-output sense channels rather than relying on the estimate.
+
+PROCESSOR LOCKOUT / OPTO RELAY
+------------------------------
+- ADS1115 ALERT must not directly carry an automotive relay-coil load.
+- Current interface: AITRIP 5V one-channel opto-isolated relay module,
+  ASIN B096M77HCJ, with onboard driver and flyback protection.
+- Relay contacts interrupt the positive contactor-authorization path.
+- Authorized state allows operation without requiring the processor to
+  continuously hold an automotive relay energized.
+- This replaces the earlier automotive gatekeeper-relay concept.
+
+OTC 3500-01 CURRENT SENSOR
+--------------------------
+- OTC clamp fixed on 2000A range.
+- Working scale: 1mV = 1A.
+- Thumbwheel was zeroed by meter and immobilized with a small hot-glue
+  dollop; software zeroing remains possible.
+- Intended internal installation is on the positive side.
+- OEM clamp ribbon was extended using a 9-pin JST arrangement: eight
+  factory conductors plus one shield/drain.
+- Shield/drain terminates to system ground and is not a signal conductor.
+- OTC PCB was cleaned, conformal-coated, and ribbon strain-relieved.
+- Extension permits the electronics PCB to live farther from the clamp.
+- Clamp orientation is to be confirmed during mockup; software polarity
+  inversion can compensate if installation requires reversal.
+- Isolated supply negative and analog signal negative join at the clamp,
+  allowing a three-wire run.
+- A shielded 3- or 4-wire scrap cable was considered suitable; an old USB
+  cable was specifically noted as a possible donor.
+
+OTC ISOLATED POWER SUPPLY
+-------------------------
+- Power chain: 12V -> waterproof 5V buck -> B0509S-1WR3 isolated 9V
+  converter.
+- B0509S-1WR3 assembly mounts on the perfboard with the analog front end.
+- Waterproof 5V buck is a separate potted module; it does not need to be
+  mounted on that perfboard or conformal-coated.
+- B0509S-1WR3 PCB and solder joints may be conformal-coated.
+- 4.7uF polarized capacitor across the 5V input, close to converter pins.
+- 2.2uF polarized capacitor across isolated 9V output, close to pins.
+- One 100nF ceramic capacitor parallels each polarized capacitor.
+- Tight-quarters note: small ceramic can be attached to the larger
+  capacitor first, then the pair mounted using the larger capacitor legs.
+- Isolated 9V output is dedicated to the OTC electronics.
+
+The B0509S-1WR3 isolated 5V → 9V converter requires a minimum output load
+for operation within its specified performance range.
+
+Bench testing confirmed successful 5V → 9V operation with two 1 kΩ resistors
+connected in parallel across the isolated 9V output.
+
+Permanent preload:
+
+* Resistor 1: 1 kΩ across 9V output
+* Resistor 2: 1 kΩ across 9V output
+* Effective resistance: approximately 500 Ω
+* Preload current at 9V: approximately 18 mA
+* Dissipation per 1 kΩ resistor: approximately 0.081 W
+
+The two 1 kΩ resistors shall remain installed as a permanent minimum-load
+preload rather than being treated as temporary test components.
+
+This preload is included in the converter's total output load and therefore
+counts toward the B0509S-1WR3 maximum output-current capability of 111ma.
+
+ADS1115 / ANALOG FRONT END
+--------------------------
+- Two ADS1115 modules are mounted on the perfboard.
+- Current channel allocation:
+    Board 1 A0 = B2 cumulative voltage
+    Board 1 A1 = B3 cumulative voltage
+    Board 1 A2 = B4 cumulative voltage
+    Board 1 A3 = B5 cumulative voltage
+    Board 2 A0 = B1 cumulative voltage
+    Board 2 A1 = final output positive
+    Board 2 A2 = OTC current
+    Board 2 A3 = final output negative
+- Board 1 ADDR: tiny jumper directly to system ground = 0x48.
+- Board 2 ADDR: tiny jumper directly to +5V VDD = 0x49.
+- Seven protected voltage-sense channels use the same
+  47k / 18k / 100nF / P6KE18A circuit.
+- Final-output sense wires originate at the last internal high-current
+  positive and negative connections before the jump cables leave the pack.
+- Build note calls for substantial sense wiring and says not to obtain
+  these measurements from another location.
+- Five cumulative battery-tap channels retain their isolation relay so
+  divider resistors are disconnected when the pack is off.
+
+P6KE18A TVS INSTALLATION
+------------------------
+- Painted stripe faces the positive/raw sense line.
+- Other end terminates at system ground.
+- On the five BMS tap channels, TVS devices remain inboard of the
+  voltage-divider isolation relay.
+- Current implementation uses seven: five cumulative taps plus final
+  output positive and final output negative.
+
+3.3V REGULATED SUPPLY
+---------------------
+- AMS1117-3.3 module is fed from the regulated 5V rail.
+- Regulated 3.3V supplies the level-shifter LV reference, all five DS18B20
+  sensors, OneWire 4.7k pull-up, and suitable future 3.3V GPIO pull-ups.
+- The old resistor-divider-derived 3.3V node is retired as a supply rail.
+
+LOGIC LEVEL SHIFTER
+-------------------
+- HV reference = regulated 5V.
+- LV reference = regulated 3.3V from AMS1117-3.3.
+- Grounds tie to common system ground.
+- Current physical orientation:
+    SCL = HV4 <-> LV4
+    SDA = HV3 <-> LV3
+- Channels 1 and 2 remain empty as spares.
+- A signal must stay on the same numbered channel across the shifter.
+
+TEMPERATURE BUS
+---------------
+- Five DS18B20 sensors share one OneWire data bus.
+- One 4.7k pull-up connects DATA to regulated 3.3V.
+- DATA leaves through output-header pin 8 and continues to display-ribbon
+  pin 6 / TX.
+- The five sensor names/locations identify physical probes, not five
+  separate OneWire data conductors.
+
+HEADERS / SERVICEABILITY
+------------------------
+- B0509S-1WR3 5V input and isolated 9V output were duplicated onto
+  individual two-pin perfboard headers.
+- Original corresponding 10-pin-input-header positions remain electrically
+  active, but dedicated two-pin headers are used for these supplies.
+- Remaining six input positions form the standardized 6S BMS cable
+  connection for B0-B5.
+- Display ribbon pin numbers are the silkscreen numbers on the back of the
+  Elecrow display PCB; the breakout board does not get a second numbering
+  scheme.
+
+MOCKUP / VERIFICATION
+---------------------
+- Measure actual break-before-make transition timing.
+- Confirm OTC clamp orientation and current polarity.
+- Verify every physical wire number against actual source, destination,
+  connector and pin.
+- Record wire color and gauge where useful.
+- Remove planned wire-index entries that do not physically exist.
+- Use final-output voltage plus OTC current for loaded-voltage sag and
+  practical pack-path resistance testing.
+- 01_Pin_Maps_Authoritative.txt wins if any pin conflict is found.
+
+SOFTWARE / DISPLAY BUILD THOUGHTS
+---------------------------------
+- Final-output +/- sensing supports actual cable-to-cable output voltage,
+  12V/16V confirmation, loaded sag and pack-path resistance estimation.
+- Pack-path resistance is a practical load-event trend, not laboratory AC
+  impedance measurement.
+- Normal temperature display summarizes the five sensors; abnormal spread
+  should identify the named abnormal/hottest sensor.
+- Low-temperature charge protection uses the lowest sensor for charging
+  eligibility while allowing discharge.
+- Existing Elecrow demo/navigation behavior should be retained where
+  practical rather than replacing the UI foundation unnecessarily.
+- Animation is secondary to monitoring reliability and should be reduced
+  or disabled if it interferes with sampling or display updates.
+
+
+============================================================
+HISTORICAL / SUPERSEDED BUILD NOTES
+============================================================
+
+RESISTOR-DIVIDER 3.3V SUPPLY — OBSOLETE
+---------------------------------------
+Earlier physical build:
+- 5V rail feeding a resistor divider to produce approximately 3.3V.
+- 10k upper resistor.
+- Two 10k resistors in series as the lower leg to system ground.
+- Center junction used as the nominal 3.3V node.
+- 4.7k OneWire pull-up soldered directly to that node.
+- Temperature-sensor VCC and level-shifter LV taken from that node.
+- Some construction notes describe the 4.7k resistor as "mid-air" mounted.
+
+This was replaced by the AMS1117-3.3 regulated supply. Retained here to
+explain the earlier build, photographs, and old manifest references.
+
+DIRECT ADS1115 ALERT -> AUTOMOTIVE RELAY COIL — SUPERSEDED
+----------------------------------------------------------
+Earlier design:
+- +12V directly to positive side of an automotive authorization-relay coil.
+- ADS1115 ALERT directly to the negative coil side.
+- Flyback diode across the coil.
+- Relaxed SPDT state = authorization allowed.
+- ALERT grounding the coil = authorization interrupted.
+
+This was replaced by the AITRIP 5V opto-isolated relay module so the
+ADS1115 ALERT output no longer carries automotive relay-coil current.
+
+OLD OUTPUT-HEADER ALLOCATION — SUPERSEDED
+-----------------------------------------
+Older notes assigned final-output sense to pins 8 and 9 and left pin 10
+reserved. Other older notes also reflect the historical off-by-one header
+identification problem.
+
+Current mapping:
+- Pin 8  = temperature sensor DATA
+- Pin 9  = final output positive sense
+- Pin 10 = final output negative sense
+
+The authoritative pin-map file supersedes all archived mappings.
+
+OLD LEVEL-SHIFTER CHANNELS — SUPERSEDED
+---------------------------------------
+Earlier notes used LV1/HV1 and LV2/HV2 for SCL/SDA. The rebuilt physical
+layout required the shifter module to be flipped for better fit.
+
+Current:
+- SCL = LV4/HV4
+- SDA = LV3/HV3
+- Channels 1 and 2 = spares.
+
+OLD ADS1115 BOARD-1 ADDRESS NOTE — SUPERSEDED
+--------------------------------------------
+An earlier build left Board 1 ADDR floating and observed 0x48, described
+as essentially "no harm no foul."
+
+Current build intentionally jumpers:
+- Board 1 ADDR -> system ground = 0x48
+- Board 2 ADDR -> +5V VDD = 0x49
+
+ORIGINAL SIX-CHANNEL ANALOG FRONT END — SUPERSEDED
+--------------------------------------------------
+Original implementation used five cumulative pack-voltage channels plus
+one OTC current channel, leaving two ADS1115 inputs unused.
+
+Current design uses seven protected voltage dividers plus OTC, consuming
+all eight ADS1115 channels. The two added dividers measure final output
+positive and final output negative.
+
+EARLY OTC DISASSEMBLY IDEA
+--------------------------
+An early note proposed removing the OTC outer case and retaining only the
+functional electronics, with conformal coating on exposed circuitry.
+
+Later build notes record the more specific physical implementation:
+extended OEM ribbon, relocated electronics PCB, cleaned/conformal-coated
+PCB, strain relief, and permanent isolated 9V supply.
+
+
+============================================================
+SOURCE EXTRACTS — BUILD-NOTE ARCHIVE
+============================================================
+
+Below are source lines selected mechanically for build-note language.
+They are intentionally retained as a searchable archive and may include
+duplicates, stale pin numbers, or superseded ideas. Use the curated
+sections above for interpretation.
+
+
+
+----- hardware_manifest_revised(3).txt -----
+MASTER HARDWARE MANIFEST
+WITH BUILD NOTES AND THOUGHTS
+
+=========================================================
+PIN MAP REFERENCE
+=========================================================
+The Authoritative Pin Map Supersedes Any Older Or Conflicting
+Pin Number References.
+01_Pin_Maps_Authoritative.txt
+480x480 HMI IPS Round Knob Touch Display
+Pin Numbers Refer To The 12-Pin Ribbon Cable
+Connector Pin Numbers Identified By The Silkscreen On The Back
+Of The Display PCB.
+No High Current Fusing Is Provided For Or Expected.
+Esp32 Will Access A Lockout Relay To Force Pos+ Control Voltage Cutoff 
+When/If Any Set Variables Are Met. Like Temp Or Voltage Drops.
+Processor Lockout:
+Series Relay In Contactor Banks Positive Coil Feed So Over Temp, Over Amp, Or ?, 
+Will Allow For Automatic Shutdown Via ESP32 Controller
+DC 12V To 24V 3A Step Up Boost Converter: <--FEED THIS FROM 12V TAP ONLY !!
+This Is A Potted Module So No Coating Needed
+
+Processor Lockout:
+Series Relay In Positive Coil Feed So Over Temp, Over Amp, Or ?, 
+Will Allow For Automatic Shutdown Via ESP32 Controller
+
+Mounting:
+4 In Left Wing
+=========================================================
+            Interlock And Command RELAYS
+=========================================================
+Automotive SPDT 12v 30A Relay Sockets Included
+Qty:4
+EEEEE 1N4007 Rectifier/Flyback Diodes:
+Relay Terminals 86+ Are Always Positive Coil Supply; 
+Relay Terminals 85- Are Always Negative/Control Return. 
+Flyback Diode Stripe Always Faces 86 +.
+One Diode Installed Across Pins 85- And 86+ Of Each Relay Coil
+To Suppress Inductive Voltage Spikes When The Coil Is De-Energized,
+Protecting Relay Contacts And Control Electronics.
+
+Done. De-Pinned Both 86 And 85 From 5 Sockets And
+Soldered Directly To Wire Crimps, Stripe Toward 86 +.
+Four Automotive Relay Sockets Remain Used In The Current Design.
+The Fifth Previously Prepared Gatekeeper Socket Is Replaced By The
+5V Opto-Isolated Relay Module.
+
+Theory Of Operation:
+1 SPDT 12v In Its Relaxed (Unpowered) State Turns The 12v Lev100 Banks Control Relay To Authorized,
+Allowing The Timer Switch Signals To Reach The Controls.
+The Open Pole Of Same Double Throw Relay Assures 16v EV200 Contactor Is NOT Authorized. 
+This Is Probably Sufficient As A Safety Interlock To Insure Either Contactor Bank Can Never Be On At The Same Time,
+However,
+There Is Concern For The Amount Of Amps Being Pushed At The Moment Of Commanded Contactor 
+Switchover Could Pose A Risk (Even If Small) Of The 2 Voltages Running Into Each Other.
+To Say The Least, So Extra Precautions Are Being Employed By Stretching Out
+The Sequence Using 2 Relays To Double The Time Alotted For Contactor Disconnect Before Connect 
+" Break For Sure Before Make " And Still Accomplish The Switchover In No Less >50ms No More Than 100 milliseconds
+    ↓
+Delay By Dual Consecutive Relay, NOT DBL Throw, 
+An Actual 2nd Relay For Pole/Pivot Transit Travel Time x2 
+Best Guess This Will Give Us >50ms Delay, 
+This Provides The Same Delay In Both Directions.
+Hopefully Preventing Pack Shorting By Contact Overlap 
+Resulting In Welded Contactors From An Accidental Make-Before-Break. 
+
+       [ RELAY 1: 12V POLICE ]                   [ RELAY 2: 16V POLICE ]
+  ┌────────────────────────────────┐       ┌────────────────────────────────┐
+  │ Pin 85: GND                    │       │ Pin 85: GND                    │
+  │ Pin 86: 12V Mode Switch Signal │       │ Pin 86: 16V Mode Switch Signal │
+  │ Pin 30: Master Control Power   │       │ Pin 30: Master Control Power   │
+  │ Pin 87a (NC): Wire to R2 Pin 30│       │ Pin 87a (NC): Wire to R1 Pin 30│
+  │ Pin 87 (NO): To LEV100 Coils   │       │ Pin 87 (NO): To EV200 Coils    │
+  └────────────────────────────────┘       └────────────────────────────────┘
+The 12V Path Logic: 
+Run The Main Control Power Into Relay 2, Pin 30. 
+Solder A Wire From Its Normally Closed Contact (Pin 87a) Over To Relay 1, Pin 30. 
+Finally, Run Relay 1'S Normally Open Contact (Pin 87) Out To The LEV100 Contactor Coils.
+
+The 16V Path Logic: 
+Mirror The Exact Same Step On The Other Side. Run Main Control Power Into Relay 1, Pin 30. 
+Solder A Wire From Its Normally Closed Contact (Pin 87a) Over To Relay 2, Pin 30. 
+Then, Run Relay 2'S Normally Open Contact (Pin 87) Out To The Big EV200 Contactor Coils.
+
+The ESP32 Output Sense Wire Can Double-Check These Exact Millisecond Speeds During Bench Mockup?
+
+=========================================================
+The ADS1115 ALERT Output Does NOT Directly Energize A Relay Coil.
+
+A Single-Channel 5V Opto-Isolated Relay Module Is Used As The Interface:
+AITRIP 5V One Channel Relay Module
+Opto Isolation / High-Low Level Trigger
+
+The Module Contains Its Own Relay Driver And Flyback Protection,
+So The ADS1115 ALERT Signal Does Not Carry Relay-Coil Current.
+
+The Relay Contacts Are Wired Into The Positive Contactor Authorization Path.
+The Authorized State Uses The Relay Contact Arrangement That Allows The Pack
+To Operate Without The Processor Actively Holding A Relay Coil Energized.
+
+Upon A Processor / ALERT Shutdown Command, The Opto Relay Module Interrupts
+The Positive Authorization Path And De-Energizes Both Contactor Banks.
+
+This Module Replaces The Previously Proposed Automotive Gatekeeper Relay.
+
+Fixed on 2000A range:
+ThumbWheel Calibrated To Zero By Meter And Then Hot Glue Dollip To Imobilize Wheel Adj.
+Will Zero From SoftWare In Future
+
+Plan:
+Install Internally On Positive Side
+JST 9 Pin Header Added To Extend Delicate Clamp Connected Ribbon Cables
+8 Factory Pins And 1 Extra
+Function: Cable Shield / Drain
+Connection: System Ground
+Purpose: EMI shield termination only.
+Pin 9 Not a signal conductor.
+PCB cleaned after soldering.
+PCB protected with conformal coating.
+Ribbon cable strain-relieved at clamp body.
+JST 9 Pin female connector attached to the OEM ribbon cable header from OEM Circuit Board
+This created a 8 inch extension for the OEM Circuit Board to exist further away from clamp
+Clamp orientation established during mock-up.
+Software polarity inversion available if final installation requires clamp reversal.
+Permanent Floating Isolated 9V Power Supply Has Been Provided.
+Incoming Isolated Power Suppy Neg- And The Analog Neg- Signal From Clamp Are Tied Together At the Clamp
+So Only A Three Wire Run Is Needed
+Find A 3- Or 4-Wire Shielded Cable In The Scrap Pile, You Are In Business.
+Old USB Cables (They Contain 4 Shielded Wires Inside)
+
+Power Conversion Achieved By: 
+12v to 5v Converter DC Step Down/Buck (This Is A Potted Module So No Coating Needed)
+Feeding Into A B0509S-1WR3 DC-DC 5V to 9V Isolated Power Converter, 
+Input 4.5V-5.5V, Output 9V, 1W Isolated Power Module
+(This Is A Self Contained Module, PCB Mounted, A Conformal Coating
+On The PCB Only And The Solder Joints Is Warranted )
+
+                     │   │   │   │ 
+                    Input Header Pin #
+                     │   │   │   │
+                     │   │   │   │
+          SYS GND ──>4   1<─ 2<─ 3<────Input Header Pin #
+
+Chip Pin #                             10Pin Input Header Pin
+                        System Ground Is A Passthrough From The 12v to 5v Converter, So...
+Chip Pin 1 = -V IN    (-5 V Input) Same As Sys Ground Because /\ Input  Header Pin   4   verified
+Chip Pin 2 = +V IN    (+5 V Input)                               Input  Header Pin   1   verified
+Chip Pin 3 = -V OUT   (Isolated -9 V Output)                     Input  Header Pin   2   verified
+Chip Pin 4 = +V OUT   (Isolated +9 V Output)                     Input  Header Pin   3   verified
+
+The Input Header Pin Numbers Shown Above Are Still Active. 
+However, Each Has Been Duplicated And Replaced By Its Own Perf Board Mounted Two-Pin Header. 
+So, The Plus And Negative 5V Input And The Plus And Negative 9V Output Are Not Being Sent Through The Input Header. 
+The Remaining Six BMS Input Lines Are Attached With A Standard 6S JST Battery BMS Cable 
+To The Appropriate Side Of The Input Header.This Standardizes The BMS Output Cable Of The Battery Pack.
+
+Also Close To The Converter Pins. Across The + - 
+Best Practice In Tight Quarters:
+Attach The Small Cap To The Bigger Cap First And Then Attach Using Only The Bigger Caps Legs
+This Small OTC Supply Assembly Will Go On The 
+Perf-Board With The Voltage Divider
+
+Input Wires From The Waterproof 5 V Buck
+Feeding Into A B0509S-1WR3 DC-DC 5V to 9V Isolated Power Converter
+Output Wires To The OTC Electronics Battery Connections
+
+The Waterproof 5 V Buck Is A Separate Potted Module And 
+Does Not Need To Be Mounted On That Perf-Board.
+
+Hits The System, It Snaps Alive Instantly To Clamp And Shunt That Energy Safely 
+To Ground Before It Can Travel Down The Small Signal Wires
+Because The 5S Full Pack Max Voltage Is 18.25V, 
+We Have Selected An 18V TVS To Act As A Threshold Guard.
+On The Divider Board Right Before The Signal Hits The Resistors. 
+They Belong Directly Across Each Raw Incoming Protected Voltage Sense Line:
+=========================================================
+            Analog Front-End Board (Voltage Divider)
+=========================================================
+
+10-pin Headers Soldered
+Input And Output Via 10 Pin Headers
+
+One Connector From Balance Harness
+ADS1115 Boards Are Built On To The Perf
+
+Final Output Sense Connections:
+Output Header Pin 9  = Final Output (+) Sense → ADS1115 Board 2 A1
+Output Header Pin 10 = Final Output (-) Sense → ADS1115 Board 2 A3
+
+Sense Wire Locations:
+Final Output (+): Last Internal Positive Connection Before The Jump Cable Leaves The Pack
+Final Output (-): Last Internal Negative Connection Before The Jump Cable Leaves The Pack
+Obtain These From Last High Current Connection
+Do Not Obtain These From Any Other Location
+Use Bigger Wire As Well
+
+The Two Final Output Sense Channels Use The Same
+47k / 18k / 100nF / P6KE18A Protected Divider Circuit
+As The Five Existing Cumulative Pack Voltage Channels.
+
+10 Pin Input Header JST-XH                                          ─┐
+Pin 10 B5 (Pack +)16v: Connects To Divider → Goes To Board 1, Pin A3 |
+Pin  9 B4 (Cell 4)12v: Connects To Divider → Goes To Board 1, Pin A2 | Only This 6S BMS Lead Plugs
+Pin  8 B3 (Cell 3) 9v: Connects To Divider → Goes To Board 1, Pin A1 | Into The 10 Pin Input Header
+Pin  7 B2 (Cell 2) 6v: Connects To Divider → Goes To Board 1, Pin A0 | Comprised Of Pin5-Pin10
+Pin  6 B1 (Cell 1) 3v: Connects To Divider → Goes To Board 2, Pin A0 |
+Pin  5 B0 (Pack Ground): System Ground Rail On The Perfboard.        |
+                                                                    ─┘
+                                                 ─┐
+Pin 4 -V IN   Chip Pin 1  (-5 V Input) Sys Grnd   | These Each Have Their Own 2Pin Header Now
+Pin 1 +V IN   Chip Pin 2  (+5 V Input)            | But Are Still Active In The Input 10Pin Header
+Pin 2 -V OUT  Chip Pin 3  (Isolated -9 V Output)  | B0509S-1WR3 DC-DC 5V to 9V Isolated Power Converter
+Pin 3 +V OUT  Chip Pin 4  (Isolated +9 V Output)  | Mounted On Perf-Board With Voltage Divider
+                                                 ─┘
+Isolated 9V+- Output Is Power For The OTC Clamp Only
+Single Row Divider Sketch: 1 Each Protected Voltage Input = x7
+(5 Cumulative Pack Voltage Inputs + Final Output Positive + Final Output Negative)
+                    +    |  \/      +        +                    +            +
+BMS TAP ───| |───────────●─────────────────► [ 47kΩ Resistor ] ───●─WIRE/HOLE────────────► To ADS1115 Pin
+            |            │                                        │
+        Isolation   [ P6KE18A ] (Stripe To Pos)                [ 18kΩ ]     [ 100nF ]
+          Relay       TVS Diode                                  Lower        Filter
+                   Observe Polarity                             Resistor     Capacitor
+
+The End Of The P6KE18A Diode With The Painted Stripe Must Face Each Positive BMS Tap Wire
+All TVS Diodes Terminate At Sys Ground. 
+For The Five BMS Tap Channels, Insure The P6KE18A Diode Striped Ends
+Remain Inboard Of The Existing Voltage-Divider Isolation Relay.
+
+A Logic Level Shifter Converter Module 4 Channel 
+Bidirectional 3.3V to 5V, 5V to 3.3V
+For The SDA And SCL Lines. 
+We Only Need 2 Channels
+1115 Boards Are Powered By 5v Not 3.3V So We Are Doing This
+For Absolute Protection Of The ESP32 Controller
+5V I2C Data Signals From The ADS1115 Boards 
+Down To The 3.3V Logic Needed By The Elecrow Display.
+
+ 5V Main Buck Output ───────●───────► 12-Pin Ribbon Pins 1 & 2 (Screen Power Input)
+                            │
+                                             ▼
+                               Regulated 3.3V Output
+                                             │
+                                             ├───────► Level Shifter [LV Pin]
+                                             ├───────► All 5 Temp Sensor Red Wires (VCC)
+                                             │
+                                             │
+                                             ├───────► All 5 Temp Sensor Yellow Wires (DATA)
+                                             └───────► Output Header Pin 8
+                                                        ↓
+                                                   12-Pin Ribbon Pin 6 (TX)
+
+ System Ground Rail ────────●───────► 12-Pin Ribbon Pins 11 & 12 (Screen Ground)
+                            ├───────► AMS1117 Ground
+                            ├───────► Level Shifter Grounds
+                            └───────► All 5 Temp Sensor Black Wires (GND)
+
+       └─────┬──────────────┬──────────────────┬───────────┬────┘
+             │ 3.3V         │ SYS GND          │ SCL       │ SDA
+             ▼              ▼                  ▼           ▼
+The Shifter Needs To Know What Both "High" And "Low" Mean. 
+Connect 3.3V+ To The LV Pin, And Connect The Main 5V+ Rail To The HV Pin.
+
+Board 1: (B2 Through B5 Cumulative Pack Voltage Taps):
+Solder A Tiny Jumper Wire From The ADDR Pin Straight To The SYS GND Pin On This Board. 
+This Names It Address 0x48
+
+Board 2: (B1 + Final Output Positive + OTC Current + Final Output Negative): 
+Solder A Tiny Jumper Wire From The ADDR Pin Straight To The 5v+ VDD Pin On This Board. 
+This Names It Address 0x49
+
+The Power References: HV Gets The Clean 5V+ Rail (From The Buck Converter), 
+And LV Gets Regulated 3.3V+ From The AMS1117-3.3 Module
+
+The Ground Plane: Both Grounds On The Shifter Tie Together Right Into The Central System Ground
+
+The Spares: Channels 1 And 2 (LV1, LV2, HV1, HV2) Stay Completely Empty And Unpopulated, 
+Serving As Perfect Backups If A Channel Ever Gets Cooked 
+
+Direct Channel Passthrough: 
+Align The Data Lines Perfectly. 
+If Clock (SCL) Goes Into LV4, 
+If Data (SDA) Goes Into LV3, It Must Exit Through HV3.
+Dont Forget To Set The Address Of The Boards Before You Stack Them.
+
+Locations: Temp Sensors
+1 Sensor At Main POS Cable Connection: There Is Only 1 Bar-To-Cable Connection On The Positive Path, Sensor Is Located Here.
+1 Sensor At Main Neg Location: It Is The First Bar-To-Cable For Neg Line At Cell Interface.
+Contactors:  1 Sensor In-Between Or Near EV200 Bus Bar Connections: This Neg Location Is Where The Second Cable-To-Bar 
+Connection And Is Also Where The External Jump Cable Will Connect
+2 For Lev100 Banks: 1 In Each Wing
+Probe Locations Are Approximate And Subject To Last Min Change As Fitting And Access Allows
+These Are At Bar-To-Cable Connections Not For Contactor Temps But Cable Connection To Bar Temps
+As We Theorize A High Temp At Any Single Connection Point Is Reason To Stop Using The Pack And Investigate
+DS18B20 Sensors Daisy-Chain Directly:
+3.3V
+GND
+DATA
+Common One-Wire Bus
+Sensors Daisy-Chain Directly.
+
+ AMS1117-3.3 Regulated Output ───────●───────► To All 5 Temp Sensor Red Wires (VCC)
+                                      │
+                                                    │
+                                                    ├──────► All 5 Temp Sensor Yellow Wires (DATA)
+                                                    └──────► Output Header Pin 8
+                                                               ↓
+                                                          12-Pin Ribbon Pin 6 (TX)
+
+ System Ground Rail ────────────────────────────────●──────► All 5 Temp Sensor Black Wires (GND)
+                                                    └──────► 12-Pin Ribbon Pins 11 & 12 (Screen Ground)
+
+The 3.3V Supply:
+The AMS1117-3.3 Regulator Module Is Fed From The Main Regulated 5V Rail.
+Its Regulated 3.3V Output Powers The Level Shifter LV Pin, The Five
+Temperature Sensor Red VCC Wires, And The Top Of The 4.7kΩ OneWire Pull-Up.
+
+The Bottom Leg Of The 4.7kΩ Pull-Up Resistor Ties To The Five Yellow
+Temperature Sensor Data Wires And Output Header Pin 8.
+Output Header Pin 8 Routes To 12-Pin Ribbon Pin 6 (TX).
+
+The Ground Node:
+The Five Black Temperature Sensor Wires And AMS1117 Ground Return
+To System Ground.
+Output:
+Regulated 3.3V Rail
+
+
+The 12-Pin Ribbon Sequential Pin Map:                                      10 Pin Output Header #:
+                                                                            ───┐
+Pin 12:  GND (System Common Ground)-----------------------------------------04 │─── Connected At Breakout Board
+Pin 11:  GND (System Common Ground)-----------------------------------------04 │─── These Are The Same Just One Pin#
+Pin 10:  D+ (USB Data Positive — Leave Empty)                               ───┘
+Pin 09:  D- (USB Data Negative — Leave Empty)                               ───┐
+Pin 08:  SCL (3.3V I2C Clock)-----------------------------------------------06 │─── Output 10Pin Header Pin# 06
+Pin 07:  SDA (3.3V I2C Data)------------------------------------------------07 │─── Output 10Pin Header Pin# 07
+Pin 06:  TX (The Temp Sensor Data Target)-----------------------------------08 │─── Output 10Pin Header Pin# 08
+Pin 05:  RX (No Connection — Leave Empty)                                   ───┘
+Pin 04:  NC (No Connection — Leave Empty)
+Pin 03:  NC (No Connection — Leave Empty)                                   ───┐
+Pin 02:  5V (5V Main Power Input)-------------------------------------------05 │─── Connected At Breakout Board
+Pin 01:  5V (5V Main Power Input)-------------------------------------------05 │─── These Are The Same Just One Pin#
+                                                                            ───┘
+
+Output Header Pin 1 Is Also System Ground For Local / Service Grounding.
+Output Header Pins 9 And 10 Are Final Output Voltage Sense Lines 
+And Do Not Route To The Display Ribbon.
+Keep In Mind Any Connection To A "Live" Side
+Should Be The Female Connection.
+Male Connects For Passive Side.
+
+Board Connector 10 Pin Header JST-XH
+
+OUTPUT SIDE 10-PIN HEADER WIRE ROUTING
+
+Pin 1 Is System Ground.
+This Is An Additional Local / Service System Ground Connection.
+
+Pin 2 Is BMS/Voltage Divider Isolation Coils Positive 12V+.
+This Should Be 12V+ Anytime Pack Is Powered On
+The Isolation Loops Disconnect The Voltage Divider From The Main BMS Leads
+When The Pack Is Turned Off, So The Divider Resistors Do Not Remain Connected
+Across The Battery Taps In An Attempt To Remove Any Parasitic Drain
+
+Pin 3 Is Alert/Alarm From ADS1115 Board 1.
+This Signal Goes To The Input Of The AITRIP 5V Opto-Isolated Relay Module.
+The Module's Relay Contacts Interrupt The Positive Contactor Authorization Path.
+The ADS1115 ALERT Output Does Not Carry Relay-Coil Current.
+
+Pin 4 Is System Ground.
+This Ties The System Ground Rail To 12-Pin Ribbon Pins 11 And 12.
+
+Pin 5 Is 5V Power.
+This Connects The Main 5V Power Rail To 12-Pin Ribbon Pins 1 And 2
+For The Elecrow Display.
+
+Pin 6 Is SCL 3.3V Logic.
+This Connects Directly To The LV4 Pin On The Low Side Of The Logic Level Shifter
+And Routes To 12-Pin Ribbon Pin 8 SCL.
+
+Pin 7 Is SDA 3.3V Logic.
+This Connects Directly To The LV3 Pin On The Low Side Of The Logic Level Shifter
+And Routes To 12-Pin Ribbon Pin 7 SDA.
+
+Pin 8 Is Temperature Sensor Data.
+This Connects To The 4.7k Ohm Master Pull-Up Data Node And The Five
+Temperature Sensor Yellow Wires.
+It Routes To 12-Pin Ribbon Pin 6 TX.
+
+Pin 9 Is Final Output Voltage Sense (+).
+This Routes Through The Protected Divider Network To ADS1115 Board 2 A1.
+
+Pin 10 Is Final Output Voltage Sense (-).
+This Routes Through The Protected Divider Network To ADS1115 Board 2 A3.
+
+==========================================================
+TEMPERATURE SENSORS PULL UP RESISTOR MID AIR MOUNTING
+==========================================================
+
+Step 1 Locate The Regulated 3.3V Output From The AMS1117-3.3 Module.
+
+Step 2 Take The 4.7k Ohm Temperature Master Pull Up Resistor
+(Yellow Violet Red Gold Bands) And Solder One Leg To The Regulated 3.3V Rail.
+
+Step 3 Connect All 5 Temperature Sensor Red VCC Wires To The Same
+Regulated 3.3V Rail.
+
+Step 4 Take The Remaining Leg Of The 4.7k Ohm Pull-Up Resistor
+And Connect It To Output Header Pin 8. This Is The Temperature Data Line.
+
+Step 5 Connect All 5 Temperature Sensor Yellow Data Wires To That
+Same Output Header Pin 8 Data Node.
+
+Step 6 Connect All 5 Temperature Sensor Black Ground Wires To System Ground.
+
+Output Header Pin 8 Routes The Data Line To 12-Pin Ribbon Pin 6 (TX).
+
+And Will ALWAYS Turn Itself Off After Timer Expires*
+Depending On Switch Mount Location 
+A Different Switch Can Be Employed
+(Push + Rotate)
+Depending On Installation Difficulty 
+It May Be Display ONLY Without Push Or Rotate
+
+Removable Cable Harnesses:
+(NO Soldering Directly To Display PCB)
+PCB Has Plugs For Connecting Power And Signal But 
+We Now Have The 12Pin Ribbon Cable For All Connections In One Breakout Board
+The Ribbon Connector At The Display Is Very Weak 
+Don't Be Rough Or You Won't Have A Locking Tab For Your Ribbon Cable
+The Breakout Board Has A much More Usable Locking Tab So Disconnect From It If You Can
+So That Is Going To Be Our Disconnect 
+And Perhaps Still Think About A Light Conformal Coating For The Display PCB To Help 
+Weather-Resist It And These Connections From Dirt, Humidity And The Green Crusties
+
+12-Pin Ribbon Connector Pin Map:
+
+
+All Pin Numbers Refer To The Silkscreen Numbering On The Back Of
+The ELECROW Display PCB. The Breakout Board Is A Straight-Through
+Extension And Does Not Introduce A Separate Pin Numbering System.
+
+Keep In Mind Any Connection To A "Live" Side
+Should Be The Female Connection.
+Male Connects For Passive Side.
+
+=========================================================
+            WIRE NUMBER INDEX
+=========================================================
+
+Wire Numbering Paradigm:
+
+Single Digit Number Indicates The System / Section Origin.
+The Two-Digit Number Identifies The Individual Physical Wire
+Within That System.
+
+Wire Numbers Are Assigned To Physical Conductors, Not Merely
+To Functions Or Devices.
+
+The List Below Is The Current Working Wire Plan.
+Individual Entries Should Be Verified Against The Physical
+Build During Mockup And Assembly.
+
+Worksheet Info To Verify For Each Wire:
+
+Wire No:
+Signal Name:
+Normal/Default Voltage Or State:
+Wire Color If Helpful:
+Wire Gauge If Helpful:
+Connector And Pin:
+
+1.xx-  Low Current Lockout Control Relays
+
+1.01    +12V Relay Supply
+1.02    Ground Relay Supply
+1.03    12V Permission Relay Coil +
+1.04    12V Permission Relay Coil -
+1.05    16V Permission Relay Coil +
+1.06    16V Permission Relay Coil -
+1.07    Break-Before-Make Timer Input
+1.09    Processor Lockout / ADS1115 ALERT Control
+1.10    Processor Lockout Relay Status
+
+
+3.01    OneWire DATA
+3.02    +3.3V
+3.03    System Ground
+3.10 Through 3.14 Identify The Five Physical Sensors / Locations.
+They Do Not Represent Five Additional OneWire Data Conductors.
+
+USB D+ And D- Are Unconnected And Therefore Are Not Assigned
+Physical Wire Numbers Here.
+
+5.10    Final Output Voltage Sense (+)
+        Final Positive Connection Before Jump Cable Leaves Pack
+        → Output Header Pin 9
+        → Protected Divider
+        → ADS1115 Board 2 A1
+5.11    Final Output Voltage Sense (-)
+        Final Negative Connection Before Jump Cable Leaves Pack
+        → Output Header Pin 10
+        → Protected Divider
+        → ADS1115 Board 2 A3
+
+6.09    3.3V Regulated
+        AMS1117-3.3 Output
+
+6.10    3.3V Ground
+        Same As System Ground
+
+7.04    OTC Cable Shield / Drain
+        → System Ground At Electronics End
+
+9.xx-  Future Expansion
+
+=========================================================
+            WIRE NUMBER VERIFICATION
+=========================================================
+
+During Mockup / Final Assembly:
+
+Verify That Each Number Represents A Real Physical Conductor.
+
+Verify Source And Destination With The Meter Where Applicable.
+
+Record Connector And Pin Assignments.
+
+Record Wire Color And Gauge Where Useful.
+
+Remove Any Planned Entry That Does Not Exist In The
+Completed Physical Build.
+
+Once Verified, This Index Becomes The Source For:
+
+09_Wire_Number_Index.txt
+
+
+
+----- hardware manifest old ref(1).txt -----
+
+The ADS1115 ALERT output shall not directly energize any relay coil.
+
+A single-channel 5V opto-isolated relay module with onboard transistor
+driver and flyback protection shall be used as the interface between
+
+This relay module replaces the previously proposed automotive relay,
+eliminating unnecessary hardware while protecting the ADS1115 from
+relay-coil current.
+
+The relay module shall interrupt the contactor authorization path upon
+an ALERT condition, placing the system into its safe shutdown state.
+============================================================
+SNAPACK - NEXT HARDWARE SOLDERING TASKS
+============================================================
+
+□ 1. Install dedicated 3.3V regulator
+------------------------------------
+- Five DS18B20 sensors
+- OneWire 4.7k pull-up
+- Future GPIO pull-ups (LEV AUX, etc.)
+
+Retire the resistor-divider "3.3V reference" from use as a supply rail.
+
+
+□ 2. Build TWO additional protected voltage-divider channels
+-------------------------------------------------------------
+
+10-Pin To Breakout Output Header
+
+Pin 08  Final Output (+) Sense
+          → ADS1115 #2 A1
+
+Pin 09  Final Output (-) Sense
+          → ADS1115 #2 A3
+
+Pin 10  Reserved
+          (Future LEV AUX input or other digital I/O)
+
+
+□ 4. Sense wire locations
+-------------------------
+
+A1 wire:
+Final POS output stud
+(last point before cable exits pack)
+
+A3 wire:
+Final NEG output stud
+(last point before cable exits pack)
+
+
+- Actual cable-to-cable output voltage
+- 12V / 16V mode confirmation
+- Pack resistance calculation
+- Future charging behavior analysis
+
+
+Future (NOT required yet)
+
+No High Current Fusing Is Provided For Or Expected.
+Esp32 Will Access A Lockout Relay To Force Pos+ Control Voltage Cutoff 
+When/If Any Set Variables Are Met. Like Temp Or Voltage Drops.
+Processor Lockout:
+Series Relay In Contactor Banks Positive Coil Feed So Over Temp, Over Amp, Or ?, 
+Will Allow For Automatic Shutdown Via ESP32 Controller
+DC 12V To 24V 3A Step Up Boost Converter: <--FEED THIS FROM 12V TAP ONLY !!
+This Is A Potted Module So No Coating Needed
+
+Processor Lockout:
+Series Relay In Positive Coil Feed So Over Temp, Over Amp, Or ?, 
+Will Allow For Automatic Shutdown Via ESP32 Controller
+
+Mounting:
+4 In Left Wing
+=========================================================
+            Interlock And Command RELAYS
+=========================================================
+Automotive SPDT 12v 30A Relay Sockets Included
+Qty:4
+EEEEE 1N4007 Rectifier/Flyback Diodes:
+Relay Terminals 86+ Are Always Positive Coil Supply; 
+Relay Terminals 85- Are Always Negative/Control Return. 
+Flyback Diode Stripe Always Faces 86 +.
+One Diode Installed Across Pins 85- And 86+ Of Each Relay Coil
+To Suppress Inductive Voltage Spikes When The Coil Is De-Energized,
+Protecting Relay Contacts And Control Electronics.
+
+Done. De-Pinned Both 86 And 85 From 5 Sockets And 
+Soldered Directly To Wire Crimps, Stripe Toward 86 +
+
+Theory Of Operation:
+1 SPDT 12v In Its Relaxed (Unpowered) State Turns The 12v Lev100 Banks Control Relay To Authorized,
+Allowing The Timer Switch Signals To Reach The Controls.
+The Open Pole Of Same Double Throw Relay Assures 16v EV200 Contactor Is NOT Authorized. 
+This Is Probably Sufficient As A Safety Interlock To Insure Either Contactor Bank Can Never Be On At The Same Time,
+However,
+There Is Concern For The Amount Of Amps Being Pushed At The Moment Of Commanded Contactor 
+Switchover Could Pose A Risk (Even If Small) Of The 2 Voltages Running Into Each Other.
+To Say The Least, So Extra Precautions Are Being Employed By Stretching Out
+The Sequence Using 2 Relays To Double The Time Alotted For Contactor Disconnect Before Connect 
+" Break For Sure Before Make " And Still Accomplish The Switchover In No Less >50ms No More Than 100 milliseconds
+    ↓
+Delay By Dual Consecutive Relay, NOT DBL Throw, 
+An Actual 2nd Relay For Pole/Pivot Transit Travel Time x2 
+Best Guess This Will Give Us >50ms Delay, 
+This Provides The Same Delay In Both Directions.
+Hopefully Preventing Pack Shorting By Contact Overlap 
+Resulting In Welded Contactors From An Accidental Make-Before-Break. 
+
+       [ RELAY 1: 12V POLICE ]                   [ RELAY 2: 16V POLICE ]
+  ┌────────────────────────────────┐       ┌────────────────────────────────┐
+  │ Pin 85: GND                    │       │ Pin 85: GND                    │
+  │ Pin 86: 12V Mode Switch Signal │       │ Pin 86: 16V Mode Switch Signal │
+  │ Pin 30: Master Control Power   │       │ Pin 30: Master Control Power   │
+  │ Pin 87a (NC): Wire to R2 Pin 30│       │ Pin 87a (NC): Wire to R1 Pin 30│
+  │ Pin 87 (NO): To LEV100 Coils   │       │ Pin 87 (NO): To EV200 Coils    │
+  └────────────────────────────────┘       └────────────────────────────────┘
+The 12V Path Logic: 
+Run The Main Control Power Into Relay 2, Pin 30. 
+Solder A Wire From Its Normally Closed Contact (Pin 87a) Over To Relay 1, Pin 30. 
+Finally, Run Relay 1'S Normally Open Contact (Pin 87) Out To The LEV100 Contactor Coils.
+
+The 16V Path Logic: 
+Mirror The Exact Same Step On The Other Side. Run Main Control Power Into Relay 1, Pin 30. 
+Solder A Wire From Its Normally Closed Contact (Pin 87a) Over To Relay 2, Pin 30. 
+Then, Run Relay 2'S Normally Open Contact (Pin 87) Out To The Big EV200 Contactor Coils.
+
+The ESP32 Output Sense Wire Can Double-Check These Exact Millisecond Speeds During Bench Mockup?
+
+By Using The ADS1115 As The Ground Switch, The Loop Is Simple:
+The Positive Side: You Run 12V Straight To The Positive Leg Of The Relay Coil.
+The Negative Side: You Run A Wire From The Negative Leg Of That Relay Coil Straight To The ADS1115 ALRT Pin.
+The Operation:
+System Fault: The Display Commands The ADS1115 To Close Its Internal Switch (Go Ground) Upon An Error Or Shutdown Command.
+The ALRT Pin Connects Directly To Ground, The 12V Relay Activates, 
+In Order For The Pack To Work Without A Micro-controller Functioning, We Wire 
+The SPDT Relay As Authorized In Its Relaxed Position
+Allowing POS+ Power to Pass, In That Mode We Therefore Depend On Other Control Measures To Insure Pack Safety.
+During A NO-Controller Scenario 
+Only Adding Power To The Relay POS+ Leg By Command Will Break The Relaxed Pole And 
+Interrupt Operation And The System Loses The Authority To Run By Breaking Path Of Relay Coil POS+
+While Other Measures Control The Path Of Relay Coil Neg-.
+
+Run ALRT Wire To The Negative Leg Of The Existing 12V Auth Interupt Relay Coil And You Are Done.
+
+Fixed on 2000A range:
+ThumbWheel Calibrated To Zero By Meter And Then Hot Glue Dollip To Imobilize Wheel Adj.
+Will Zero From SoftWare In Future
+
+Plan:
+Install Internally On Positive Side
+JST 9 Pin Header Added To Extend Delicate Clamp Connected Ribbon Cables
+8 Factory Pins And 1 Extra
+Function: Cable Shield / Drain
+Connection: System Ground
+Purpose: EMI shield termination only.
+Pin 9 Not a signal conductor.
+PCB cleaned after soldering.
+PCB protected with conformal coating.
+Ribbon cable strain-relieved at clamp body.
+JST 9 Pin female connector attached to the OEM ribbon cable header from OEM Circuit Board
+This created a 8 inch extension for the OEM Circuit Board to live further away from clamp
+Clamp orientation established during mock-up.
+Software polarity inversion available if final installation requires clamp reversal.
+Permanent Floating Isolated 9V Power Supply Has Been Provided.
+Incoming Isolated Power Suppy Neg- And The Analog Neg- Signal From Clamp Are Tied Together At the Clamp
+So Only A Three Wire Run Is Needed
+Find A 3- Or 4-Wire Shielded Cable In The Scrap Pile, You Are In Business.
+Old USB Cables (They Contain 4 Shielded Wires Inside)
+
+Power Conversion Achieved By: 
+12v to 5v Converter DC Step Down/Buck (This Is A Potted Module So No Coating Needed)
+Feeding Into A B0509S-1WR3 DC-DC 5V to 9V Isolated Power Converter, 
+Input 4.5V-5.5V, Output 9V, 1W Isolated Power Module
+(This Is A Self Contained Module, PCB Mounted, A Conformal Coating
+On The PCB Only And The Solder Joints Is Warranted )
+
+                     │   │   │   │ 
+                    Input Header Pin #
+                     │   │   │   │
+                     │   │   │   │
+          SYS GND ──>4   1<─ 2<─ 3<────Input Header Pin #
+
+Chip Pin #                             10Pin Input Header Pin
+                        System Ground Is A Passthrough From The 12v to 5v Converter, So...
+Chip Pin 1 = -V IN    (-5 V Input) Same As Sys Ground Because /\ Input  Header Pin   4   verified
+Chip Pin 2 = +V IN    (+5 V Input)                               Input  Header Pin   1   verified
+Chip Pin 3 = -V OUT   (Isolated -9 V Output)                     Input  Header Pin   2   verified
+Chip Pin 4 = +V OUT   (Isolated +9 V Output)                     Input  Header Pin   3   verified
+
+The Input Header Pin Numbers Shown Above Are Still Active. 
+However, Each Has Been Duplicated And Replaced By Its Own Perf Board Mounted Two-Pin Header. 
+So, The Plus And Negative 5V Input And The Plus And Negative 9V Output Are Not Being Sent Through The Input Header. 
+The Remaining Six Input Lines Are Attached With A Standard 6S Battery BMS Cable 
+To The Appropriate Side Of The Input Header.
+
+Also Close To The Converter Pins. Across The + - 
+Best Practice In Tight Quarters:
+Attach The Small Cap To The Bigger Cap First And Then Attach Using Only The Bigger Caps Legs
+This Small OTC Supply Assembly Will Go On The 
+Perf-Board With The Voltage Divider
+
+Input Wires From The Waterproof 5 V Buck
+Feeding Into A B0509S-1WR3 DC-DC 5V to 9V Isolated Power Converter
+Output Wires To The OTC Electronics Battery Connections
+
+The Waterproof 5 V Buck Is A Separate Potted Module And 
+Does Not Need To Be Mounted On That Perf-Board.
+
+Hits The System, It Snaps Alive Instantly To Clamp And Shunt That Energy Safely 
+To Ground Before It Can Travel Down The Small Signal Wires
+Because The 5S Full Pack Max Voltage Is 18.25V, 
+We Have Selected An 18V TVS To Act As A Threshold Guard.
+On The Divider Board Right Before The Signal Hits The Resistors. 
+They Belong Directly Across Each Raw Incoming Battery Tap Line 
+=========================================================
+            Analog Front-End Board (Voltage Divider)
+=========================================================
+
+10-pin Headers Soldered
+Input And Output Via 10 Pin Headers
+
+One Connector From Balance Harness
+ADS1115 Boards Are Built On To The Perf          
+One  Channel On  Board 2 For OTC Input → Goes To Board 2, Pin A2
+
+10 Pin Input Header JST-XH                                          ─┐
+Pin 10 B5 (Pack +)16v: Connects To Divider → Goes To Board 1, Pin A3 |
+Pin  9 B4 (Cell 4)12v: Connects To Divider → Goes To Board 1, Pin A2 | Only This 6S BMS Lead Plugs 
+Pin  8 B3 (Cell 3) 9v: Connects To Divider → Goes To Board 1, Pin A1 | Into This 10Pin Now
+Pin  7 B2 (Cell 2) 6v: Connects To Divider → Goes To Board 1, Pin A0 | 
+Pin  6 B1 (Cell 1) 3v: Connects To Divider → Goes To Board 2, Pin A0 | The Other Pins Are Not Used Now
+Pin  5 B0 (Pack Ground): System Ground Rail On The Perfboard.        | But Are Still Active
+                                                                    ─┘
+                                                 ─┐
+Pin 4 -V IN   Chip Pin 1  (-5 V Input) Sys Grnd   | These Each Have Their Own 2Pin Header Now
+Pin 1 +V IN   Chip Pin 2  (+5 V Input)            | But Are Still Active In The Input 10Pin Header
+Pin 2 -V OUT  Chip Pin 3  (Isolated -9 V Output)  | B0509S-1WR3 DC-DC 5V to 9V Isolated Power Converter
+Pin 3 +V OUT  Chip Pin 4  (Isolated +9 V Output)  | Mounted On Perf-Board With Voltage Divider
+                                                 ─┘
+Isolated 9V+- Output Is Power For The OTC Clamp Only
+Single Row Divider Sketch: 1 Each BMS Lead = x5
+
+                    +    |  \/      +        +                    +            +
+BMS TAP ───| |───────────●─────────────────► [ 47kΩ Resistor ] ───●─WIRE/HOLE────────────► To ADS1115 Pin
+            |            │                                        │
+        Isolation   [ P6KE18A ] (Stripe To Pos)                [ 18kΩ ]     [ 100nF ]
+          Relay       TVS Diode                                  Lower        Filter
+                   Observe Polarity                             Resistor     Capacitor
+
+The End Of The P6KE18A Diode With The Painted Stripe Must Face Each Positive BMS Tap Wire
+All TVS Diodes Terminate At Sys Ground. 
+Also Insure All P6KE18A Diode Striped Ends Remain Inboard Of The Isolation Relay
+Do NOT Let Them Be Connected To Constant Pack Voltages Or Constant Drain Will Happen
+A Logic Level Shifter Converter Module 4 Channel 
+Bidirectional 3.3V to 5V, 5V to 3.3V
+For The SDA And SCL Lines. 
+We Only Need 2 Channels
+1115 Boards Are Powered By 5v Not 3.3V So We Are Doing This
+For Absolute Protection Of The ESP32 Controller
+5V I2C Data Signals From The ADS1115 Boards 
+Down To The 3.3V Logic Needed By The Elecrow Display.
+
+                            │
+ Supposed To Be 3.3V  →   → ├───────●► Level Shifter [LV Pin] (Low Logic Power Reference)
+                            │       ├─► To All 5 Temp Sensor Red Wires (VCC Power)
+                            │       │
+                            │         │
+                            │         ├► To All 5 Temp Sensor Yellow Wires (DATA)
+                            │         │
+                            │         └► Ribbon Breakout Pin 7 (TX / ESP32 Data Pin)
+                            │
+                            │
+                            └───────► To All 5 Temp Sensor Black Wires (GND)
+
+       └─────┬──────────────┬──────────────────┬───────────┬────┘
+             │ 3.3V         │ SYS GND          │ SCL       │ SDA
+             ▼              ▼                  ▼           ▼
+The Shifter Needs To Know What Both "High" And "Low" Mean. 
+Connect 3.3V+ To The LV Pin, And Connect The Main 5V+ Rail To The HV Pin.
+
+Board 1: (4 BMS Taps Starting At Pack Positive +):
+We Got Lucky Here As Apparently The 1115 Board Will Auto Address Itself If The 
+Address Hole Is Left Empty Which Is What Happened, So No Harm No Foul, 
+It Should Adress Itself To Address 0x48
+
+Board 2: (Remaining BMS Tap Cell 5 + Current Clamp): 
+Solder A Tiny Jumper Wire From The ADDR Pin Straight To The 5v+ VDD Pin On This Board. 
+This Names It Address 0x49
+
+The Power References: HV Gets The Clean 5V+ Rail (From The Buck Converter), 
+And LV Gets The Reference 3.3V+ From Magic 3.3V+ Maker
+
+The Ground Plane: Both Grounds On The Shifter Tie Together Right Into The Central System Ground
+
+The Spares: Channels 3 And 4 (LV3, LV4, HV3, HV4) Stay Completely Empty And Unpopulated, 
+Serving As Perfect Backups If A Channel Ever Gets Cooked 
+
+Direct Channel Passthrough: 
+Align The Data Lines Perfectly. 
+If Clock (SCL) Goes Into LV1, 
+If Data (SDA) Goes Into LV2, It Must Exit Through HV2.
+Dont Forget To Set The Address Of The Boards Before You Stack Them.
+
+Locations: Temp Sensors
+1 Sensor At Main POS Cable Connection: There Is Only 1 Bar-To-Cable Connection On The Positive Path, Sensor Is Located Here.
+1 Sensor At Main Neg Location: It Is The First Bar-To-Cable For Neg Line At Cell Interface.
+Contactors:  1 Sensor In-Between Or Near EV200 Bus Bar Connections: This Neg Location Is Where The Second Cable-To-Bar 
+Connection And Is Also Where The External Jump Cable Will Connect
+2 For Lev100 Banks: 1 In Each Wing
+Probe Locations Are Approximate And Subject To Last Min Change As Fitting And Access Allows
+These Are At Bar-To-Cable Connections Not For Contactor Temps But Cable Connection To Bar Temps
+As We Theorize A High Temp At Any Single Connection Point Is Reason To Stop Using The Pack And Investigate
+DATA
+Common One-Wire Bus
+Sensors Daisy-Chain Directly.
+                            │
+ Supposed To Be 3.3V →   →  ├─────   ──●► Level Shifter [LV Pin] (Low Logic Power Reference)
+                            │          ├─► To All 5 Temp Sensor Red Wires (VCC Power)
+                            │          │
+                            │          │
+                            │          ├► To All 5 Temp Sensor Yellow Wires (DATA)
+                            │          │
+                            │          └► Ribbon Breakout Pin 7 (TX / ESP32 Data Pin)
+                            │
+                            │
+                            └───────► To All 5 Temp Sensor Black Wires (GND)
+
+The 3.3V Node: 
+The middle junction between the 10kΩ and 20kΩ resistors is the central distribution hub. 
+It powers the Level Shifter's LV pin, feeds the 5 temperature probe red wires, 
+and provides the baseline power entering the top of The 4.7kΩ pull-up resistor.
+The bottom leg of that 4.7kΩ pull-up resistor must tie into the yellow data lines of The 
+temperature probesOutput Header Pin 8 and Pin 7 (TX) on The 12-pin breakout board simultaneously.
+
+The bottom leg of the 20kΩ resistor, and the screen ground tracks (Pins 1 & 2), 
+and the 5 black temperature sensor wires all meet right back at System Ground
+
+
+MASTER 3.3V MODULE NOTES
+Step 1 Create The Core Junction:
+Take One 10k Resistor And One 20k Resistor. 
+Twist And Solder One Leg Of Each Resistor Together In Mid Air. 
+This Shared Connection Point Is The Official 3.3V Node.
+
+Step 2 Attach The 10k Resistor, Solder It Directly Onto Header Pin 8 Which Is The 5V+ Main Power Input. 
+Take The Leg Of The 20k Resistor And Solder It Straight To The System Ground 
+Which Can Be Header Pin 7 Or Any Sys GND-. You Now Have A Rigid V Shape Sticking Up From The Header.
+
+Step 3 Connect The Targets To The 3.3V Node Go Straight To That Floating Middle 3.3V Node You Created In Step 1. 
+Solder The 4.7k Temperature Sensor Master Pull Up Resistor Directly To That Node. 
+Solder All 5 Of The Temperature Sensor Red VCC Wires Directly To That 3.3V Node. 
+Solder A Single Wire Directly To That Node And Run It Straight Over To The LV Pin On The Logic Level Shifter.
+
+
+The 12-Pin Ribbon Breakout Sequential Pin Map:                                     10 Pin Output Header #:
+                                                                                   ───┐
+Pin 12:  GND (System Common Ground / )Pin                                          03 │─── Connected At Breakout Board
+Pin 11:  GND (System Common Ground / )Pin                                          03 │─── These Are The Same Just One Pin#
+Pin 10:  D+ (USB Data Positive — Leave Empty)Pin                                   ───┘    Output 10Pin Header Pin# 03
+Pin 09:  D- (USB Data Negative — Leave Empty)Pin                                   ───┐
+Pin 08:  SCL (3.3V I2C Data                                                        06 │─── Output 10Pin Header Pin# 06
+Pin 07:  SDA (3.3V I2C Clock                                                       07 │─── Output 10Pin Header Pin# 07
+Pin 06:  TX (The Temp Sensor Data Target)                                          08 │─── Output 10Pin Header Pin# 04
+Pin 05:  RX (No Connection — Leave Empty)                                          ───┘
+Pin 04:  NC (No Connection — Leave Empty)
+Pin 03:  NC (No Connection — Leave Empty)                                          ───┐
+Pin 02:  5V (5V Main Power Input                                                   05 │─── Connected At Breakout Board
+Pin 01:  5V (5V Main Power Input                                                   05 │─── These Are The Same Just One Pin#
+                                                                                   ───┘    Output 10Pin Header Pin# 05
+Keep In Mind Any Connection To A "Live" Side 
+Should Be The Female Connection.
+Male Connects For Passive Side.
+
+Board Connector 10 Pin Header JST-XH
+
+OUTPUT SIDE 10-PIN HEADER WIRE ROUTING
+
+Pin 1 Is BMS/Voltage Divider Isolation Coils Positive 12V+.
+The Isolation Loops Are Just To Disconnect 
+The Voltage Divider From The Main BMS Leads 
+When The Pack Is Turned Off, 
+So That None Of The Voltage Divider Resistors 
+Can Cause Any Parasitic Drain, Possibly Ruining Your LiFePO4 Cells.. 
+
+Pin 2 Is Alert/Alarm From ADS1115 Board 1.
+This Wire Runs Straight Out To The Negative Coil Leg Of The Physical 12V POS+ Gatekeeper Safety Relay. 
+The Positive Leg Of That Relay Coil Hooks To The 12V Battery Rail. 
+This Coil Must Have A Flyback Diode !
+
+Pin 3 Is System Ground. 
+This Ties The Main System Ground Rail Straight Out To 
+Ribbon Cable Breakout Pins 1 And 2.
+
+Pin 4 Open
+
+Pin 5 Is 5V Power. 
+This Connects 5V Main Power Rail Wire Out To 
+Ribbon Cable Breakout Pins 11 And 12 To The Elecrow Display.
+
+Pin 6 Is SCL 3.3V Logic. 
+This Connects Directly To The LV1 Pin On The Low Side Of The Logic Level Shifter. 
+It Routes Straight Out To Pin 6 SCL On The Ribbon Breakout Board.
+
+Pin 7 Is SDA 3.3V Logic. 
+This Connects Directly To The LV2 Pin On The Low Side Of The Logic Level Shifter. 
+It Routes Straight Out To Pin 5 SDA On The Ribbon Breakout Board.
+
+Pin 8 Is Temperature Sensor Data.
+This Connects Directly To The Floating 4.7k Ohm Master Pull Up Resistor Node And The Five Temperature Sensor Yellow Wires. 
+It Routes Straight Out To Pin 7 TX On The Ribbon Breakout Board.
+
+Pin 9  Empty.
+
+Pin 10 Empty.
+
+==========================================================
+TEMPERATURE SENSORS PULL UP RESISTOR MID AIR MOUNTING
+Step 1 Locate The Central 3.33V Node Which Is The Middle Junction Where The Top 10k Ohm Resistor 
+
+Step 2 Take The 4.7k Ohm Temperature Master Pull Up Resistor Which Has Yellow Violet Red Gold Bands. 
+Solder One Leg Of This Resistor Directly Onto That Central 3.33V Node.
+
+Step 3 Take All 5 Of The Red VCC Wires Coming From The Temperature Sensor Bundle. 
+Solder Them Directly Onto That Same Central 3.33V Node So They Get Stable Low Voltage Power.
+
+Step 4 Take The Remaining Loose Leg Of The 4.7k Ohm Resistor And Solder It Directly To 
+Output Side Header Pin 8. This Is The Temperature Data Line.
+
+Step 5 Take All 5 Of The Yellow Data Wires From The Temperature Sensor Bundle. 
+Solder Them Directly To That Same Output Side Header Pin 8 Sharing The Pad With The 4.7k Ohm Resistor Leg.
+
+And Will ALWAYS Turn Itself Off After Timer Expires*
+Depending On Switch Mount Location 
+A Different Switch Can Be Employed
+(Push + Rotate)
+Depending On Installation Difficulty 
+It May Be Display ONLY Without Push Or Rotate
+
+Removable Cable Harnesses:
+(NO Soldering Directly To Display PCB)
+PCB Has Plugs For Connecting Power And Signal But 
+We Now Have The 12Pin Ribbon Cable For All Connections In One Breakout Board
+The Ribbon Connector At The Display Is Very Weak 
+Don't Be Rough Or You Won't Have A Locking Tab For Your Ribbon Cable
+The Breakout Board Has A much More Usable Locking Tab So Disconnect From It If You Can
+So That Is Going To Be Our Disconnect 
+And Perhaps Still Think About A Light Conformal Coating For The Display PCB To Help 
+Weather-Resist It And These Connections From Dirt, Humidity And The Green Crusties
+
+The 12-Pin Ribbon Breakout Sequential Pin Map:
+
+Pin 12:  GND (System Common Ground / )Pin
+Pin 11:  GND (System Common Ground / )Pin
+Pin 10:  D+ (USB Data Positive — Leave Empty)Pin
+Pin 09:  D- (USB Data Negative — Leave Empty)Pin
+Pin 08:  SCL (3.3V I2C Data
+Pin 07:  SDA (3.3V I2C Clock
+Pin 06:  TX (The Temp Sensor Data Target)
+Pin 05:  RX (No Connection — Leave Empty)
+Pin 04:  NC (No Connection — Leave Empty)
+Pin 03:  NC (No Connection — Leave Empty)
+Pin 02:  5V (5V Main Power Input
+Pin 01:  5V (5V Main Power Input
+
+Keep In Mind Any Connection To A "Live" Side 
+Should Be The Female Connection.
+Male Connects For Passive Side.
+
+=========================================================
+            WIRE NUMBER INDEX
+=========================================================
+1.xx-  Low Current Lockout Control Relays
+1.01	+12V Relay Supply
+1.02	Ground Relay Supply
+1.03	12V Permission Relay Coil +
+1.04	12V Permission Relay Coil −
+1.05	16V Permission Relay Coil +
+1.06	16V Permission Relay Coil −
+1.07	Break-Before-Make Timer Input
+1.08	Break-Before-Make Timer Output
+1.09	Processor Lockout Relay Control
+1.10	Processor Lockout Relay Status
+2.xx-  High Current Contactors Coils
+2.11	LEV100 Coil Return −
+2.12	LEV100 Aux Contact Wire In:  Returns ? When Contactor Is Closed
+2.13	LEV100 Aux Contact Wire Out: Supplies Constant (When Armed) ?     Prolly Use Our 24v Coil Supply.
+3.xx-  Temp Sensors
+3.01	OneWire DATA
+3.02	+3.3V
+3.03	Sys Ground
+7.04	Sensor 9V Isolated +
+7.05	Sensor Enable (future)
+7.06    Calibration/Test
+8.04	Service Override (reserved)
+9.xx-  Future Expansion
+
+Wire Numbering Paradigm:
+Single Digit Number Indicating Section Origin As Shown Above,
+
+Worksheet Info To Assign To Wire And Connector Numbers:
+Wire No:
+Signal Name:
+Normal/Default Voltage or State:
+Wire Color If Helpful:
+Connector and Pin:
+
+10 Pin Output Header
+
+Pin 1 Is Is System Ground.
+
+Pin 2 Is BMS/Voltage Divider Isolation Coils Positive 12V+.    
+
+Pin 3 Is Alert/Alarm From ADS1115 Board 1.
+
+Pin 4 Is System Ground.
+
+Pin 5 Is 5V Power. 
+
+Pin 6 Is SCL 3.3V Logic. 
+
+Pin 7 Is SDA 3.3V Logic. 
+
+Pin 8 Is Temperature Sensor Data.
+
+Pin 9  Empty.
+
+Pin 10 Empty.
+
+End 10 Pin Output Header
+
+
+
+----- software manifest(8).txt -----
+
+Most sensor-interface hardware is built.
+
+Completed:
+- Five protected cumulative pack-voltage divider channels
+- Two ADS1115 boards
+The two output-sense channels duplicate the existing protected
+47kΩ / 18kΩ / 100nF / P6KE18A divider design.
+
+Functions depending on these channels include:
+- Actual cable-to-cable output-voltage display
+- 12V / 16V output confirmation
+* Internal high-current wiring
+* Output cables and connections included within the measurement points
+
+* Display the latest valid resistance estimate.
+* Identify increasing resistance as a possible indication of battery aging, loose connections, contactor degradation, cable degradation, or another high-current-path problem.
+
+
+The implementation shall use the existing final-output voltage and OTC current measurements. No additional resistance-measurement hardware is required unless testing proves that the installed sensors cannot provide a repeatable result.
+
+* Reveal detailed information only when requested or when an abnormal condition exists.
+* Build from the existing Elecrow demo rather than redesigning the interface.
+
+
+        COLD CHARGE BLOCKED
+
+• Reverse Current Threshold
+• Enable / Disable Cold Charge Protection
+
+These names or the like will do nicely for now. 
+Hopefully, if needed, changing a few labels later will be no big deal.
+
+POS CABLE
+
+NEG CABLE
+
+
+The five pack-tap divider channels and OTC current channel are built. 
+Two additional identical protected divider channels for final output positive 
+and final output negative are now specified but not yet installed. 
+They will use the two remaining ADS1115 inputs.
+
+## Planned Configuration Settings (Version 1)
+
+Configuration values will be stored in ESP32 non-volatile memory (flash) and survive power loss. 
+Future configuration may be performed from the display, 
+Bluetooth is available but will be probably a simple Wi-Fi setup page at least for now in ver. 1.
+* Crank Screen Exit Current
+* Peak Current Hold Time
+* Green / Yellow / Red Current Thresholds
+* Low Voltage Warning
+* Low Cell Warning (future)
+
+* Reset Lifetime Statistics
+* Clear Event Log (future)
+
+
+  * POS CABLE
+  * NEG CABLE
+  * EV200 BUS
+
+
+----- op specs(1) -----
+These items are not final.
+They are the current preferred control behavior for the mock-up.
+
+• 16V operation must require an affirmative request.
+  Builder May Choose To Have An Overide Momentary Button To Activate 16v While Pressed Only.
+
+
+• Set during mock-up and left internally adjusted.
+
+  - Automatic Boost mode requests 16V
+  - User holds the case-mounted BOOST button
+  - User deliberately selects a display-based 16V mode
+  4. Apply 16V contactor command
+  5. Verify witnesses agree with expected state
+
+
+• Exact thresholds remain to be determined during mock-up.
+
+---------------------------------------------------------
+6. CASE-MOUNTED MOMENTARY BOOST BUTTON
+---------------------------------------------------------
+
+  HOLD BUTTON:
+  Request 16V through the normal interlock sequence.
+
+• Current preference is Option A unless mock-up testing shows
+  a clear advantage to Option B.
+ |
+ | Auto threshold qualified
+ | OR momentary BOOST pressed
+
+• ESP32 does not replace the hardware interlocks.
+
+
+• Processor-controlled positive-side lockout relay may remove
+  EV200 coil power as an independent safety veto.
+
+• Measure voltage at the final cable/output connection point
+  immediately before the conductor exits the case.
+• Main timer status
+• Processor lockout-relay status
+• Last fault
+---------------------------------------------------------
+15. MOCK-UP QUESTIONS TO RESOLVE
+---------------------------------------------------------
