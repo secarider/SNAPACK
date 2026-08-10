@@ -1,35 +1,23 @@
 # SNAPACK Display Layout (Version 1.0)
-=================================== read this added ==========================================
-## Hardware Implementation Status
 
-Most sensor-interface hardware is built.
+## Firmware Architecture
 
-Completed:
-- Five protected cumulative pack-voltage divider channels
-- Two ADS1115 boards
-- OTC current-sensor input
-- Five-temperature-sensor wiring
-- Display power and communications interface
+Tier 1 establishes the production firmware architecture with a deliberately
+simple diagnostic user interface. Tier 1 code is not considered throwaway.
 
-In Progress:
-- Final output positive-voltage sensing channel
-- Final output negative-voltage sensing channel
+Sensor acquisition, measurement processing, safety logic, fault-state handling,
+nonvolatile storage, and hardware control shall remain separate from
+SquareLine-generated UI files.
 
-The two output-sense channels duplicate the existing protected
-47kΩ / 18kΩ / 100nF / P6KE18A divider design.
+SquareLine/LVGL files are the presentation layer and shall remain replaceable
+without requiring the underlying application logic to be rewritten.
 
-ADS1115 Board 2:
-A0 = B1 cumulative pack voltage
-A1 = Final output positive voltage
-A2 = OTC current sensor
-A3 = Final output negative voltage
+LVGL access shall remain within the UI execution context. Sensor, safety,
+storage, and hardware-control tasks shall communicate through a defined
+application-state interface, queue, or equivalent thread-safe mechanism.
 
-Functions depending on these channels include:
-- Actual cable-to-cable output-voltage display
-- 12V / 16V output confirmation
-- Loaded-voltage sag measurement
-- Pack-path resistance estimation
-==================================== end new added info =======================================
+The existing Elecrow display driver, touch support, rotary navigation, splash
+behavior, and useful ring/arc animations shall be preserved wherever practical.
 
 ## Pack Resistance Monitoring —
 
@@ -54,8 +42,16 @@ The measurement represents the complete active output path, including:
 * Detect suitable current-load events automatically.
 * Capture stable pre-load voltage and current values.
 * Capture loaded voltage and current values during the event.
+* Pre-load and loaded measurements used for a single resistance calculation
+  shall be taken from the same stable operating mode and active contactor
+  configuration.
+* Measurements spanning a 12V / 16V mode transition or contactor-state change
+  shall be rejected for resistance calculation.
 * Calculate estimated pack-path resistance in milliohms.
-* Reject results from events that do not provide a sufficient or stable current change.
+* Reject results from events that do not provide a sufficient and reasonably
+  stable current change, contain invalid sensor data, occur during a contactor
+  or operating-mode transition, or otherwise cannot produce a trustworthy
+  resistance estimate.
 * Record the peak current and minimum loaded voltage associated with each accepted measurement.
 * Store accepted resistance results in nonvolatile memory.
 * Retain resistance history for comparison over time.
@@ -94,13 +90,15 @@ The implementation shall use the existing final-output voltage and OTC current m
 ## Features
 
 * Cell voltage detail page
-* Internal resistance estimation
+* Pack-path resistance estimation and history
+* Loaded voltage-sag monitoring
 * Lifetime peak current
 * Lifetime highest temperature
+* Temperature-disagreement and sensor-fault identification
 * Event logging
-* Battery health statistics
+* Pack-health trending
 * Configuration screen
-* Additional diagnostics
+* Permanent hardware / sensor diagnostics
 
 ---
 
@@ -114,14 +112,40 @@ The implementation shall use the existing final-output voltage and OTC current m
 
 ## Screen 1 — Main Menu
 
-Three primary selections:
-Duplicate and mod for extra Screen needs
+Version 1 begins with three primary functional screens:
 
 * MONITOR
 * TEMPS
 * CRANK AMPS
 
-The existing rotary carousel navigation will be retained.
+These three screens are the minimum required layout, not a limitation on
+additional screens.
+
+Additional useful screens may be added where they improve operation,
+diagnostics, configuration, or presentation without compromising reliability
+or unnecessarily complicating navigation.
+
+An ABOUT screen is encouraged and may include:
+
+* SNAPACK name / logo
+* Firmware version
+* Hardware revision
+* Firmware developer name or credit
+* Other appropriate project or build information
+
+ABOUT SNAPACK
+Firmware: 1.0
+Hardware: Rev 1
+
+IF FOUND:
+Please contact:
+[phone/email]
+
+Owner identification:
+[optional information]
+
+The existing rotary carousel navigation will be retained and may be expanded
+to accommodate additional screens.
 
 ---
 
@@ -131,14 +155,24 @@ Normal operating screen.
 
 Display:
 
-* Pack Voltage
+* Final Output Voltage
 * Output Current
 * Average Temperature (°F)
-* Operating Mode (12V / 16V determined from measured output voltage)
+* Operating Mode (12V / 16V determined from measured final output voltage)
+
+When all temperature sensors agree within the configured spread, the normal
+sensor-group average is displayed.
+
+If a temperature differs significantly from the normal group, the MONITOR
+screen shall identify the affected location rather than allowing that reading
+to distort the displayed normal-group average.
+
+A sensor-health fault shall be identified separately from a genuine localized
+temperature difference.
 
 Example:
 
-PACK ........ 16.42 V
+OUTPUT ...... 16.42 V
 
 CURRENT ..... 248 A
 
@@ -162,6 +196,16 @@ Required Behavior:
 • Continuously monitor all five temperature sensors.
 
 • The lowest measured sensor shall determine pack charging eligibility.
+
+• A missing, failed, disconnected, or otherwise invalid temperature sensor
+  shall not be treated as a safe temperature for charging.
+
+• If temperature-sensor health is insufficient to determine that all required
+  battery temperatures are safely above the charging limit, charging
+  authorization shall be withheld until valid temperature monitoring is restored.
+
+• Temperature-sensor failure shall not, by itself, prohibit discharge unless
+  another defined safety condition requires it.
 
 • If every measured temperature is above the configured limit,
   normal operation continues.
@@ -190,6 +234,9 @@ Required Behavior:
     • all temperatures exceed the release threshold, and
     • reverse current is no longer present.
 
+This cold-charge fault uses automatic recovery as defined above and is not
+normally a latched fault requiring user acknowledgment.
+
 Configuration:
 
 • Charge Inhibit Temperature
@@ -199,73 +246,110 @@ Configuration:
 
 ---
 
+## Temperature Agreement / Abnormal Temperature Behavior
+
 Read all five temperature sensors continuously.
 
-If all sensors agree within a configurable temperature spread:
+If all five temperatures agree within the configured allowable spread:
 
-* Display only the average temperature.
-* Indicate "ALL NORMAL."
+* Display the average temperature.
+* Indicate ALL NORMAL.
 
-If any sensor exceeds the allowable spread:
+If one or more temperature readings do not agree with the normal group:
 
-* Automatically display the hottest sensor name.
-* Highlight the abnormal reading.
-* Continue monitoring all sensors.
+* Identify the affected location by assigned sensor name.
+* Display the differing temperature prominently.
+* Continue displaying all five sensor readings.
+* Display the average of the agreeing normal-temperature group separately.
 
-Example Normal:
+A temperature reading that differs significantly from the other sensors shall
+not automatically be classified as a failed sensor.
 
-TEMP
-88.5°F
+A differing reading may represent a genuine localized hot or cold condition
+and shall remain visible to the operator.
 
-ALL NORMAL
+Sensor-health faults shall be determined separately using available evidence
+such as missing communication, invalid readings, disconnected probes,
+impossible values, repeated communication errors, or other clearly unreliable
+sensor behavior.
 
-Example Warning:
+A sensor confirmed or reasonably determined to be faulty may be excluded from
+the normal-group average, but its fault condition and assigned name shall
+remain visible to the operator.
 
-EV200 BUS
-146.2°F
-
-HIGH TEMP
+The implementation may use median-based deviation or another robust method
+to identify temperature disagreement and establish the normal-temperature
+group, provided that a genuine localized temperature condition is not
+silently discarded as a sensor fault.
 
 ---
 
 ## Screen 3 — TEMPS
 
-Detailed temperature page.
+Detailed temperature-monitoring screen.
 
-Displays all five named sensors.
+Display all five temperature sensors simultaneously by their assigned names:
 
-These names or the like will do nicely for now. 
-Hopefully, if needed, changing a few labels later will be no big deal.
+* POS CABLE
+* NEG CABLE
+* EV200 BUS
+* LEFT LEV100
+* RIGHT LEV100
 
-POS CABLE
+Each sensor shall display its individual current temperature.
 
-NEG CABLE
+Temperature units default to degrees Fahrenheit and may be changed through
+the configured Temperature Units setting.
 
-EV200 BUS
+When all five sensors agree within the configured allowable spread:
 
-LEFT LEV100
+* Indicate ALL NORMAL.
+* Display the normal-group average temperature.
+* Keep all five individual sensor readings visible.
 
-RIGHT LEV100
+When one or more temperatures differ significantly from the normal group:
 
-All temperatures displayed in degrees Fahrenheit by Default.
+* Identify each affected location by assigned sensor name.
+* Display each differing temperature prominently.
+* Visually distinguish the differing temperature from the normal-temperature group.
+* Continue displaying all five sensor readings.
+* Display the average of the agreeing normal-temperature group separately.
+
+A differing temperature shall not automatically be labeled as a failed sensor.
+
+If a sensor-health fault is independently detected, identify the affected
+sensor by assigned name and clearly indicate SENSOR FAULT or equivalent
+rather than presenting the condition as a genuine temperature difference.
+
+Sensor names shall remain associated with their assigned DS18B20 ROM addresses
+as defined by the temperature-sensor commissioning configuration.
+
+Temperature warnings may use the existing ring / arc animation behavior where
+appropriate, provided readability and monitoring performance are not compromised.
 
 ---
 
 ## Screen 4 — CRANK AMPS
 
-Dedicated high-visibility current screen.
+Dedicated high-visibility current and load-event screen.
 
-Large full-screen amperage display.
+The primary display shall be a large full-screen amperage reading that remains
+easy to read during an engine-cranking event.
 
-Color ranges:
+Current color ranges:
 
 * Green below 300 A
 * Yellow from 300–799 A
 * Red at 800 A and above
 
-Also display:
+These thresholds shall be configurable.
 
-Peak Current
+Also display, without competing with the primary amperage reading:
+
+* Peak Current
+* Final Output Voltage
+* Minimum Loaded Voltage, when captured during a valid load event
+* Latest Valid Pack-Path Resistance Estimate, when available
 
 Example:
 
@@ -273,11 +357,26 @@ Example:
 
 AMPS
 
-PEAK 817
+PEAK ......... 817 A
+OUTPUT ....... 11.84 V
+MIN .......... 10.92 V
+PATH ......... 3.8 mΩ
 
-This screen may initially be selected manually from the menu.
+The screen may initially be selected manually from the Main Menu.
 
-Automatic switching during high-current events may be added later if it remains simple and reliable.
+Automatic entry during high-current events may be added later if it can be
+implemented simply and reliably.
+
+During a suitable load event, the firmware may capture the measurements needed
+for pack-path resistance estimation without requiring any additional operator
+action.
+
+If the event does not meet the requirements for a valid resistance measurement,
+no misleading resistance result shall be displayed or stored.
+
+The CRANK AMPS screen is intended for immediate observation of the load event.
+Detailed resistance history, event records, or additional diagnostic information
+may be presented on another screen if implemented.
 
 ---
 
@@ -286,21 +385,57 @@ Automatic switching during high-current events may be added later if it remains 
 Primary measurements:
 
 * Pack Voltage
+* Final Output Voltage
 * Output Current
 * Five Temperature Sensors
 
 Derived values:
 
 * Average Temperature
-* Hottest Sensor
+* Temperature Disagreement / Sensor-Fault Identification
 * Peak Current
-* Operating Mode (from measured output voltage)
-Apparantly this is not ready yet /\ so this \/ is \/
+* Operating Mode (12V / 16V determined from measured final output voltage)
+* Pack-Path Resistance Estimate
+* Loaded Voltage Sag
 
-The five pack-tap divider channels and OTC current channel are built. 
-Two additional identical protected divider channels for final output positive 
-and final output negative are now specified but not yet installed. 
-They will use the two remaining ADS1115 inputs.
+The five pack-tap divider channels and OTC current channel are built.
+
+Two additional identical protected divider channels for final output positive
+and final output negative are specified and will use the two remaining
+ADS1115 inputs.
+
+These final-output channels provide the measured voltage presented at the
+external output and are used for operating-mode confirmation, loaded-voltage
+sag measurement, and pack-path resistance estimation.
+
+---
+
+## Tier 1 Diagnostics
+
+Tier 1 shall provide sufficient diagnostic information to verify hardware
+operation and troubleshoot wiring, configuration, and sensor problems during
+initial bring-up.
+
+Serial diagnostics should include, where applicable:
+
+* ADS1115 detection and I2C address
+* Raw ADS1115 channel readings
+* Converted voltage and current values
+* DS18B20 detection and unique ROM addresses
+* Assigned DS18B20 sensor names
+* Individual temperature readings
+* Final output positive and negative measurements
+* Current operating mode
+* Active warning or fault states
+* Contactor authorization / commanded state
+* Relevant safety-state transitions
+
+The diagnostic display shall present the primary measurements needed for
+hardware verification without requiring the finished Tier 2 presentation.
+
+Diagnostic functionality belongs to the permanent firmware architecture
+and should remain available for future troubleshooting even after the
+production user interface is completed.
 
 ---
 
@@ -316,9 +451,14 @@ If the answer is no, the display immediately identifies what requires attention.
 
 ## Planned Configuration Settings (Version 1)
 
-Configuration values will be stored in ESP32 non-volatile memory (flash) and survive power loss. 
-Future configuration may be performed from the display, 
-Bluetooth is available but will be probably a simple Wi-Fi setup page at least for now in ver. 1.
+Configuration values will be stored in ESP32 non-volatile memory (flash)
+and survive power loss.
+
+Version 1 may provide a simple Wi-Fi configuration web page for settings
+that are inconvenient to enter through the round display.
+
+Bluetooth capability is available in the ESP32-S3 hardware but is not
+required for Version 1.
 
 ### Display
 
@@ -331,9 +471,22 @@ Bluetooth is available but will be probably a simple Wi-Fi setup page at least f
 ### Temperature
 
 * High Temperature Alarm
+* High Temperature Release Threshold (hysteresis)
 * Temperature Sensor Agreement Threshold
 * Temperature Warning Flash Enable
 * Sensor Name Assignment
+* Charge Inhibit Temperature
+* Charge Release Temperature (hysteresis)
+* Reverse Current Threshold
+* Cold Charge Protection Enable / Disable
+
+Each DS18B20 temperature probe shall be identified by its unique ROM address.
+
+The assigned sensor name shall be associated with that ROM address and stored
+in nonvolatile memory so sensor identity does not depend on discovery order.
+
+A commissioning or reassignment method shall allow a replacement probe to be
+associated with the correct physical location.
 
 ### Current / Cranking
 
@@ -348,7 +501,59 @@ Bluetooth is available but will be probably a simple Wi-Fi setup page at least f
 * Low Voltage Warning
 * Low Cell Warning (future)
 
+### Safety / Fault Behavior
+
+Safety thresholds shall use appropriate hysteresis and debounce where needed
+to prevent rapid state changes caused by noise or values near a threshold.
+
+Temperature disagreement, genuine overtemperature, and temperature-sensor
+health faults are separate conditions and shall not automatically be treated
+as equivalent faults.
+
+A temperature that differs significantly from the other locations shall remain
+visible and shall be evaluated against the applicable safety thresholds.
+A genuine localized high-temperature condition shall not be discarded merely
+because the other temperature sensors remain normal.
+
+A temperature-sensor health fault shall be identified separately using available
+evidence such as missing communication, invalid or impossible readings,
+disconnected probes, repeated communication errors, or other clearly unreliable
+sensor behavior.
+
+Loss of sufficient valid temperature information shall fail safe for functions
+that require temperature authorization. In particular, charging shall not be
+authorized when the firmware cannot establish that all required monitored
+locations are within the permitted charging-temperature range.
+
+Temperature-sensor failure shall not, by itself, prohibit discharge unless
+another defined safety condition requires it.
+
+Each safety fault shall define its recovery behavior as either:
+
+* Automatic recovery after safe conditions are restored.
+* Latched until reset or user acknowledgment.
+
+The Low Temperature Charge Protection behavior defined earlier is an
+automatic-recovery condition and shall follow its separately defined inhibit,
+release, reverse-current, and recovery rules.
+
+Serious fault conditions shall remove positive authorization and command the
+appropriate contactor state through the processor-controlled safety output.
+
+Firmware safety logic supplements the hardware fail-safe design and shall not
+assume that continued normal firmware execution is the sole means of placing
+the system into a safe state.
+
+Active warnings and faults shall remain identifiable to the operator by type
+and affected location whenever that information is available.
+
 ### Lifetime Records
+
+Peak values, accepted resistance measurements, settings, and event records
+shall be stored in nonvolatile memory as appropriate.
+
+Nonvolatile writes shall be event-driven, thresholded, debounced, or otherwise
+limited so continuously changing measurements do not cause unnecessary flash wear.
 
 * Reset Peak Current
 * Reset Highest Temperature
@@ -357,11 +562,19 @@ Bluetooth is available but will be probably a simple Wi-Fi setup page at least f
 
 ### Communications
 
-* Bluetooth Enable / Disable
+Version 1 preferred remote configuration method:
+
+* Simple Wi-Fi configuration web page
 * Wi-Fi Enable / Disable
 * Device Name
 * Firmware Version
 * Hardware Revision
+
+The Wi-Fi interface is intended primarily for configuration and diagnostics,
+not as a replacement for the local display.
+
+Bluetooth is not required for Version 1 and may be considered later if a
+useful application is identified.
 
 ### Version 1 Defaults
 
@@ -371,8 +584,11 @@ Bluetooth is available but will be probably a simple Wi-Fi setup page at least f
   * MONITOR
   * TEMPS
   * CRANK AMPS
+
 * Crank Screen: Manual selection (automatic entry optional later)
-* Temperature Display: Average temperature unless a sensor exceeds the allowed spread.
+* Temperature Display: Average of the normal sensor group when temperatures agree within the configured spread.
+* Temperature Disagreement Display: Identify the affected location by assigned sensor name, display the differing temperature prominently, and display the agreeing normal-group average separately.
+* Sensor Fault Display: Identify a confirmed sensor-health fault separately from a genuine localized temperature difference.
 * Current Display: Large full-screen amperage with Green / Yellow / Red color bands.
 * Sensor Names:
 
@@ -399,6 +615,7 @@ with another ring within the ring.
 * Critical conditions use red and a more urgent animation/pulsing.
 with posibly another ring within the other 2 for 3 rings withing each other ring
 * Crank-current colors follow the configured Green / Yellow / Red thresholds.
-* Temperature warnings may highlight the named abnormal sensor with a pulsing ring.
+* Temperature warnings may highlight the affected named location with a pulsing ring.
+* Sensor-health faults shall be visually distinguishable from genuine temperature warnings.
 * If animation ever interferes with reliable sampling or display updates, 
 the animation is reduced or disabled before any monitoring function is compromised.
