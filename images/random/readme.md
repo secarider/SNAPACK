@@ -76,11 +76,6 @@
 </p>
 
 <p align="center">
-  <img src="headway_38120_old.webp" width="340">
-  <img src="headway_38120_specs.webp" width="340">
-</p>
-
-<p align="center">
   <img src="images.png" width="340">
   <img src="otc_case.jpg" width="340">
 </p>
