@@ -26,25 +26,16 @@ Older Or Conflicting Pin Number References Elsewhere.
                10 PIN INPUT HEADER
 ============================================================
 
-Pin  1: RETIRED / NO CONNECTION / EMPTY
-Pin  2: RETIRED / NO CONNECTION / EMPTY
-Pin  3: RETIRED / NO CONNECTION / EMPTY
-Pin  4: RETIRED / NO CONNECTION / EMPTY
-
 Pins 1-4 Were Previously Used For Duplicate B0509S-1WR3
 5V Input And Isolated 9V Output Connections.
 
 The B0509S-1WR3 Now Uses Two Dedicated Perfboard-Mounted
 2-Pin Headers:
 
-5V 2-Pin Header:
-    +5V Input
-    System Ground / -5V Input
-
-Isolated 9V 2-Pin Header:
-    Isolated +9V
-    Isolated -9V
-
+Pin  1: RETIRED / NO CONNECTION / EMPTY
+Pin  2: RETIRED / NO CONNECTION / EMPTY
+Pin  3: RETIRED / NO CONNECTION / EMPTY
+Pin  4: RETIRED / NO CONNECTION / EMPTY
 Pin  5: B0 Pack Ground / System Ground
 Pin  6: B1 Cell 1 Cumulative Voltage ~3V
 Pin  7: B2 Cell 2 Cumulative Voltage ~6V
@@ -53,55 +44,35 @@ Pin  9: B4 Cell 4 Cumulative Voltage ~12V
 Pin 10: B5 Cell 5 Cumulative Voltage ~16V / Pack Positive
 
 ============================================================
-              12 PIN RIBBON CABLE
-============================================================
-
-Pin 12: System Common Ground
-
-Pin 11: System Common Ground
-
-Pin 10: D+ USB Data Positive — Leave Empty
-
-Pin 09: D- USB Data Negative — Leave Empty
-
-Pin 08: SCL 3.3V I2C Clock
-
-Pin 07: SDA 3.3V I2C Data
-
-Pin 06: TX Temperature Sensor Data Target
-
-Pin 05: RX No Connection — Leave Empty
-
-Pin 04: NC No Connection — Leave Empty
-
-Pin 03: NC No Connection — Leave Empty
-
-Pin 02: 5V 5V Main Power Input
-
-Pin 01: 5V 5V Main Power Input
-
-============================================================
               10 PIN OUTPUT HEADER
 ============================================================
 
 Pin  1: System Ground
-
 Pin  2: BMS / Voltage Divider Isolation Coils Positive 12V+
-
 Pin  3: Alert / Alarm From ADS1115 Board 1
-
 Pin  4: System Ground
-
 Pin  5: 5V Power
-
 Pin  6: SCL 3.3V Logic
-
 Pin  7: SDA 3.3V Logic
-
 Pin  8: Temperature Sensor Data
-
 Pin  9: Output Voltage Sense (+)
-
 Pin 10: Output Voltage Sense (−)
+
+============================================================
+              12 PIN RIBBON CABLE
+============================================================
+
+Pin 12: System Common Ground
+Pin 11: System Common Ground
+Pin 10: D+ USB Data Positive — Leave Empty
+Pin 09: D- USB Data Negative — Leave Empty
+Pin 08: SCL 3.3V I2C Clock
+Pin 07: SDA 3.3V I2C Data
+Pin 06: TX Temperature Sensor Data Target
+Pin 05: RX No Connection — Leave Empty
+Pin 04: NC No Connection — Leave Empty
+Pin 03: NC No Connection — Leave Empty
+Pin 02: 5V 5V Main Power Input
+Pin 01: 5V 5V Main Power Input
 
 ============================================================
