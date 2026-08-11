@@ -122,6 +122,11 @@ A2 = OTC Current
 
 A3 = Final Output −
 
+Board 1 = 0x48 jumper directly between ADDR Pin To SYS GND
+Board 2 = 0x49 jumper directly between ADDR Pin To 5v+ VDD
+Board 3 = 0x4A jumper directly between ADDR Pin To SDA
+Board 4 = 0x4B jumper directly between ADDR Pin To SCL
+
 ============================================================
 INPUT PROTECTION
 ============================================================
