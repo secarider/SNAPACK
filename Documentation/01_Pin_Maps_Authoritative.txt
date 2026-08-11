@@ -50,7 +50,7 @@ Pin 10: B5 Cell 5 Cumulative Voltage ~16V / Pack Positive
 Pin  1: System Ground
 Pin  2: BMS / Voltage Divider Isolation Coils Positive 12V+
 Pin  3: Alert / Alarm From ADS1115 Board 1
-Pin  4: System Ground
+Pin  4: OPEN
 Pin  5: 5V Power
 Pin  6: SCL 3.3V Logic
 Pin  7: SDA 3.3V Logic
