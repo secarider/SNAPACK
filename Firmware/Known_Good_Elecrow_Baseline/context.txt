@@ -1,0 +1,71 @@
+esptool Version
+
+The successful terminal flashing workflow uses:
+
+esptool 5.3.1
+
+On the original Linux Mint development machine it was installed using pipx.
+
+Example:
+
+pipx install esptool
+
+The resulting executable is:
+
+~/.local/bin/esptool
+
+The system-installed esptool 4.7.0 was not used for the final known-good flashing workflow.
+
+Factory Firmware Backup
+
+Before development flashing began, the complete original 16 MB factory flash was backed up from the physical display.
+
+The successful backup was performed using esptool with --no-stub.
+
+The original factory backup file is:
+
+elecrow_factory_original_16MB.bin
+
+Size:
+
+16 MB / 16777216 bytes
+
+Recorded SHA-256:
+
+89a80c37456ea4e8777fb2e1c9f69a1dd8b859563210813c78f7e34f2eaffa5a
+
+This provides a recovery image of the firmware originally supplied on the physical Elecrow display.
+
+Physical Hardware Verification
+
+This baseline has been tested on the actual display hardware.
+
+Confirmed working after flashing:
+
+ESP32-S3 boot
+Display initialization
+LVGL
+8 MB OPI PSRAM
+Elecrow startup animation
+Main carousel
+Rotary navigation
+Demo submenu navigation
+Existing Elecrow interface functionality
+Persistent custom SNAPACK LVGL overlay
+
+The SNAPACK marker is created on LVGL's top layer, allowing it to remain visible while the underlying Elecrow interface changes screens.
+
+The relevant modification is:
+
+ // SNAPACK development marker
+ lv_obj_t *snapackLabel = lv_label_create(lv_layer_top());
+ lv_label_set_text(snapackLabel, "SNAPACK");
+ lv_obj_set_style_text_color(snapackLabel, lv_color_white(), 0);
+ lv_obj_set_style_text_font(snapackLabel, &lv_font_montserrat_28, 0);
+ lv_obj_align(snapackLabel, LV_ALIGN_TOP_MID, 0, 15);
+
+This modification provides visual confirmation that the display is running the SNAPACK-modified firmware rather than an untouched factory/demo image.
+
+Purpose of This Baseline
+
+This directory should remain a known-good rollback point.
