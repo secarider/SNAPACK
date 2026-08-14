@@ -238,6 +238,7 @@ This Module Replaces The Previously Proposed Automotive Gatekeeper Relay.
 =========================================================
 OTC 3500-01 Clamp
 2000A Mode Only
+OTC_ZERO_OFFSET = 3.620
 
 The OTC 3500-01) Operate On A Strict, Direct Scaling Ratio: 1mV = 1amp
 
@@ -447,15 +448,15 @@ Single Row Divider Sketch: 1 Each Protected Voltage Input = x7
                TVS Protection Shield
                     +    |  \/      +        +                    +      +      +
 BMS TAP ───| |───────────●──────────────────►[ 47kΩ Resistor ] <───●─WIRE/HOLE────────► To ADS1115 Pin
-            |           +│\                /                      │\                /
-            |           +│ * SAME HOLE AS *                       │ * SAME HOLE AS *                                  
-            |           +│    +/\+               +/\+             │
-            |           +│     ││                 ││              │────────────┐
+            |           +│\                /                     +│\                /
+            |           +│ * SAME HOLE AS *                      +│ * SAME HOLE AS *                                  
+            |           +│    +/\+               +/\+            +│
+            |           +│     ││                 ││             +│────────────┐
         Isolation   [ P6KE18A ] \ (Stripe To Pos) /            [ 18kΩ ]     [ 100nF ]
           Relay       TVS Diode                                  Lower        Filter
                    OBSERVE POLARITY                             Resistor     Capacitor
-                        -│                                        │────────────┘      
-                        -│                                        │
+                        -│                                       -│────────────┘      
+                        -│                                       -│
                         -│                                       -│           -
 SYSTEM GND ──────────────┴────────────────────────────────────────┴──────────────────► SYSTEM GND
                         -                                        -            -
@@ -557,6 +558,11 @@ Align The Data Lines Perfectly.
 If Clock (SCL) Goes Into LV4, It Must Exit Through HV4 To Go To The ADS1115 Boards. 
 If  Data (SDA) Goes Into LV3, It Must Exit Through HV3 To Go To The ADS1115 Boards.
 Dont Forget To Set The Address Of The Boards Before You Stack Them.
+
+Board 1 = 0x48 jumper directly between ADDR Pin To SYS GND
+Board 2 = 0x49 jumper directly between ADDR Pin To 5v+ VDD
+Board 3 = 0x4A jumper directly between ADDR Pin To SDA
+Board 4 = 0x4B jumper directly between ADDR Pin To SCL
 
 =========================================================
             TEMPERATURE
@@ -983,3 +989,141 @@ Once Verified, This Index Becomes The Source For:
 09_Wire_Number_Index.txt
 
 =========================================================
+
+
+============================================================
+        PROPOSED / UNDER CONSIDERATION
+============================================================
+
+The Following Items Are Design Concepts Under Evaluation.
+They Are Not Yet Implemented Hardware And Shall Not Supersede
+The Authoritative Built-Hardware Specifications Until Adopted.
+
+------------------------------------------------------------
+24V LEV100 COIL-SUPPLY MONITORING
+------------------------------------------------------------
+
+Proposed Addition:
+
+Add Third ADS1115 Module For Auxiliary / Diagnostic
+Analog Monitoring.
+
+Initial Proposed Channel Assignment:
+
+ADS1115 Board 3
+
+A0 = 24V LEV100 Converter Output Monitor
+A1 = Spare
+A2 = Spare
+A3 = Spare
+
+ALERT/RDY = Available For Future Use
+
+I2C Address:
+To Be Assigned During Installation.
+
+The 24V Rail Would Enter The Perfboard Through One Of The
+Formerly Retired / Available 10-Pin Input Header Positions.
+
+A Dedicated Protected Divider Shall Be Used Because The Existing
+47k / 18k Pack-Voltage Divider Is Not Suitable For The 24V Rail.
+
+Candidate Divider Pending Converter Maximum-Voltage Verification:
+
+Upper Resistor: 100k
+Lower Resistor: 10k
+Filter Capacitor: 100nF
+
+A Higher-Voltage TVS Appropriate For The 24V Rail Shall Replace
+The P6KE18A Used On The Existing Lower-Voltage Sense Channels.
+
+------------------------------------------------------------
+BMS ISOLATION RELAY 12V SUPPLY
+------------------------------------------------------------
+
+Existing 12V-Coil BMS / Voltage-Divider Isolation Relays
+Will Remain In Use.
+
+Proposed Wiring:
+
+Bring Switched Pack-On 12V Into One Available Position Of The
+10-Pin Input Header.
+
+Route This 12V Across The Perfboard To Existing
+10-Pin Output Header Pin 2.
+
+Output Header Pin 2 Remains The Existing Accessible Connection
+To The Buried BMS Isolation Relay Positive-Coil Network.
+
+The Isolation Relays Energize Whenever SNAPACK Is Powered.
+Processor Authorization Is Not Required.
+
+------------------------------------------------------------
+PROCESSOR-FAILURE MANUAL OVERRIDE
+------------------------------------------------------------
+
+Consider External Weather-Resistant Key Switch Providing
+Manual Bypass Of Processor Authorization.
+
+Purpose:
+
+Permit Basic Manual Pack Operation If The ESP32 / Display /
+Controller System Is Unavailable.
+
+The Override Would Restore Manual Authorization while retaining
+the existing hardware interlock / mode-selection architecture.
+
+Final Switch, Wiring, And Implementation Not Yet Selected.
+============================================================
+
+AMBIENT LIGHT SENSOR / AUTOMATIC DAY-NIGHT DISPLAY THEME:
+
+Sensor:
+GL5528 5mm CdS Photoresistor / LDR
+
+GL5528 Relevant Specifications:
+Light Resistance @ 10 Lux: 10-20kΩ
+Spectral Peak: 540nm
+Maximum Voltage: 150V DC
+Maximum Dissipation: 100mW
+Operating Temperature: -30°C To +70°C
+
+Purpose:
+Provides Ambient-Light Level To The ESP32 Through ADS1115 Board 3.
+Firmware Uses The Reading To Select Between Day And Night Display Themes.
+
+The Sensor Is Not Intended To Measure Calibrated Lux.
+Actual Day/Night Switching Thresholds Will Be Established In Firmware
+Using Readings From The Finished Installation.
+
+Voltage Divider:
+
+Regulated 3.3V
+     |
+ [ GL5528 ]
+     |
+     +--------------------> ADS1115 Board 3 / A1
+     |
+   [ 10kΩ ]
+     |
+  SYS GND
+
+ADS1115 Board 3:
+A0 = 24V Rail Monitor
+A1 = Ambient Light Sensor
+A2 = Spare
+A3 = Spare
+
+Physical Light Pipe:
+
+3/16" (4.76mm) Clear Acrylic Round Rod
+Used As A Light Pipe From The Exterior Of The SNAPACK Enclosure
+To The 5mm Face Of The Internally Mounted GL5528.
+
+The Exterior End Of The Acrylic Rod Is Exposed To Ambient Light.
+The GL5528 Remains Inside The Enclosure.
+
+The Interior Length Of The Acrylic Rod May Be Covered With Opaque
+Tubing Or Black Heat-Shrink To Reduce Light Pickup From The Display
+And Other Internal Light Sources.
+
