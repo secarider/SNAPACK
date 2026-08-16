@@ -87,7 +87,7 @@ ADS1115
 
 Quantity
 
-2
+3
 
 Interface
 
@@ -122,12 +122,15 @@ A1 = one channel for the CDS/light sensor
 two spare channels remaining
 ALERT available
 
-
 Board 1 = 0x48 jumper directly between ADDR Pin To SYS GND
 Board 2 = 0x49 jumper directly between ADDR Pin To 5v+ VDD
 Board 3 = 0x4A jumper directly between ADDR Pin To SDA
 Board 4 = 0x4B jumper directly between ADDR Pin To SCL
 
+ 1115    Level     Output    Ribbon
+SCL -> HV3 -> LV3 -> Pin6 -> Pin7 -> Display
+ 1115    Level     Output    Ribbon
+SDA -> HV4 -> LV4 -> Pin7 -> Pin8 -> Display
 
 ============================================================
 INPUT PROTECTION
