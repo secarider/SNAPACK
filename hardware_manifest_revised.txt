@@ -532,7 +532,7 @@ Logic Level Shifter Sketch
        ┌────────────────────────────────────────────────────────┐
        │             ELECROW ESP32-S3 TOUCHSCREEN               │
        └─────┬──────────────┬──────────────────┬───────────┬────┘
-             │ 3.3V         │ SYS GND          │ SCL       │ SDA
+             │ 3.3V         │ SYS GND          │ SDA       │ SCL
              ▼              ▼                  ▼           ▼
        ┌─────┴──────────────┴──────────────────┴───────────┴────┐
        │    [LV]        [SYS GND]             [LV4]       [LV3] │
@@ -542,7 +542,7 @@ Logic Level Shifter Sketch
        │    [HV]        [SYS GND]             [HV4]       [HV3] │
        └─────┬──────────────┬──────────────────┬───────────┬────┘
              ▲              ▲                  ▲           ▲
-             │ 5V           │ SYS GND          │ SCL       │ SDA
+             │ 5V           │ SYS GND          │ SDA       │ SCL
        ┌─────┴──────────────┴──────────────────┴───────────┴────┐
        │            TWO ADS1115 BOARDS (SHARED LINES)           │
        └────────────────────────────────────────────────────────┘
@@ -583,12 +583,6 @@ Both Grounds On The Shifter Tie Together Right Into The Central System Ground
 The Spares: 
 Channels 1 And 2 (LV1, LV2, HV1, HV2) Stay Completely Empty And Unpopulated, 
 Serving As Perfect Backups If A Channel Ever Gets Cooked 
-
-Direct Channel Passthrough: 
-Align The Data Lines Perfectly. 
-If Clock (SCL) Goes Into LV4, It Must Exit Through HV4 To Go To The ADS1115 Boards. 
-If  Data (SDA) Goes Into LV3, It Must Exit Through HV3 To Go To The ADS1115 Boards.
-Dont Forget To Set The Address Of The Boards Before You Stack Them.
 
 Board 1 = 0x48 jumper directly between ADDR Pin To SYS GND
 Board 2 = 0x49 jumper directly between ADDR Pin To 5v+ VDD
