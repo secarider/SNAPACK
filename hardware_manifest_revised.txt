@@ -395,19 +395,37 @@ Final Output Negative Voltage
 One Connector From Balance Harness
 ADS1115 Boards Are Built On To The Perf
 
-ADS1115 Channel Assignment:
+============================================================
+          ADS1115 AUTHORITATIVE CHANNEL MAP
+============================================================
+CHANNEL ALLOCATION
+============================================================
+Board 1 — 0x48 jumper directly between ADDR Pin To SYS GND
+A0 = B1
+A1 = B2
+A2 = B3
+A3 = B4
 
-Board 1:
-A0 = B2 Cumulative Pack Voltage
-A1 = B3 Cumulative Pack Voltage
-A2 = B4 Cumulative Pack Voltage
-A3 = B5 Cumulative Pack Voltage
+------------------------------------------------------------
 
-Board 2:
-A0 = B1 Cumulative Pack Voltage
-A1 = Final Output Positive Voltage
-A2 = OTC Current Sensor
-A3 = Final Output Negative Voltage
+Board 2 — 0x49 jumper directly between ADDR Pin To 5v+ VDD
+A0 = B5
+A1 = Final Output +
+A2 = OTC Current
+A3 = Final Output −
+
+------------------------------------------------------------
+
+Board 3 — 0x4A jumper directly between ADDR Pin To SDA
+A0 = 24 V LEV100 supply monitor
+A1 = one channel for the CDS/light sensor
+two spare channels remaining
+ALERT available
+
+Board 1 = 0x48 jumper directly between ADDR Pin To SYS GND
+Board 2 = 0x49 jumper directly between ADDR Pin To 5v+ VDD
+Board 3 = 0x4A jumper directly between ADDR Pin To SDA
+Board 4 = 0x4B jumper directly between ADDR Pin To SCL
 
 Final Output Sense Connections:
 Output Header Pin 9  = Final Output (+) Sense → ADS1115 Board 2 A1
@@ -529,14 +547,20 @@ Connect 3.3V+ To The LV Pin, And Connect The Main 5V+ Rail To The HV Pin.
 Common Ground: Tie The GND Pins On Both Sides Of The Shifter To Pack Ground/Negative.
 
 Board 1: 
-(B2 Through B5 Cumulative Pack Voltage Taps):
+(B1 Through B4 Cumulative Pack Voltage Taps):
 Solder A Tiny Jumper Wire From The ADDR Pin Straight To The SYS GND Pin On This Board. 
 This Names It Address 0x48
 
 Board 2: 
-(B1 + Final Output Positive + OTC Current + Final Output Negative): 
+(B5 + Final Output Positive + OTC Current + Final Output Negative): 
 Solder A Tiny Jumper Wire From The ADDR Pin Straight To The 5v+ VDD Pin On This Board. 
 This Names It Address 0x49
+
+Board 3:
+A0 = 24 V LEV100 supply monitor   see new divider
+A1 = one channel for the CDS/light sensor
+Solder A Tiny Jumper Wire From The ADDR Pin Straight To The SDA Pin On This Board.
+This Names It Address 0x4A
 
 The Data Path: 
 SDA And SCL From The Twin ADS1115 Boards Are Tied Together Then They Go Into HV3 And HV4. 
@@ -1013,7 +1037,7 @@ Initial Proposed Channel Assignment:
 ADS1115 Board 3
 
 A0 = 24V LEV100 Converter Output Monitor
-A1 = Spare
+A1 = Ambient Light Sensor
 A2 = Spare
 A3 = Spare
 
@@ -1036,6 +1060,9 @@ Filter Capacitor: 100nF
 
 A Higher-Voltage TVS Appropriate For The 24V Rail Shall Replace
 The P6KE18A Used On The Existing Lower-Voltage Sense Channels.
+
+P6KE27A
+Axial Unidirectional Channel 600 Watt 27 Volt TVS Transient Suppression Diodes 
 
 ------------------------------------------------------------
 BMS ISOLATION RELAY 12V SUPPLY
