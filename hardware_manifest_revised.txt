@@ -444,11 +444,11 @@ As The Five Existing Cumulative Pack Voltage Channels.
 
 10 Pin Input Header JST-XH
                                                                     ─┐
-Pin 10 B5 (Pack +)16v: Connects To Divider → Goes To Board 1, Pin A3 |
-Pin  9 B4 (Cell 4)12v: Connects To Divider → Goes To Board 1, Pin A2 | Only This 6S BMS Lead Plugs
-Pin  8 B3 (Cell 3) 9v: Connects To Divider → Goes To Board 1, Pin A1 | Into The 10 Pin Input Header
-Pin  7 B2 (Cell 2) 6v: Connects To Divider → Goes To Board 1, Pin A0 | Comprised Of Pin5-Pin10
-Pin  6 B1 (Cell 1) 3v: Connects To Divider → Goes To Board 2, Pin A0 |
+Pin 10 B5 (Pack +)16v: Connects To Divider → Goes To Board 2, Pin A0 |
+Pin  9 B4 (Cell 4)12v: Connects To Divider → Goes To Board 1, Pin A3 | Only This 6S BMS Lead Plugs
+Pin  8 B3 (Cell 3) 9v: Connects To Divider → Goes To Board 1, Pin A2 | Into The 10 Pin Input Header
+Pin  7 B2 (Cell 2) 6v: Connects To Divider → Goes To Board 1, Pin A1 | Comprised Of Pin5-Pin10
+Pin  6 B1 (Cell 1) 3v: Connects To Divider → Goes To Board 1, Pin A0 |
 Pin  5 B0 (Pack Ground): System Ground Rail On The Perfboard.        |
                                                                     ─┘
 Chip Pins:
