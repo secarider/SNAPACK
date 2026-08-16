@@ -427,6 +427,13 @@ Board 2 = 0x49 jumper directly between ADDR Pin To 5v+ VDD
 Board 3 = 0x4A jumper directly between ADDR Pin To SDA
 Board 4 = 0x4B jumper directly between ADDR Pin To SCL
 
+ 1115    Level     Output    Ribbon
+SCL -> HV3 -> LV3 -> Pin6 -> Pin7 -> Display
+ 1115    Level     Output    Ribbon
+SDA -> HV4 -> LV4 -> Pin7 -> Pin8 -> Display
+
+-------------------------------------------------------
+
 Final Output Sense Connections:
 Output Header Pin 9  = Final Output (+) Sense → ADS1115 Board 2 A1
 Output Header Pin 10 = Final Output (-) Sense → ADS1115 Board 2 A3
