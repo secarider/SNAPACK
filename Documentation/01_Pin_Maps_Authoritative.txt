@@ -124,8 +124,8 @@ Pin 12: System Common Ground
 Pin 11: System Common Ground                                    Pin  01: System Ground
 Pin 10: D+ USB Data Positive — OPEN / NO CONNECTION / EMPTY     Pin x02: BMS / Voltage Divider Isolation Coils Positive 12V+
 Pin 09: D- USB Data Negative — OPEN / NO CONNECTION / EMPTY     Pin x03: Alert / Alarm From ADS1115 Board 1
-Pin 08: SDA 3.3V I2C Clock                                      Pin x04: OPEN / NO CONNECTION / EMPTY
-Pin 07: SCL 3.3V I2C Data                                       Pin  05: 5V Power
+Pin 08: SDA 3.3V I2C Data                                       Pin x04: OPEN / NO CONNECTION / EMPTY
+Pin 07: SCL 3.3V I2C Clock                                      Pin  05: 5V Power
 Pin 06: TX Temperature Sensor Data Target                       Pin  06: SCL 3.3V Logic     LV4  Lshift  HV4  1115
 Pin 05: RX OPEN / NO CONNECTION / EMPTY                         Pin  07: SDA 3.3V Logic     LV3  Lshift  HV3  1115
 Pin 04: NC OPEN / NO CONNECTION / EMPTY                         Pin  08: Temperature Sensor Data
