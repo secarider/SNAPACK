@@ -32,30 +32,30 @@ Pins 1-4 Were Previously Used For Duplicate B0509S-1WR3
 The B0509S-1WR3 Now Uses Two Dedicated Perfboard-Mounted
 2-Pin Headers:
 
-Pin  1: RETIRED / NO CONNECTION / EMPTY
-Pin  2: RETIRED / NO CONNECTION / EMPTY
-Pin  3: RETIRED / NO CONNECTION / EMPTY
-Pin  4: RETIRED / NO CONNECTION / EMPTY
-Pin  5: B0 Pack Ground / System Ground
-Pin  6: B1 Cell 1 Cumulative Voltage ~3V
-Pin  7: B2 Cell 2 Cumulative Voltage ~6V
-Pin  8: B3 Cell 3 Cumulative Voltage ~9V
-Pin  9: B4 Cell 4 Cumulative Voltage ~12V
+Pin 01: RETIRED / NO CONNECTION / EMPTY
+Pin 02: RETIRED / NO CONNECTION / EMPTY
+Pin 03: RETIRED / NO CONNECTION / EMPTY
+Pin 04: RETIRED / NO CONNECTION / EMPTY
+Pin 05: B0 Pack Ground / System Ground
+Pin 06: B1 Cell 1 Cumulative Voltage ~3V
+Pin 07: B2 Cell 2 Cumulative Voltage ~6V
+Pin 08: B3 Cell 3 Cumulative Voltage ~9V
+Pin 09: B4 Cell 4 Cumulative Voltage ~12V
 Pin 10: B5 Cell 5 Cumulative Voltage ~16V / Pack Positive
 
 ============================================================
               10 PIN OUTPUT HEADER
 ============================================================
 
-Pin  1: System Ground
-Pin  2: BMS / Voltage Divider Isolation Coils Positive 12V+
-Pin  3: Alert / Alarm From ADS1115 Board 1
-Pin  4: OPEN / NO CONNECTION / EMPTY
-Pin  5: 5V Power
-Pin  6: SCL 3.3V Logic
-Pin  7: SDA 3.3V Logic
-Pin  8: Temperature Sensor Data
-Pin  9: Output Voltage Sense (+)
+Pin 01: System Ground
+Pin 02: BMS / Voltage Divider Isolation Coils Positive 12V+
+Pin 03: Alert / Alarm From ADS1115 Board 1
+Pin 04: OPEN / NO CONNECTION / EMPTY
+Pin 05: 5V Power
+Pin 06: SCL 3.3V Logic
+Pin 07: SDA 3.3V Logic
+Pin 08: Temperature Sensor Data
+Pin 09: Output Voltage Sense (+)
 Pin 10: Output Voltage Sense (−)
 
 ============================================================
@@ -76,3 +76,58 @@ Pin 02: 5V 5V Main Power Input
 Pin 01: 5V 5V Main Power Input
 
 ============================================================
+          ADS1115 AUTHORITATIVE CHANNEL MAP
+============================================================
+CHANNEL ALLOCATION
+============================================================
+Board 1 — 0x48 jumper directly between ADDR Pin To SYS GND
+A0 = B1
+A1 = B2
+A2 = B3
+A3 = B4
+
+------------------------------------------------------------
+
+Board 2 — 0x49 jumper directly between ADDR Pin To 5v+ VDD
+A0 = B5
+A1 = Final Output +
+A2 = OTC Current
+A3 = Final Output −
+
+------------------------------------------------------------
+
+Board 3 — 0x4A jumper directly between ADDR Pin To SDA
+A0 = 24 V LEV100 supply monitor
+A1 = one channel for the CDS/light sensor
+two spare channels remaining
+ALERT available
+
+Board 1 = 0x48 jumper directly between ADDR Pin To SYS GND
+Board 2 = 0x49 jumper directly between ADDR Pin To 5v+ VDD
+Board 3 = 0x4A jumper directly between ADDR Pin To SDA
+Board 4 = 0x4B jumper directly between ADDR Pin To SCL
+
+============================================================
+Workshop Comparison
+============================================================
+
+
+
+              12 PIN RIBBON CABLE                                    10 PIN OUTPUT HEADER
+=======================================================================================================================
+Pin 12: System Common Ground
+Pin 11: System Common Ground                                    Pin  01: System Ground
+Pin 10: D+ USB Data Positive — OPEN / NO CONNECTION / EMPTY     Pin x02: BMS / Voltage Divider Isolation Coils Positive 12V+
+Pin 09: D- USB Data Negative — OPEN / NO CONNECTION / EMPTY     Pin x03: Alert / Alarm From ADS1115 Board 1
+Pin 08: SDA 3.3V I2C Clock                                      Pin x04: OPEN / NO CONNECTION / EMPTY
+Pin 07: SCL 3.3V I2C Data                                       Pin  05: 5V Power
+Pin 06: TX Temperature Sensor Data Target                       Pin  06: SCL 3.3V Logic     LV4  Lshift  HV4  1115
+Pin 05: RX OPEN / NO CONNECTION / EMPTY                         Pin  07: SDA 3.3V Logic     LV3  Lshift  HV3  1115
+Pin 04: NC OPEN / NO CONNECTION / EMPTY                         Pin  08: Temperature Sensor Data
+Pin 03: NC OPEN / NO CONNECTION / EMPTY                         Pin x09: Output Voltage Sense (+)
+Pin 02: 5V 5V Main Power Input                                  Pin x10: Output Voltage Sense (−)
+Pin 01: 5V 5V Main Power Input                                                              
+
+
+
+
