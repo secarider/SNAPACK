@@ -183,17 +183,6 @@ Chip Pin 4 = +V OUT   (Isolated +9 V Output)
 
 =======================================================================================================================
 
-       [ RELAY 1: 12V POLICE ]                   [ RELAY 2: 16V POLICE ]
-  ┌────────────────────────────────┐       ┌────────────────────────────────┐
-  │ Pin 85: 12V- Mode Switch Signal│       │ Pin 85: 16V- Mode Switch Signal│
-  │ Pin 86: Pos+ From CPU Auth     │       │ Pin 86: Pos+ From CPU Auth     │
-  │ Pin 30: Master Control Power   │       │ Pin 30: Master Control Power   │
-  │ Pin 87a (NC): To Relay 2 Pin 30│       │ Pin 87a (NC): To Relay 1 Pin 30│
-  │ Pin 87  (NO): To LEV100 Coils  │       │ Pin 87  (NO): To EV200 Coils   │
-  └────────────────────────────────┘       └────────────────────────────────┘
-
-=======================================================================================================================
-
 \/ Not Isolated - Shared Sys Ground \/
 
  5V Main Buck Output ───────●───────► 12-Pin Ribbon Pins 1 & 2 (Screen Power Input)
@@ -257,6 +246,15 @@ Regulated 3.3V
   SYS GND
 
 =======================================================================================================================
+
+       [ RELAY 1: 12V POLICE ]                   [ RELAY 2: 16V POLICE ]
+  ┌────────────────────────────────┐       ┌────────────────────────────────┐
+  │ Pin 85: 12V- Mode Switch Signal│       │ Pin 85: 16V- Mode Switch Signal│
+  │ Pin 86: Pos+ From CPU Auth     │       │ Pin 86: Pos+ From CPU Auth     │
+  │ Pin 30: Master Control Power   │       │ Pin 30: Master Control Power   │
+  │ Pin 87a (NC): To Relay 2 Pin 30│       │ Pin 87a (NC): To Relay 1 Pin 30│
+  │ Pin 87  (NO): To LEV100 Coils  │       │ Pin 87  (NO): To EV200 Coils   │
+  └────────────────────────────────┘       └────────────────────────────────┘
 
 Master Control Power
         │
