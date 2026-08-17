@@ -183,14 +183,13 @@ Chip Pin 4 = +V OUT   (Isolated +9 V Output)
 
 =======================================================================================================================
 
-
        [ RELAY 1: 12V POLICE ]                   [ RELAY 2: 16V POLICE ]
   ┌────────────────────────────────┐       ┌────────────────────────────────┐
-  │ Pin 85: GND                    │       │ Pin 85: GND                    │
-  │ Pin 86: 12V Mode Switch Signal │       │ Pin 86: 16V Mode Switch Signal │
+  │ Pin 85: 12V- Mode Switch Signal│       │ Pin 85: 16V- Mode Switch Signal│
+  │ Pin 86: Pos+ From CPU Auth     │       │ Pin 86: Pos+ From CPU Auth     │
   │ Pin 30: Master Control Power   │       │ Pin 30: Master Control Power   │
-  │ Pin 87a (NC): Wire to R2 Pin 30│       │ Pin 87a (NC): Wire to R1 Pin 30│
-  │ Pin 87 (NO): To LEV100 Coils   │       │ Pin 87 (NO): To EV200 Coils    │
+  │ Pin 87a (NC): To Relay 2 Pin 30│       │ Pin 87a (NC): To Relay 1 Pin 30│
+  │ Pin 87  (NO): To LEV100 Coils  │       │ Pin 87  (NO): To EV200 Coils   │
   └────────────────────────────────┘       └────────────────────────────────┘
 
 =======================================================================================================================
@@ -258,4 +257,42 @@ Regulated 3.3V
   SYS GND
 
 =======================================================================================================================
+
+Master Control Power
+        │
+        ▼
+Relay 2 pin 30
+        │
+        ▼
+Relay 2 pin 87a (NC)
+        │
+        └──────────────► Relay 1 pin 30
+                              │
+                              ▼
+                        Relay 1 pin 87 (NO)
+                              │
+                              ▼
+                         LEV100 coils
+
+
+Master Control Power
+        │
+        ▼
+Relay 1 pin 30
+        │
+        ▼
+Relay 1 pin 87a (NC)
+        │
+        └──────────────► Relay 2 pin 30
+                              │
+                              ▼
+                        Relay 2 pin 87 (NO)
+                              │
+                              ▼
+                          EV200 coils
+
+=======================================================================================================================
+
+
+
 
