@@ -405,6 +405,7 @@ A0 = B1
 A1 = B2
 A2 = B3
 A3 = B4
+this is all 4 cells that make 12v on one board
 
 ------------------------------------------------------------
 
@@ -503,6 +504,8 @@ Bidirectional Shifter Translates
 5V I2C Data Signals From The ADS1115 Boards 
 Down To The 3.3V Logic Needed By The Elecrow Display.
 
+\/ Not Isolated - Shared Sys Ground \/
+
  5V Main Buck Output ───────●───────► 12-Pin Ribbon Pins 1 & 2 (Screen Power Input)
                             │
                             ├───────► Level Shifter [HV Pin] (High Logic Power)
@@ -510,7 +513,7 @@ Down To The 3.3V Logic Needed By The Elecrow Display.
                             └───────► AMS1117-3.3 Regulator Module Input
                                              │
                                              ▼
-                               Regulated 3.3V Output
+                               Regulated 3.3V Output + Not Isolated Shared Sys Ground
                                              │
                                              ├───────► Level Shifter [LV Pin]
                                              ├───────► All 5 Temp Sensor Red Wires (VCC)
@@ -1014,16 +1017,6 @@ Once Verified, This Index Becomes The Source For:
 09_Wire_Number_Index.txt
 
 =========================================================
-
-
-============================================================
-        PROPOSED / UNDER CONSIDERATION
-============================================================
-
-The Following Items Are Design Concepts Under Evaluation.
-They Are Not Yet Implemented Hardware And Shall Not Supersede
-The Authoritative Built-Hardware Specifications Until Adopted.
-
 ------------------------------------------------------------
 24V LEV100 COIL-SUPPLY MONITORING
 ------------------------------------------------------------
@@ -1033,7 +1026,7 @@ Proposed Addition:
 Add Third ADS1115 Module For Auxiliary / Diagnostic
 Analog Monitoring.
 
-Initial Proposed Channel Assignment:
+Channel Assignment:
 
 ADS1115 Board 3
 
@@ -1053,6 +1046,13 @@ Formerly Retired / Available 10-Pin Input Header Positions.
 A Dedicated Protected Divider Shall Be Used Because The Existing
 47k / 18k Pack-Voltage Divider Is Not Suitable For The 24V Rail.
 
+24V RAIL ─────────●────────► [100kΩ] ─────●────► ADS1115 Board 3 / A0
+      SAME HOLE AS│                       │SAME HOLE AS
+                [TVS]P6KE27A            [10k]
+                  │    SAME HOLE AS       │
+SYSTEM GND ───────┴───────────────────────┴────► SYSTEM GND
+
+
 Candidate Divider Pending Converter Maximum-Voltage Verification:
 
 Upper Resistor: 100k
@@ -1065,14 +1065,13 @@ The P6KE18A Used On The Existing Lower-Voltage Sense Channels.
 P6KE27A
 Axial Unidirectional Channel 600 Watt 27 Volt TVS Transient Suppression Diodes 
 
-------------------------------------------------------------
+========================================================================================================================
 BMS ISOLATION RELAY 12V SUPPLY
-------------------------------------------------------------
 
 Existing 12V-Coil BMS / Voltage-Divider Isolation Relays
 Will Remain In Use.
 
-Proposed Wiring:
+Proposed Wiring: done
 
 Bring Switched Pack-On 12V Into One Available Position Of The
 10-Pin Input Header.
@@ -1086,23 +1085,7 @@ To The Buried BMS Isolation Relay Positive-Coil Network.
 The Isolation Relays Energize Whenever SNAPACK Is Powered.
 Processor Authorization Is Not Required.
 
-------------------------------------------------------------
-PROCESSOR-FAILURE MANUAL OVERRIDE
-------------------------------------------------------------
-
-Consider External Weather-Resistant Key Switch Providing
-Manual Bypass Of Processor Authorization.
-
-Purpose:
-
-Permit Basic Manual Pack Operation If The ESP32 / Display /
-Controller System Is Unavailable.
-
-The Override Would Restore Manual Authorization while retaining
-the existing hardware interlock / mode-selection architecture.
-
-Final Switch, Wiring, And Implementation Not Yet Selected.
-============================================================
+========================================================================================================================
 
 AMBIENT LIGHT SENSOR / AUTOMATIC DAY-NIGHT DISPLAY THEME:
 
@@ -1154,4 +1137,249 @@ The GL5528 Remains Inside The Enclosure.
 The Interior Length Of The Acrylic Rod May Be Covered With Opaque
 Tubing Or Black Heat-Shrink To Reduce Light Pickup From The Display
 And Other Internal Light Sources.
+
+
+========================================================================================================================
+        PROPOSED / UNDER CONSIDERATION
+========================================================================================================================
+
+The Following Items Are Design Concepts Under Evaluation.
+They Are Not Yet Implemented Hardware And Shall Not Supersede
+The Authoritative Built-Hardware Specifications Until Adopted.
+
+------------------------------------------------------------
+PROCESSOR-FAILURE MANUAL OVERRIDE
+------------------------------------------------------------
+
+Consider External Weather-Resistant Key Switch Providing
+Manual Bypass Of Processor Authorization.
+
+Purpose:
+
+Permit Basic Manual Pack Operation If The ESP32 / Display /
+Controller System Is Unavailable.
+
+The Override Would Restore Manual Authorization while retaining
+the existing hardware interlock / mode-selection architecture.
+
+Final Switch, Wiring, And Implementation Not Yet Selected.
+
+
+PROPOSED FEATURE — POST-CRANK RECOVERY / VEHICLE CHARGING
+
+After a successful cranking event, 
+SNAPACK may remain connected to the running vehicle and monitor charging current returning from the vehicle charging system.
+
+- Track charge removed during cranking by integrating current over time.
+- After engine start, detect current returning to SNAPACK and track recovered charge.
+- Display recovery progress and provide a clear indication when the energy used during the crank has been recovered.
+- Cells 1–4 / normal 12V section receive charge directly from the vehicle.
+- If the 12V section has recovered but Cell Group 5 / boost cell remains low, 
+a future small internally controlled isolated LiFePO4 charger may transfer energy from the 12V section to Cell 5.
+- This could provide a simple field-charging method: connect SNAPACK to a running vehicle and allow 
+SNAPACK to manage its own recovery without specialized shop charging equipment.
+- Specialized direct BMS/cell charging remains available for full service/balancing via 6s BMS leads at service hatch
+
+AUTOMATIC DISCONNECT
+
+During vehicle charging/recovery, continuously monitor:
+- Charge current and direction
+- Individual cell voltages
+- Pack voltage
+- Temperature sensors
+- Recovered charge
+
+When the desired recovery level is reached, or if a configured voltage/current/temperature limit is reached, SNAPACK may remove the authoritative positive relay authorization and open the main contactors, automatically disconnecting itself electrically from the vehicle.
+
+Normal completion and fault-triggered shutdown should be separately identified and logged/displayed.
+
+12-MINUTE HARD LIMIT
+
+The existing 12-minute hardware timer remains authoritative and should not be bypassed for charging.
+
+Software may terminate recovery earlier, but may not extend operation beyond the timer.
+
+The 12-minute window already provides substantial potential recovery from a normally operating vehicle 
+charging system and preserves the original hardware-enforced maximum connection time.
+
+CRANKING-SCREEN TEMPERATURE DISPLAY
+
+During an active cranking event, reserve an area near the large cranking-current display for temperature status.
+
+Normally display average pack temperature or a subdued temperature indication.
+
+If an individual temperature sensor becomes abnormal or begins rising rapidly during a sustained crank, 
+immediately replace the normal indication with the affected sensor name and temperature so the 
+developing condition is visible without leaving the cranking screen.
+
+
+CELL 5 MAINTENANCE / TOP-OFF MODE
+
+The proposed isolated Cell-5 LiFePO4 charger does not need to operate only during post-crank vehicle recovery.
+
+Because Cell 5 top-off current will likely be relatively low (~1 A), Cell 5 may recover incrementally over multiple SNAPACK operating sessions.
+
+A user may deliberately activate a normal 12V timer cycle while no vehicle is connected specifically to allow the 12V Cells 1–4 section to top off Cell 5.
+
+Possible logic:
+
+- Normal 12-minute SNAPACK timer is activated.
+- No cranking or external vehicle-charging event is occurring.
+- Firmware checks Cells 1–4 and Cell 5.
+- If the 12V section has adequate available charge and Cell 5 is below its defined target, enable the isolated Cell-5 charger.
+- Display indicates BOOST CELL TOP-OFF / Cell 5 voltage / charging status.
+- Charger terminates normally when Cell 5 reaches its proper charge condition.
+- Existing 12-minute hardware timer remains the absolute maximum session duration.
+- Additional 12-minute maintenance sessions may be initiated later if Cell 5 still requires charging.
+
+This allows Cell 5 maintenance while SNAPACK is being transported between jobs and reduces the importance of completing Cell-5 recovery during a single vehicle-charging session.
+
+PROPOSED FEATURE — FIVE-CHANNEL SERVICE CHARGER
+
+Possible future replacement for the present manual five-power-supply charging procedure.
+
+Concept:
+- Provide one external DC service-power connection.
+- Internally split that source among five independent isolated DC/DC converters.
+- Each isolated converter powers one dedicated 1S LiFePO4 charger such as the SK3624 3.6V / 2.4A module.
+- Each charger independently charges one 1P5S cell group:
+
+  Charger 1 → B0-B1
+  Charger 2 → B1-B2
+  Charger 3 → B2-B3
+  Charger 4 → B3-B4
+  Charger 5 → B4-B5
+
+- The five isolated converter INPUTS may share the same external power source.
+- Their OUTPUTS remain isolated so each charger can float at its respective position in the series pack.
+- Individual chargers may terminate as their respective cell groups become full while the remaining groups continue charging.
+- Approximate maximum combined cell-charging power at 2.4A/channel is ~43W, before conversion losses.
+
+PACKAGING OPTIONS:
+
+1. INTERNAL:
+   Five isolated converters + five charger modules installed inside SNAPACK.
+   User connects only one ordinary external service-power supply.
+
+2. EXTERNAL:
+   If enclosure space becomes insufficient, place the complete five-channel isolated charger system in a dedicated external service-charger box.
+   Connect that charger to SNAPACK through the existing B0-B5 service/BMS connection.
+
+This is separate from the proposed automatic onboard Cell-5 recovery charger used during post-crank/maintenance operation.
+
+STATUS: CONCEPT / PACKAGING STUDY
+Final implementation depends primarily on available enclosure space.
+
+more harging thoughts 
+Board 2 ALERT + pull-up + another AITRIP 5 V opto relay is a very plausible charger-control path.
+
+PROPOSED — AUTOMATIC CELL-5 CHARGE / RECOVERY HARDWARE
+
+PURPOSE
+
+Provide an onboard method of charging Cell Group 5 (B4-B5) from the
+normal 12V section without requiring the normal 12V and Cell-5 grounds
+to be common.
+
+This supports:
+- Post-crank Cell-5 recovery
+- Intentional Cell-5 maintenance/top-off sessions
+- Opportunistic Cell-5 charging whenever operating conditions permit
+
+
+PROPOSED POWER PATH
+
+12V section / available SNAPACK power
+        |
+        v
+Cincon EC5DAW-24S05N isolated DC/DC
+        |
+        |  Isolated regulated 5V / 2A / 10W
+        v
+SK3624 1S LiFePO4 charger
+        |
+        +---- BAT+ -> B5
+        |
+        +---- BAT- -> B4
+
+Cincon EC5DAW-24S05N:
+- Input: 9-36VDC
+- Output: regulated 5V / 2A
+- Power: 10W
+- Galvanically isolated
+- May therefore be powered directly from the 12V section or from the
+  existing 24V rail.
+
+SK3624 charger:
+- 1S LiFePO4
+- 4.5-5.5V input
+- 3.6V charge cutoff
+- Up to approximately 2.4A charging
+- Internal CC/CV charging and termination
+- Approximately 200mA termination threshold
+- Automatic recharge below approximately 3.5V
+
+The isolated converter allows the complete SK3624 charger circuit to
+float at B4 potential.
+
+CELL-5 CHARGER CONTROL
+
+ADS1115 Board 2 already monitors B5 on A0:
+
+Board 2 — 0x49
+ADDR -> 5V VDD
+A0 = B5
+A1 = Final Output +
+A2 = OTC Current
+A3 = Final Output -
+
+Investigate using Board 2 ALERT as the authoritative Cell-5 charger
+enable/disable signal rather than consuming another ESP32 GPIO.
+
+ADS1115 ALERT is open-drain:
+- Asserted = actively pulls LOW
+- Inactive = releases line / high impedance
+- External pull-up establishes HIGH state when released
+
+Proposed control:
+
+Board 2 ALERT
+      |
+   pull-up
+      |
+      v
+Low-level-trigger opto-isolated relay/control stage
+      |
+      v
+Cell-5 charger power authorization
+
+Desired logic:
+- ALERT released / HIGH = CHARGER OFF
+- ALERT asserted / LOW = CHARGER ON
+
+Therefore loss of ADS1115 power/configuration or an open ALERT signal
+naturally results in charger OFF.
+
+The ESP32 does not directly drive ALERT. It commands Board 2 over the
+existing SDA/SCL I2C bus and can rapidly rewrite the ADS1115 comparator
+configuration/threshold registers.
+
+Board 2 may continue scanning its four analog channels normally.
+When firmware determines that Cell-5 charging is appropriate, it may
+reconfigure Board 2 ALERT for the charger-control function.
+
+The SK3624 remains responsible for the actual LiFePO4 CC/CV charging
+and normal charge termination. SNAPACK controls whether the charging
+subsystem is authorized to operate.
+
+
+IMPLEMENTATION NOTE
+
+Before finalizing this scheme, bench-test that Board 2 ALERT can be
+reliably commanded into both required states through ADS1115 register
+configuration while retaining the required multi-channel scanning
+behavior.
+
+STATUS: PROPOSED / BENCH TEST REQUIRED
+
 
