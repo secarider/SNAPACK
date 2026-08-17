@@ -105,6 +105,7 @@ A0 = B1
 A1 = B2
 A2 = B3
 A3 = B4
+this is all 4 cells that make 12v on one board
 
 ------------------------------------------------------------
 
@@ -200,7 +201,7 @@ ADS1115 Board 1 ALERT Output Connects To
 
 AITRIP 5V Opto-Isolated Relay Module
 
-The Relay Module Interrupts The Contactor
+The Relay Module Interrupts The Contactor pos+
 Authorization Circuit During Hardware Fault
 Conditions.
 
