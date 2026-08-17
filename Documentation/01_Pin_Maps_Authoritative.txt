@@ -1,102 +1,82 @@
 ============================================================
-      04_ADS1115_ANALOG_FRONT_END.TXT
+            PIN NUMBERING CONVENTION
 ============================================================
 
-Purpose
+Unless Specifically Stated Otherwise:
 
-Defines All Voltage Measurement Hardware.
+All ELECROW Display Pin Numbers Refer To The 12-Pin Ribbon Cable
+Connector Pin Numbers As Identified By The Silkscreen On The Back
+Of The Display PCB.
 
-Contents
+The Ribbon Breakout Board Is Treated Strictly As A Straight-Through
+Extension Of The Display Ribbon Cable.
 
-• ADS1115 Board 1
-• ADS1115 Board 2
-• TVS Protection
-• 47K / 18K Divider Networks
-• 100nF Input Filtering
-• B0–B5 Pack Monitoring
-• OTC Current Sensor Input
-• Final Output Positive Sense
-• Final Output Negative Sense
-• Pack Resistance Monitoring Support
+Breakout Board Pin Numbers Are Intentionally NOT Used In This
+Manifest Unless Absolutely Required For Physical Construction.
 
-Design Rules
+The Two Custom Perfboard Headers Are Identified Separately As:
 
-• Every Analog Input Uses The Same Protected Divider Network.
-• Final Output Positive And Negative Occupy The Remaining ADS1115 Channels.
-• ALERT Output Shall Drive A 5V Opto-Isolated Relay Module.
-• ADS1115 ALERT Shall Never Drive A Relay Coil Directly.
+10 Pin Input Header
+10 Pin Output Header
 
-Verification
-
-□ Divider Ratios Correct
-□ TVS Installed
-□ ADS Addresses Verified
-□ I2C Communication Verified
-□ ALERT Output Verified
-□ All Eight Analog Channels Verified
+The Following Three Pin Maps Are Authoritative And Supersede Any
+Older Or Conflicting Pin Number References Elsewhere.
 
 ============================================================
-
-SNAPACK Hardware Specification
-
-Status: Authoritative
-Revision: Draft 1
-
-============================================================
-PURPOSE
+               10 PIN INPUT HEADER
 ============================================================
 
-This Specification Defines The Complete Analog Voltage
-Measurement System Used By SNAPACK.
+Pins 1-4 Were Previously Used For Duplicate B0509S-1WR3
+5V Input And Isolated 9V Output Connections.
 
-It Covers:
+The B0509S-1WR3 Now Uses Two Dedicated Perfboard-Mounted
+2-Pin Headers:
 
-• ADS1115 Data Acquisition
-• Voltage Divider Networks
-• Input Protection
-• Current Sensor Interface
-• Pack Voltage Measurement
-• Output Voltage Measurement
-
-Connector Assignments Are Defined In:
-
-    01_Authoritative_Pin_Mapping.txt
-
-============================================================
-SYSTEM OVERVIEW
-============================================================
-
-The Analog Front End Continuously Measures Battery,
-Output And Current Sensor Signals.
-
-Two ADS1115 16-Bit Analog-To-Digital Converters
-Provide Eight Measurement Channels.
-
-All External Voltage Inputs Use An Identical
-Protection Network Prior To Entering The ADS1115.
+Pin 01: Output Voltage Sense (−)
+Pin 02: Output Voltage Sense (+)
+Pin 03: 12V Coil+ BMS/Voltage-Divider Isolation Relays
+Pin 04: B0 Pack Ground / System Ground  spilled onto
+Pin 05: B0 Pack Ground / System Ground  main ground
+Pin 06: B5 Cell 5 Cumulative Voltage ~16V / Pack Positive
+Pin 07: B1 Cell 1 Cumulative Voltage ~3V
+Pin 08: B2 Cell 2 Cumulative Voltage ~6V
+Pin 09: B3 Cell 3 Cumulative Voltage ~9V
+Pin 10: B4 Cell 4 Cumulative Voltage ~12V
 
 ============================================================
-HARDWARE
+              10 PIN OUTPUT HEADER
 ============================================================
 
-Analog-To-Digital Converter
+Pin 01: System Ground
+Pin 02: BMS / Voltage Divider Isolation Coils Positive 12V+
+Pin 03: Alert / Alarm From ADS1115 Board 1
+Pin 04: OPEN / NO CONNECTION / EMPTY
+Pin 05: 5V Power
+Pin 06: SCL 3.3V Logic
+Pin 07: SDA 3.3V Logic
+Pin 08: Temperature Sensor Data
+Pin 09: Output Voltage Sense (+)
+Pin 10: Output Voltage Sense (−)
 
-Manufacturer Part Number
+============================================================
+              12 PIN RIBBON CABLE
+============================================================
 
-ADS1115
+Pin 12: System Common Ground
+Pin 11: System Common Ground
+Pin 10: D+ USB Data Positive — OPEN / NO CONNECTION / EMPTY
+Pin 09: D- USB Data Negative — OPEN / NO CONNECTION / EMPTY
+Pin 08: SDA 3.3V I2C Data
+Pin 07: SCL 3.3V I2C Clock
+Pin 06: TX Temperature Sensor Data Target
+Pin 05: RX OPEN / NO CONNECTION / EMPTY
+Pin 04: NC OPEN / NO CONNECTION / EMPTY
+Pin 03: NC OPEN / NO CONNECTION / EMPTY
+Pin 02: 5V 5V Main Power Input
+Pin 01: 5V 5V Main Power Input
 
-Quantity
-
-3
-
-Interface
-
-I²C
-
-Resolution
-
-16 Bit
-
+============================================================
+          ADS1115 AUTHORITATIVE CHANNEL MAP
 ============================================================
 CHANNEL ALLOCATION
 ============================================================
@@ -106,16 +86,14 @@ A1 = B2
 A2 = B3
 A3 = B4
 this is all 4 cells that make 12v on one board
-ALERT Wired And Available
 
 ------------------------------------------------------------
 
 Board 2 — 0x49 jumper directly between ADDR Pin To 5v+ VDD
-A0 = B5 Pack Positive +
-A1 =    Final Output +
-A2 =    OTC Current
-A3 =    Final Output −
-ALERT Wired And Available
+A0 = B5
+A1 = Final Output +
+A2 = OTC Current
+A3 = Final Output −
 
 ------------------------------------------------------------
 
@@ -135,99 +113,184 @@ SCL -> HV3 -> LV3 -> Pin6 -> Pin7 -> Display
  1115    Level     Output    Ribbon
 SDA -> HV4 -> LV4 -> Pin7 -> Pin8 -> Display
 
-============================================================
-INPUT PROTECTION
-============================================================
-
-Every Voltage Measurement Channel Uses The Same
-Protection Network.
-
-Components
-
-P6KE18A TVS Diode
-
-47kΩ 1W Series Resistor
-
-18kΩ Divider Resistor
-
-100nF Filter Capacitor
-
-This Network Is Used For Every Battery And Output
-Voltage Measurement Channel.
 
 ============================================================
-CURRENT SENSOR INPUT
+Workshop Comparison
 ============================================================
 
-The OTC Hall Current Sensor Provides An Analog
-Voltage To ADS1115 Board 2.
+              12 PIN RIBBON CABLE                                    10 PIN OUTPUT HEADER
+=======================================================================================================================
+Pin 12: System Common Ground
+Pin 11: System Common Ground                                    Pin  01: System Ground
+Pin 10: D+ USB Data Positive — OPEN / NO CONNECTION / EMPTY     Pin x02: BMS / Voltage Divider Isolation Coils Positive 12V+
+Pin 09: D- USB Data Negative — OPEN / NO CONNECTION / EMPTY     Pin x03: Alert / Alarm From ADS1115 Board 1
+Pin 08: SDA 3.3V I2C Data                                       Pin x04: OPEN / NO CONNECTION / EMPTY
+Pin 07: SCL 3.3V I2C Clock                                      Pin  05: 5V Power
+Pin 06: TX Temperature Sensor Data Target                       Pin  06: SCL 3.3V Logic   From  LV3  Lshift  HV3  1115
+Pin 05: RX OPEN / NO CONNECTION / EMPTY                         Pin  07: SDA 3.3V Logic   From  LV4  Lshift  HV4  1115
+Pin 04: NC OPEN / NO CONNECTION / EMPTY                         Pin  08: Temperature Sensor Data
+Pin 03: NC OPEN / NO CONNECTION / EMPTY                         Pin x09: Output Voltage Sense (+)
+Pin 02: 5V 5V Main Power Input                                  Pin x10: Output Voltage Sense (−)
+Pin 01: 5V 5V Main Power Input                                                              
 
-The Current Sensor Uses Its Own Isolated Power
-Supply Defined In:
 
-    05_Current_Monitoring.txt
 
-============================================================
-OUTPUT VOLTAGE MONITORING
-============================================================
+=======================================================================================================================
 
-The Remaining Two ADS1115 Channels Monitor
+Voltage Divider For 5 BMS Taps
 
-• Final Output Positive
+               TVS Protection Shield
+                    +    |  \/      +        +                    +      +      +
+BMS TAP ───| |───────────●──────────────────►[ 47kΩ Resistor ] <───●─WIRE/HOLE────────► To ADS1115 Pin
+            |           +│\                /                     +│\                /
+            |           +│ * SAME HOLE AS *                      +│ * SAME HOLE AS *                                  
+            |           +│    +/\+               +/\+            +│
+            |           +│     ││                 ││             +│────────────┐
+        Isolation   [ P6KE18A ] \ (Stripe To Pos) /            [ 18kΩ ]     [ 100nF ]
+          Relay       TVS Diode                                  Lower        Filter
+                   OBSERVE POLARITY                             Resistor     Capacitor
+                        -│                                       -│────────────┘      
+                        -│                                       -│
+                        -│                                       -│           -
+SYSTEM GND ──────────────┴────────────────────────────────────────┴──────────────────► SYSTEM GND
+                        -                                        -            -
 
-• Final Output Negative
+=======================================================================================================================
 
-These Measurements Allow Firmware To Determine
+Voltage Divider For 1 24volt Rail Monitor
 
-Output Voltage
+24V RAIL ─────────●────────► [100kΩ] ─────●────► ADS1115 Board 3 / A0
+      SAME HOLE AS│                       │SAME HOLE AS
+                [TVS]P6KE27A            [10k]
+                  │    SAME HOLE AS       │
+SYSTEM GND ───────┴───────────────────────┴────► SYSTEM GND
 
-Voltage Drop
+=======================================================================================================================
 
-Pack Internal Resistance
+                      Bottom View
+                    ┌──────────────┐
+                    │ B0509S-1WR3  │
+                    └.───.───.───.─┘
+        Chip Pin# ──>1   2   3   4
+                     │   │   │   │
 
-System Performance Under Load
+Chip Pin #            10-Pin Input Header Pins 1-4: Retired / No Connection / Empty
 
-============================================================
-I²C INTERFACE
-============================================================
+Chip Pin 1 = -V IN    (-5 V Input)   Same As Sys Ground/System Ground Is A Passthrough
+Chip Pin 2 = +V IN    (+5 V Input)
+Chip Pin 3 = -V OUT   (Isolated -9 V Output)
+Chip Pin 4 = +V OUT   (Isolated +9 V Output)
 
-Both ADS1115 Boards Operate On The Shared I²C Bus.
+=======================================================================================================================
 
-Communication Is Through The Logic Level Shifter.
+\/ Not Isolated - Shared Sys Ground \/
 
-============================================================
-ALERT OUTPUT
-============================================================
+ 5V Main Buck Output ───────●───────► 12-Pin Ribbon Pins 1 & 2 (Screen Power Input)
+                            │
+                            ├───────► Level Shifter [HV Pin] (High Logic Power)
+                            │
+                            └───────► AMS1117-3.3 Regulator Module Input
+                                             │
+                                             ▼
+                               Regulated 3.3V Output + Not Isolated Shared Sys Ground
+                                             │
+                                             ├───────► Level Shifter [LV Pin]
+                                             ├───────► All 5 Temp Sensor Red Wires (VCC)
+                                             │
+                                          [ 4.7kΩ ] Master Pull-Up Resistor
+                                             │
+                                             ├───────► All 5 Temp Sensor Yellow Wires (DATA)
+                                             └───────► Output Header Pin 8
+                                                        ↓
+                                                   12-Pin Ribbon Pin 6 (TX)
 
-ADS1115 Board 1 ALERT Output Connects To
+ System Ground Rail ────────●───────► 12-Pin Ribbon Pins 11 & 12 (Screen Ground)
+                            ├───────► AMS1117 Ground
+                            ├───────► Level Shifter Grounds
+                            └───────► All 5 Temp Sensor Black Wires (GND)
 
-AITRIP 5V Opto-Isolated Relay Module
+=======================================================================================================================
 
-The Relay Module Interrupts The Contactor pos+
-Authorization Circuit During Hardware Fault
-Conditions.
+Logic Level Shifter Sketch SHARED LINES For All 3 ADS1115 BOARDS
 
-============================================================
-DESIGN REQUIREMENTS
-============================================================
+       ┌────────────────────────────────────────────────────────┐
+       │             ELECROW ESP32-S3 TOUCHSCREEN               │
+       └─────┬──────────────┬──────────────────┬───────────┬────┘
+             │ 3.3V         │ SYS GND          │ SDA       │ SCL
+             ▼              ▼                  ▼           ▼
+       ┌─────┴──────────────┴──────────────────┴───────────┴────┐
+       │    [LV]        [SYS GND]             [LV4]       [LV3] │
+       │                                                        │
+       │             4-CHANNEL LOGIC LEVEL SHIFTER              │
+       │                                                        │
+       │    [HV]        [SYS GND]             [HV4]       [HV3] │
+       └─────┬──────────────┬──────────────────┬───────────┬────┘
+             ▲              ▲                  ▲           ▲
+             │ 5V           │ SYS GND          │ SDA       │ SCL
+       ┌─────┴──────────────┴──────────────────┴───────────┴────┐
+       │            3 ADS1115 BOARDS (SHARED LINES)           │
+       └────────────────────────────────────────────────────────┘
 
-All Voltage Inputs Shall Use Identical Protection
-Networks.
+=======================================================================================================================
 
-Only Protected Signals Shall Enter The ADS1115.
+CDS Cell:Ambiant Light Sensor
 
-All Analog Measurements Shall Reference System
-Ground Except The Isolated OTC Interface.
+Regulated 3.3V
+     |
+ [ GL5528 ]
+     |
+     +--------------------> ADS1115 Board 3 / A1
+     |
+   [ 10kΩ ]
+     |
+  SYS GND
 
-The B0509S-1WR3 isolated 5V → 9V converter requires a minimum output load
-for operation within its specified performance range.
+=======================================================================================================================
 
-Bench testing confirmed successful 5V → 9V operation with two 1 kΩ resistors
-connected in parallel across the isolated 9V output.
+       [ RELAY 1: 12V POLICE ]                   [ RELAY 2: 16V POLICE ]
+  ┌────────────────────────────────┐       ┌────────────────────────────────┐
+  │ Pin 85: 12V- Mode Switch Signal│       │ Pin 85: 16V- Mode Switch Signal│
+  │ Pin 86: Pos+ From CPU Auth     │       │ Pin 86: Pos+ From CPU Auth     │
+  │ Pin 30: Master Control Power   │       │ Pin 30: Master Control Power   │
+  │ Pin 87a (NC): To Relay 2 Pin 30│       │ Pin 87a (NC): To Relay 1 Pin 30│
+  │ Pin 87  (NO): To LEV100 Coils  │       │ Pin 87  (NO): To EV200 Coils   │
+  └────────────────────────────────┘       └────────────────────────────────┘
 
-The two 1 kΩ resistors shall remain installed as a permanent minimum-load
-preload rather than being treated as temporary test components.
+Master Control Power
+        │
+        ▼
+Relay 2 pin 30
+        │
+        ▼
+Relay 2 pin 87a (NC)
+        │
+        └──────────────► Relay 1 pin 30
+                              │
+                              ▼
+                        Relay 1 pin 87 (NO)
+                              │
+                              ▼
+                         LEV100 coils
 
-============================================================
-END OF SPECIFICATION
-============================================================
+
+Master Control Power
+        │
+        ▼
+Relay 1 pin 30
+        │
+        ▼
+Relay 1 pin 87a (NC)
+        │
+        └──────────────► Relay 2 pin 30
+                              │
+                              ▼
+                        Relay 2 pin 87 (NO)
+                              │
+                              ▼
+                          EV200 coils
+
+=======================================================================================================================
+
+
+
+
