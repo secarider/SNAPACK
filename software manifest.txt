@@ -619,3 +619,610 @@ with posibly another ring within the other 2 for 3 rings withing each other ring
 * Sensor-health faults shall be visually distinguishable from genuine temperature warnings.
 * If animation ever interferes with reliable sampling or display updates, 
 the animation is reduced or disabled before any monitoring function is compromised.
+
+possibilities:
+
+
+Cranking Screen — Dynamic Temperature Status
+During an active cranking event, reserve a temperature-status area adjacent to the primary cranking-current display. 
+Under normal conditions, this area may display the current average pack temperature or remain visually subdued. 
+If the existing temperature-monitoring logic detects an abnormal sensor condition or 
+rapid temperature rise during the cranking event, the normal temperature indication is 
+immediately replaced by a prominent identification of the affected sensor and its current temperature. 
+The indication remains visible during the cranking event so the operator does not need to 
+leave the cranking screen to observe a developing thermal condition.
+
+
+SNAPACK STEP70 FULL FUNCTIONALITY AUDIT
+=======================================
+
+CAROUSEL / NAVIGATION
+---------------------
+STATUS: PROVEN
+
+Seven carousel positions remain operational:
+
+0 - SNAPACK Cell Voltage
+1 - SNAPACK Temperature
+2 - SNAPACK Current
+3 - SNAPACK Diagnostic
+4 - OEM Volume
+5 - OEM Temperature
+6 - OEM Light
+
+Touch carousel:
+- Upper half used primarily for swiping.
+- Lower half used primarily for selection.
+- Current code requires approximately 100 px horizontal travel within
+  300 ms, with less than 100 px vertical movement.
+- In practical testing, border-to-border swipes are consistently reliable.
+- Shorter swipes can fail.
+
+Physical rotary:
+- Rotary navigation operational.
+- Single push from Carousel selects current screen.
+
+Physical double-click:
+- Universal double-click escape from detail screens remains implemented.
+- Current double-click window approximately 420 ms.
+
+
+CELL VOLTAGE
+------------
+STATUS: PROVEN
+
+All five real cell voltages are operational.
+
+Individual cells are derived from cumulative B1-B5 measurements.
+
+Current ADS mapping:
+
+ADS #1 - 0x48
+A0 = B1
+A1 = B2
+A2 = B3
+A3 = B4
+
+ADS #2 - 0x49
+A0 = B5
+A1 = CdS
+A2 = OTC current
+A3 = 24-V rail
+
+Current divider scaling is operational.
+
+Cell Voltage screen displays live measurements.
+
+
+24-V RAIL
+---------
+STATUS: PROVEN
+
+ADS2 A3 provides the 24-V rail measurement.
+
+Observed live values have been approximately:
+
+23.99 - 24.02 V
+
+24-V rail is now displayed correctly on Diagnostic screen.
+
+
+TEMPERATURE
+-----------
+STATUS: PROVEN
+
+DS2484 I2C-to-1-Wire bridge operational at 0x18.
+
+Five DS18B20 sensors discovered and individually verified.
+
+Permanent sensor identities:
+
+Sensor 1
+ROM = 28 38 F7 CB 00 00 00 08
+
+Sensor 2
+ROM = 28 F2 EB 20 00 00 00 D8
+
+Sensor 3
+ROM = 28 A6 5F 23 00 00 00 F2
+
+Sensor 4
+ROM = 28 4D 6C 22 00 00 00 66
+
+Sensor 5
+ROM = 28 9F C9 CA 00 00 00 78
+
+Physical probes have been marked 1 through 5 to correspond to these
+permanent ROM identities.
+
+All five sensors have individually responded correctly to applied heat.
+
+Temperature screen:
+- Sensor 1 operational
+- Sensor 2 operational
+- Sensor 3 operational
+- Sensor 4 operational
+- Sensor 5 operational
+- AVG operational
+- Average uses valid sensors.
+
+STEP70 TEMPERATURE SCHEDULING
+-----------------------------
+STATUS: UNDER TEST
+
+Normal temperature cycle = approximately 5 seconds.
+
+All sensors begin temperature conversion together.
+
+Conversion waiting period is non-blocking.
+
+After conversion completes, Step70 reads one sensor at a time rather
+than reading all five scratchpads in one uninterrupted burst.
+
+The firmware yields back to normal UI/control processing between
+individual sensor reads.
+
+Current Step70 temperature service is recurring-serial-silent.
+
+
+CURRENT / OTC
+-------------
+STATUS: FUNCTIONAL - FINAL POLARITY TEST PENDING
+
+OTC 3500-01 current clamp operational.
+
+OTC range:
+2000 A
+
+Scaling:
+1 mV = 1 A
+
+OTC input divider:
+10k high
+22k low
+
+Observed zero at ADS input:
+approximately 2.449 V
+
+OTC acquisition remains approximately 50 samples/sec.
+
+Filtering and transient/spike rejection remain implemented.
+
+FINAL CLAMP POLARITY STILL NEEDS PHYSICAL CONFIRMATION.
+
+Required final orientation:
+
+DISCHARGE -> OTC signal decreases from zero
+CHARGE    -> OTC signal increases from zero
+
+After confirmation:
+Mark clamp side facing PACK POSITIVE with red paint mark/dot.
+
+
+CURRENT EVENT SCREEN BEHAVIOR
+-----------------------------
+STATUS: PRESENT IN STEP70
+
+Automatic Current-screen takeover is already implemented.
+
+Current trigger presently:
+
+Absolute current >= approximately 12 A
+for 3 confirmed samples
+-> automatically enter Current screen
+
+Current event presently ends approximately:
+
+Current <= 5 A
+for approximately 500 ms
+
+These are existing development thresholds and are NOT necessarily
+final SNAPACK protection thresholds.
+
+Current-event peak tracking remains implemented.
+
+Diagnostic screen includes:
+- Last event peak
+- Session maximum
+
+
+DIAGNOSTIC SCREEN
+-----------------
+STATUS: PROVEN
+
+Current live fields include:
+
+- 24-V Rail
+- Last Peak
+- Session Max
+- Full Pack
+- 4S Pack
+- Lowest Cell
+
+These fields are operational.
+
+
+CDS LIGHT SENSOR / DAY-NIGHT THEME
+----------------------------------
+STATUS: PROVEN - NEEDS LATER TUNING
+
+CdS sensor:
+ADS2 A1
+
+Hardware:
+GL5528 CdS sensor
+10k resistor to ground
+
+Automatic Day/Night theme switching works.
+
+Current firmware behavior approximately:
+
+<= 500 mV -> Night candidate
+>= 1500 mV -> Day candidate
+
+Sample interval approximately 500 ms.
+
+Approximately 3 confirmations required before changing theme.
+
+OBSERVED ISSUE:
+
+Day mode currently engages too easily under relatively dim indoor
+lighting.
+
+FUTURE CHANGE:
+
+Raise/spread Night -> Day threshold so genuinely brighter illumination
+is required before entering Day theme.
+
+Do not change CdS hardware at this time.
+
+
+RING ANIMATION
+--------------
+STATUS: PROVEN - CONTINUING LONG-TERM TESTING
+
+Animated perimeter rings remain operational on:
+
+- Carousel
+- Cell Voltage
+- Temperature
+- Diagnostic
+
+OEM Volume control has been repurposed as master ring-animation speed.
+
+IMPORTANT TESTING STANDARD:
+
+OEM Volume = 30%
+
+30% is now the standard setting for observing animation smoothness over
+time.
+
+At higher settings, especially above approximately 40-50%, animation
+becomes fast enough that short hitches are difficult to see.
+
+FUTURE UI TUNING:
+
+The Volume-to-animation-speed mapping needs to be expanded/remapped.
+
+Currently most useful animation speeds occur below approximately 50%
+of the Volume control.
+
+Values above approximately 50% have little useful visual distinction.
+
+Future mapping should spread the useful slow-to-medium animation range
+across much more of the Volume control travel.
+
+
+KNOWN ANIMATION / BACKGROUND SERVICE HISTORY
+--------------------------------------------
+Step68 demonstrated an important serial-backpressure problem.
+
+With recurring temperature Serial.print diagnostics active:
+
+- Terminal reader running -> UI/ring smooth.
+- Terminal reader stopped for approximately 7-8 minutes ->
+  approximately 1-second UI freeze every 5 seconds.
+- Restarting terminal reader -> hitch disappeared almost immediately.
+
+CONCLUSION / PERMANENT SNAPACK DESIGN RULE:
+
+Recurring or nonessential Serial.print diagnostics must NEVER be
+allowed to block the ESP32 UI/control loop when no host serial reader
+is consuming output.
+
+This is important not merely for animation but for future:
+
+- current monitoring
+- temperature monitoring
+- thermal rate-of-rise detection
+- contactor authorization
+- protection logic
+
+Step70 recurring temperature service is serial-silent.
+
+
+OEM TEMPERATURE SCREEN
+----------------------
+STATUS: PROVEN
+
+OEM Temperature control is currently repurposed as a COLOR CONTROL.
+
+It changes Carousel night-mode background/color behavior.
+
+This is separate from the SNAPACK Temperature sensor screen.
+
+OEM Temperature control still contains some original Elecrow
+LED-strip/WiFi demo behavior.
+
+Terminal may display messages such as:
+
+WiFi not connected; cannot send LED-strip command
+
+and:
+
+Temperature: xxx -> Illuminated LED count: xx
+
+These messages refer to the OEM color-control machinery, NOT SNAPACK
+temperature measurements.
+
+
+OEM VOLUME SCREEN
+-----------------
+STATUS: PROVEN - NEEDS RANGE REMAPPING
+
+OEM Volume controls master ring-animation speed.
+
+Current useful testing position:
+
+30%
+
+Future:
+Remap control so useful animation speeds occupy most/all of the
+available adjustment range.
+
+
+OEM LIGHT SCREEN
+----------------
+STATUS: PRESENT
+
+Original OEM Light screen remains available.
+And it controls the back light for the display
+although like the vol ani speed it seems to be brightest
+at 50 to 60 anything more dosent show a difference
+and should be spread out like the vol ani speed 
+It is NOT the automatic CdS Day/Night theme control.
+
+
+SETTINGS / PERSISTENCE
+----------------------
+STATUS: PRESENT
+
+The following values are stored/restored using ESP32 Preferences:
+
+- OEM Volume / animation speed
+- OEM Temperature / color setting
+- OEM Light value / backlight brightness
+
+Sticky settings remain implemented.
+
+
+TOUCH / SWIPE
+-------------
+STATUS: FUNCTIONAL - POSSIBLE FUTURE TUNING
+
+Reliable technique established:
+
+- Perform swipes above center line.
+- Perform selections below center line.
+- Avoid center-line interaction where practical.
+- Border-to-border swipes are consistently reliable.
+
+Shorter swipes presently fail approximately 30-50% of the time.
+
+Possible future change:
+Tune swipe-distance/gesture thresholds.
+
+NOT CURRENT PRIORITY.
+
+
+WIFI / REMOTE LED STRIP
+-----------------------
+STATUS: OBSOLETE ELECROW LEFTOVER
+
+Original Elecrow WiFi/remote LED-strip code remains substantially
+present.
+
+Current firmware attempts connection to old/demo WiFi during startup.
+
+OEM Temperature/color adjustment still invokes obsolete remote
+LED-strip functions.
+
+This functionality is not required by SNAPACK.
+
+FUTURE CLEANUP:
+
+Remove obsolete WiFi/remote LED-strip machinery while preserving the
+repurposed OEM Temperature color control.
+
+
+GLOBAL SERIAL SAFETY
+--------------------
+STATUS: PARTIALLY CORRECTED / TECHNICAL DEBT
+
+Recurring Step70 temperature output has been made serial-safe by
+eliminating continuous diagnostic printing.
+
+However, runtime Serial.printf/Serial.print calls remain elsewhere,
+including some event-driven operations such as:
+
+- Current event start/end
+- OTC transient candidate/rejection
+- Rotary movement
+- Volume adjustment
+- OEM Temperature/LED-strip commands
+- Theme changes
+
+These are mostly event-driven and therefore do not reproduce the
+unattended Step68 temperature-output accumulation.
+
+Nevertheless:
+
+FUTURE REQUIREMENT:
+
+Apply the non-blocking/serial-safe rule globally before SNAPACK
+protection/control logic becomes authoritative.
+
+
+THERMAL PROTECTION
+------------------
+STATUS: PLANNED - NOT IMPLEMENTED
+
+Future thermal protection is intended to include TWO independent
+mechanisms:
+
+1. Absolute overtemperature protection.
+
+2. Abnormal temperature rate-of-rise protection.
+
+A rapidly heating connection may therefore cause protection action
+before reaching the absolute high-temperature threshold.
+
+Future thermal fault consequence:
+
+Withdraw authoritative power/authorization from contactors.
+
+Exact thresholds are deliberately NOT established yet.
+
+They must be determined from installed-system testing.
+
+
+NORMAL VS HIGH-CURRENT TEMPERATURE MONITORING
+---------------------------------------------
+STATUS: ARCHITECTURE AGREED - NOT YET IMPLEMENTED
+
+Normal operation:
+
+Use relatively relaxed temperature polling to minimize DS2484/1-Wire
+workload and preserve UI smoothness.
+
+High-current event:
+
+OTC current measurement will eventually trigger a fast thermal-watch
+mode.
+
+During high-current thermal-watch mode:
+
+Priority order should approximately be:
+
+1. Current acquisition
+2. Temperature acquisition / rate-of-rise
+3. Protection / contactor authority
+4. Essential Current-screen information
+5. Touch/UI responsiveness
+6. Decorative ring animation
+
+Decorative ring animation is SACRIFICIAL during a genuine high-current
+event.
+
+Perfect animation smoothness is NOT required while maximum thermal
+surveillance is active.
+
+After high current ends:
+
+Fast temperature monitoring should continue for a suitable cooldown /
+heat-soak period before returning to normal temperature cadence.
+
+Exact:
+- current trigger
+- temperature cadence
+- absolute temperature threshold
+- rate-of-rise threshold
+- cooldown duration
+
+remain UNDEFINED until real testing provides useful data.
+
+
+NOT CURRENTLY IMPLEMENTED
+-------------------------
+The following must NOT be mistaken for operating Step70 features:
+
+- Temperature-triggered contactor shutdown
+- Temperature rate-of-rise shutdown
+- High-current fast-temperature mode
+- Post-current-event thermal soak mode
+- Final temperature thresholds
+- Final rate-of-rise thresholds
+- ADS ALERT-based authorization logic
+- Temperature-based charging authorization
+- Authoritative thermal contactor control
+- Final OTC clamp polarity
+
+
+CURRENT STEP70 TEST PRIORITIES
+------------------------------
+1. Continue long-duration idle/ring smoothness testing.
+
+2. Standard ring smoothness observation setting:
+   OEM Volume = 30%.
+
+3. Perform OTC discharge-current test.
+
+4. Establish permanent OTC clamp polarity:
+   DISCHARGE -> voltage decreases
+   CHARGE -> voltage increases.
+
+5. Mark side of OTC clamp facing pack positive with red paint.
+
+6. Continue evaluating five-sensor Step70 normal temperature cadence.
+
+7. Do NOT establish final thermal protection thresholds yet.
+
+
+LATER UI / CLEANUP LIST
+-----------------------
+- Remap OEM Volume animation-speed range.
+- Tune CdS Night -> Day threshold.
+- Consider swipe-distance tuning.
+- Remove obsolete Elecrow WiFi/remote LED-strip functionality.
+- Apply serial-safe/non-blocking diagnostic policy globally.
+- Remove obsolete native-OneWire remnants if any remain.
+- Remove obsolete 5-V I2C/level-shifter assumptions if any remain.
+- Clean stale Step-number diagnostic messages.
+- Preserve permanent five-sensor ROM mapping.
+
+
+OVERALL STEP70 STATUS
+---------------------
+Major live measurement systems operating simultaneously:
+
+- Five individual cell voltages
+- Full-pack/cumulative voltage calculations
+- 24-V rail monitoring
+- OTC current sensing
+- CdS ambient-light sensing
+- Five individually identified DS18B20 temperature sensors
+- Temperature average
+- Diagnostic values
+- Seven-screen carousel
+- Rotary control
+- Touch navigation
+- Day/Night theme
+- Ring animation
+- User-adjustable animation speed
+- User-adjustable color control
+
+Step70 is therefore a substantially functional integrated SNAPACK
+measurement/UI build.
+
+Primary unfinished calibration/test work:
+
+- OTC physical polarity
+- Long-duration Step70 timing/smoothness
+- Normal versus high-current temperature polling strategy
+
+Primary future protection work:
+
+- Thermal absolute limit
+- Thermal rate-of-rise detection
+- High-current thermal-watch mode
+- Contactor authorization/shutdown integration
