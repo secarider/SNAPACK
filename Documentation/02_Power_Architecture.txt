@@ -54,17 +54,18 @@ PRIMARY POWER RAILS
 
 The SNAPACK Contains The Following Power Rails:
 
-• Full Pack Voltage
+Modules supplied are 9 to 32 volt input and will be powered from full pack voltage 16V
 
-• 12-Volt Operating Rail
+• 16-Volt 5S Full Pack Voltage
+
+• 12-Volt 4S Pack Voltage
 
 • Regulated 5-Volt Rail
 
 • Regulated 3.3-Volt Logic Rail
 
-• Isolated +9V Supply
-
-• Isolated -9V Supply
+• Regulated 9V-Volt Rail
+  Used By The OTC Current Sensor.
 
 ============================================================
 POWER CONVERSION
@@ -94,28 +95,11 @@ Voltage Regulator Module Powered From The Existing
 
 The 3.3V Rail Powers:
 
-• Logic Level Shifter
-
 • DS18B20 Temperature Sensors
 
 • OneWire Pull-Up Resistor
 
 • Future 3.3V Logic Inputs
-
-------------------------------------------------------------
-
-Isolated Supplies
-
-A B0509S-1WR3 Isolated DC-DC Converter Produces
-
-• +9V Isolated
-
-• -9V Isolated
-
-These Supplies Are Used Only By The OTC Current Sensor
-Front-End.
-
-No Other Circuit Shall Share The Isolated Ground.
 
 ============================================================
 POWER DISTRIBUTION
@@ -143,62 +127,19 @@ Low Power Electronics
 
 • ADS1115 Boards
 
-• Logic Level Shifter
-
 • Temperature Sensors
 
 • Relays And Relay Module
 
 ============================================================
-GROUND SYSTEMS
-============================================================
-
-The SNAPACK Utilizes Two Independent Ground Systems.
-
-------------------------------------------------------------
-
-System Ground
-
-Common Ground Shared By:
-
-• Battery Pack
-
-• Display
-
-• ADS1115 Boards
-
-• Relay Module
-
-• Temperature Sensors
-
-• Logic Electronics
-
-------------------------------------------------------------
-
-Isolated Ground
-
-Dedicated Ground Used Only By:
-
-• OTC Current Sensor Circuit
-
-• B0509S Isolated Output
-
-The Isolated Ground Shall Not Be Connected To System
-Ground Except Through The Intended Current Sensor
-Measurement Circuit.
-
-============================================================
 DESIGN REQUIREMENTS
 ============================================================
 
-The 5V And 3.3V Rails Shall Remain Stable During
+The 9V, 5V, And 3.3V Rails Shall Remain Stable During
 Contactor Switching Events.
 
 Logic Electronics Shall Never Operate Directly From
 Battery Voltage.
-
-The AMS1117 Shall Be The Only Source Of Regulated
-3.3V Within The System.
 
 All Power Conversion Modules Shall Be Mounted To
 Permit Replacement Without Redesign Of Adjacent
