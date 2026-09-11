@@ -12,6 +12,7 @@ Revision:
 
 Last Updated:
 2026-08-07
+2026-09-10
 
 Supersedes:
 Hardware Manifest (Legacy)
@@ -90,9 +91,9 @@ SDA
 
 Used For:
 
-• ADS1115 Board 1
+ADS1115 Boards
 
-• ADS1115 Board 2
+DS2484 Interface , All Temp Sensors.
 
 Additional I2C Devices May Be Added In The Future.
 
