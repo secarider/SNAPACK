@@ -18,7 +18,7 @@ Contents
 
 Design Rules
 
-• OTC Uses The ±9V Supply Only.
+• OTC Uses The 9V Supply
 • Clamp Orientation Has Been Determined And Marked.
 • Current Shall Be Displayed In Amps.
 • High Current Automatically Calls The Large Amp Display.
