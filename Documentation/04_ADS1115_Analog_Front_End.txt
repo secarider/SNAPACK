@@ -69,11 +69,11 @@ SYSTEM OVERVIEW
 The Analog Front End Continuously Measures Battery,
 Output And Current Sensor Signals.
 
-Two ADS1115 16-Bit Analog-To-Digital Converters
-Provide Eight Measurement Channels.
+ADS1115 16-Bit Analog-To-Digital Converters
+Provide Measurement Channels.
 
-All External Voltage Inputs Use An Identical
-Protection Network Prior To Entering The ADS1115.
+All External Voltage Inputs Use A Protection 
+Network Prior To Entering The ADS1115.
 
 ============================================================
 HARDWARE
@@ -82,56 +82,60 @@ HARDWARE
 Analog-To-Digital Converter
 
 Manufacturer Part Number
-
 ADS1115
 
 Quantity
-
 3
 
 Interface
-
 I²C
 
 Resolution
-
 16 Bit
 
 ============================================================
 CHANNEL ALLOCATION
 ============================================================
+
 Board 1 — 0x48 jumper directly between ADDR Pin To SYS GND
+
 A0 = B1
 A1 = B2
 A2 = B3
 A3 = B4
 this is all 4 cells that make 12v on one board
 
+ALERT Wired And Available
+
 ------------------------------------------------------------
 
 Board 2 — 0x49 jumper directly between ADDR Pin To 5v+ VDD
-A0 = B5
-A1 = Final Output +
+
+A0 = B5 Pack Positive +
+A1 = CDS/light sensor
 A2 = OTC Current
-A3 = Final Output −
+A3 = 24 V LEV100 supply monitor
+
+ALERT Wired And Available
 
 ------------------------------------------------------------
 
 Board 3 — 0x4A jumper directly between ADDR Pin To SDA
-A0 = 24 V LEV100 supply monitor
-A1 = one channel for the CDS/light sensor
+
+A? =    Final Output +
+A? =    Final Output −
 two spare channels remaining
-ALERT available
+
+ALERT Wired And Available
+
+============================================================
+Address Assignment Method:
+============================================================
 
 Board 1 = 0x48 jumper directly between ADDR Pin To SYS GND
 Board 2 = 0x49 jumper directly between ADDR Pin To 5v+ VDD
 Board 3 = 0x4A jumper directly between ADDR Pin To SDA
 Board 4 = 0x4B jumper directly between ADDR Pin To SCL
-
- 1115    Level     Output    Ribbon
-SCL -> HV3 -> LV3 -> Pin6 -> Pin7 -> Display
- 1115    Level     Output    Ribbon
-SDA -> HV4 -> LV4 -> Pin7 -> Pin8 -> Display
 
 ============================================================
 INPUT PROTECTION
@@ -141,6 +145,34 @@ Every Voltage Measurement Channel Uses The Same
 Protection Network.
 
 Components
+
+Current proven divider architecture:
+
+B1:
+47k high / 18k low
+
+B2:
+47k high / 18k low
+
+B3:
+47k high / 18k low
+
+B4:
+100k high / 10k low
+
+B5:
+100k high / 10k low
+
+Design maximum cumulative voltages:
+
+B1 = 3.65 V
+B2 = 7.30 V
+B3 = 10.95 V
+B4 = 14.60 V
+B5 = 18.25 V
+
+These values describe the present proven implementation and required
+measurement ranges.
 
 P6KE18A TVS Diode
 
@@ -160,10 +192,11 @@ CURRENT SENSOR INPUT
 The OTC Hall Current Sensor Provides An Analog
 Voltage To ADS1115 Board 2.
 
-The Current Sensor Uses Its Own Isolated Power
+The Current Sensor Uses Its Own Power
 Supply Defined In:
 
-    05_Current_Monitoring.txt
+    05_Current_Monitoring.txt And
+    02_Power_Architecture.txt
 
 ============================================================
 OUTPUT VOLTAGE MONITORING
@@ -171,13 +204,16 @@ OUTPUT VOLTAGE MONITORING
 
 The Remaining Two ADS1115 Channels Monitor
 
+These Are At The Last Point Before Leaving Pack Behind All Contactors
+
 • Final Output Positive
 
 • Final Output Negative
 
 These Measurements Allow Firmware To Determine
 
-Output Voltage
+Actual Output Voltage To Confirm Mode Selection
+This Will Change From 12 To 16 In Boost Mode
 
 Voltage Drop
 
@@ -189,9 +225,7 @@ System Performance Under Load
 I²C INTERFACE
 ============================================================
 
-Both ADS1115 Boards Operate On The Shared I²C Bus.
-
-Communication Is Through The Logic Level Shifter.
+Both ADS1115 Boards Operate On The Shared I²C Bus 3.3v Only
 
 ============================================================
 ALERT OUTPUT
@@ -212,19 +246,7 @@ DESIGN REQUIREMENTS
 All Voltage Inputs Shall Use Identical Protection
 Networks.
 
-Only Protected Signals Shall Enter The ADS1115.
-
-All Analog Measurements Shall Reference System
-Ground Except The Isolated OTC Interface.
-
-The B0509S-1WR3 isolated 5V → 9V converter requires a minimum output load
-for operation within its specified performance range.
-
-Bench testing confirmed successful 5V → 9V operation with two 1 kΩ resistors
-connected in parallel across the isolated 9V output.
-
-The two 1 kΩ resistors shall remain installed as a permanent minimum-load
-preload rather than being treated as temporary test components.
+Only 3.3v Protected Signals Shall Enter The ADS1115.
 
 ============================================================
 END OF SPECIFICATION
