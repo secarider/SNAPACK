@@ -1,6 +1,6 @@
 ============================================================
-    10_HARDWARE_REVISION_LOG.TXT
-============================================================
+10_HARDWARE_REVISION_LOG.TXT
+============================
 
 Revision History
 
@@ -16,6 +16,15 @@ Rev B
 • Corrected Connector Pin Mapping
 • Modular Hardware Specifications
 
+Rev C
+
+• ADS1115 Analog System Changed To 3.3V Operation
+• I2C Level Shifter Removed
+• Three ADS1115 Board Architecture Established
+• Voltage Divider Networks Revised For 3.3V Analog System
+• DS2484 I2C-To-1-Wire Temperature Interface Added
+• ADS1115 ALERT / AITRIP Contactor Authorization Retained
+
 ============================================================
 
 SNAPACK Hardware Specification
@@ -25,7 +34,7 @@ Revision: Active
 
 ============================================================
 PURPOSE
-============================================================
+=======
 
 This Specification Records Significant Hardware
 Design Changes Made Throughout The SNAPACK Project.
@@ -35,7 +44,7 @@ Shall Be Recorded.
 
 ============================================================
 REVISION FORMAT
-============================================================
+===============
 
 Revision
 
@@ -49,13 +58,13 @@ Notes (Optional)
 
 ============================================================
 REVISION HISTORY
-============================================================
+================
 
 Revision A
 
 Initial Prototype Construction
 
-------------------------------------------------------------
+---
 
 Revision B
 
@@ -65,7 +74,7 @@ Affected Specifications
 
 01_Authoritative_Pin_Mapping.txt
 
-------------------------------------------------------------
+---
 
 Revision B
 
@@ -75,7 +84,7 @@ Affected Specifications
 
 02_Power_Architecture.txt
 
-------------------------------------------------------------
+---
 
 Revision B
 
@@ -85,7 +94,7 @@ Affected Specifications
 
 04_ADS1115_Analog_Front_End.txt
 
-------------------------------------------------------------
+---
 
 Revision B
 
@@ -95,7 +104,7 @@ Affected Specifications
 
 04_ADS1115_Analog_Front_End.txt
 
-------------------------------------------------------------
+---
 
 Revision B
 
@@ -108,7 +117,7 @@ Affected Specifications
 
 08_Protection_And_Fault_Response.txt
 
-------------------------------------------------------------
+---
 
 Revision B
 
@@ -118,7 +127,7 @@ Affected Specifications
 
 06_Temperature_Monitoring.txt
 
-------------------------------------------------------------
+---
 
 Revision B
 
@@ -129,8 +138,162 @@ Affected Specifications
 All
 
 ============================================================
-REVISION POLICY
+REVISION C
+==========
+
+ADS1115 Analog System Changed From 5V To 3.3V Operation
+
+The ADS1115 Boards Now Operate Directly From The
+Regulated 3.3V Logic Rail.
+
+Affected Specifications
+
+01_Authoritative_Pin_Mapping.txt
+
+02_Power_Architecture.txt
+
+03_Display_Interface.txt
+
+04_ADS1115_Analog_Front_End.txt
+
+---
+
+I2C Level Shifter Removed
+
+The ADS1115 Analog System And Display I2C Interface
+Now Operate In The Same 3.3V Logic Domain.
+
+The Previously Required I2C Level Shifter Is No Longer
+Part Of The SNAPACK Hardware Architecture.
+
+Affected Specifications
+
+01_Authoritative_Pin_Mapping.txt
+
+02_Power_Architecture.txt
+
+03_Display_Interface.txt
+
+04_ADS1115_Analog_Front_End.txt
+
+---
+
+Three ADS1115 Board Architecture Established
+
+Three ADS1115 Boards Are Used To Provide The Required
+Analog Measurement Channels.
+
+The Third ADS1115 Provides Channels For Final Output
+Voltage Monitoring And Additional Expansion Capacity.
+
+Affected Specifications
+
+01_Authoritative_Pin_Mapping.txt
+
+03_Display_Interface.txt
+
+04_ADS1115_Analog_Front_End.txt
+
+---
+
+Voltage Divider Architecture Revised
+
+The Previous Common Divider Arrangement Was Revised
+For Operation With The 3.3V ADS1115 Analog System.
+
+Current Divider Architecture:
+
+B1 = 47k High / 18k Low
+
+B2 = 47k High / 18k Low
+
+B3 = 47k High / 18k Low
+
+B4 = 100k High / 10k Low
+
+B5 = 100k High / 10k Low
+
+24V Rail Monitor = 100k High / 10k Low
+
+The First Three Cumulative Battery Taps Retain The
+Previously Proven 47k / 18k Divider Network.
+
+The Higher Voltage Measurement Channels Use The
+100k / 10k Divider Network To Maintain Suitable
+ADS1115 Input Voltage At Their Maximum Design Voltage.
+
+Affected Specifications
+
+01_Authoritative_Pin_Mapping.txt
+
+04_ADS1115_Analog_Front_End.txt
+
+---
+
+DS2484 I2C-To-1-Wire Interface Added
+
+The Temperature Sensor Interface Now Uses A DS2484
+I2C-To-1-Wire Bridge.
+
+The DS2484 Operates From The Regulated 3.3V Rail
+And Communicates With The ESP32 Through The Shared
+3.3V I2C Bus.
+
+The DS18B20 Temperature Sensors Operate On The
+OneWire Bus Downstream Of The DS2484.
+
+The Previous Direct ESP32 OneWire Temperature
+Connection Is No Longer Used.
+
+Affected Specifications
+
+02_Power_Architecture.txt
+
+03_Display_Interface.txt
+
+06_Temperature_Monitoring.txt
+
+---
+
+ADS1115 ALERT Hardware Authority Retained
+
+ADS1115 Board 1 ALERT Continues To Operate Through
+The AITRIP 5V Opto-Isolated Relay Module.
+
+The AITRIP Relay Interrupts Positive Contactor Coil
+Authorization During Hardware Fault Conditions.
+
+The ADS1115 ALERT Output Does Not Directly Drive
+The Contactor Coil.
+
+Affected Specifications
+
+04_ADS1115_Analog_Front_End.txt
+
+08_Protection_And_Fault_Response.txt
+
+---
+
+Developmental Perfboard Connector Pin Assignments Retired
+
+Connector Pin Numbers Used On Developmental Perfboards
+Are Not Considered Permanent SNAPACK Connector Assignments.
+
+The Current Development Boards Will Not Be Installed
+As The Final SNAPACK Hardware.
+
+Final Connector And PCB Pin Assignments Shall Be
+Established During Manufactured PCB Development.
+
+No Final PCB Pin Numbers Are Assigned At This Revision.
+
+Affected Specifications
+
+01_Authoritative_Pin_Mapping.txt
+
 ============================================================
+REVISION POLICY
+===============
 
 Only Completed Hardware Changes Shall Be Added
 To This Log.
@@ -140,4 +303,4 @@ Implemented.
 
 ============================================================
 END OF SPECIFICATION
-============================================================
+====================
