@@ -7,6 +7,7 @@ SNAPACK Hardware Specification
 
 Status: Authoritative
 Revision: Draft 08-09-2026
+2026-09-10
 
 ============================================================
 PURPOSE
@@ -14,60 +15,6 @@ PURPOSE
 
 This Specification Defines The Major Components
 Used Throughout SNAPACK.
-
-Whenever Possible, Components Shall Be Identified
-By Their Manufacturer And Manufacturer Part Number.
-
-Vendor Information Is Included As A Procurement
-Reference Only.
-
-============================================================
-IDENTIFICATION STANDARD
-============================================================
-
-Each Entry Shall Include
-
-Component Name
-
-Manufacturer
-
-Manufacturer Part Number
-
-Quantity
-
-Purpose
-
-Hardware Specification Reference
-
-ASIN (Amazon Only, Optional)
-
-Notes (Optional)
-
-=========================================================
-            SMALL COMPONENTS / PASSIVES
-=========================================================
-
-Voltage Sense / Divider Channels — Qty 7 Each:
-47kΩ  1% Metal Film Resistor
-18kΩ  1% Metal Film Resistor
-100nF Ceramic Capacitor
-P6KE18A TVS Diode
-
-Temperature Sensor Bus:
-4.7kΩ Pull-Up Resistor
-(Yellow-Violet-Red-Gold)
-
-1N4007 Rectifier / Flyback Diode — Qty 5
-B0509S-1WR3 Isolated 9V Supply Filtering:
-4.7µF Polarized Capacitor — 5V Input
-2.2µF Polarized Capacitor — 9V Isolated Output
-100nF Ceramic Capacitor — Qty 2
-
-12 Pin Flexible Flat Cable, 0.5mm Pitch 150mm Type A
-ASIN 	B0C5TKKDWJ 
-
-12 Pin 0.5mm 1mm Pitch to DIP 2.0mm PCB Converter Board Couple Extend Adapter 
-ASIN 	B07RVD1J1K 
 
 ============================================================
 COMPONENT LIST
@@ -122,6 +69,11 @@ Reference
 
 ------------------------------------------------------------
 
+OTC 3500-01 Clamp Sensor
+External Regulated 9V Power Supply
+
+------------------------------------------------------------
+
 Component
 Main Display
 
@@ -144,29 +96,8 @@ Reference
 ------------------------------------------------------------
 
 Component
-Isolated DC-DC Converter
-
-Manufacturer
-MORNSUN
-
-ASIN 	B0F4DN8JDY 
-
-Part Number
-B0509S-1WR3
-
-Quantity
-1
-
-Purpose
-OTC Isolated ±9V Supply
-
-Reference
-02_Power_Architecture.txt
-
-------------------------------------------------------------
-
-Component
-AMS1117-3.3 Module
+AMS1117-3.3 linear regulator
+module
 
 ASIN 	B07CP4P5XJ 
 
@@ -193,15 +124,9 @@ Reference
 Component
 ADS1115 16 Bit 4 Channel I2C Analog-to-Digital Converter
 
-Manufacturer
-Texas Instruments
-
 ASIN: 	B0DP43DDZG
 
-Part Number: ADS115-1 
-
-Quantity
-2
+Part Number: ADS1115
 
 Purpose
 Analog Data Acquisition
@@ -212,23 +137,13 @@ Reference
 ------------------------------------------------------------
 
 Component
-Logic Level Shifter Converter Module 
-4 Channel Bidirectional 3.3V to 5V, 5V to 3.3V
-
-ASIN: B0CCF6TCSJ
-UPC:  705252403509
-
-Part Number: WWZMDiB 
+DPDT Relay 5V Coil 
+2NO 2NC Mini PCB Power Relays HK19F-5V
+8 Pin, DC 5V Coil, 1A 125VAC/2A 30VDC
 
 ------------------------------------------------------------
 
-Component
-DPDT Relay 12V Coil 
-2NO 2NC Mini PCB Power Relays HK19F-12V
-8 Pin, DC 12V Coil, 1A 125VAC/2A 30VDC
-
-ASIN: 	B09P1D1K64
-UPC: 	770240350141 
+Adafruit DS2484 I2C to 1-Wire Bus Adapter Breakout - STEMMA QT / Qwiic JST SH 1mm
 
 ------------------------------------------------------------
 
@@ -265,11 +180,10 @@ Description
 1-Channel 5V Opto-Isolated Relay Module
 5V Quiescent Current: 4mA Working Current: 65mA Trigger Voltage: 0-2V Trigger Current: 2mA 
 
-Quantity
-1
-
 Purpose
-Authorization Interruption
+
+Board 1 Authorization Interruption
+Board 2 5th Cell Group (16v Boost) Charge Enable
 
 Reference
 08_Protection_And_Fault_Response.txt
