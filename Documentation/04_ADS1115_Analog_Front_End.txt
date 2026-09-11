@@ -8,8 +8,7 @@ Defines All Voltage Measurement Hardware.
 
 Contents
 
-• ADS1115 Board 1
-• ADS1115 Board 2
+• ADS1115 Boards
 • TVS Protection
 • 47K / 18K Divider Networks
 • 100nF Input Filtering
@@ -18,22 +17,6 @@ Contents
 • Final Output Positive Sense
 • Final Output Negative Sense
 • Pack Resistance Monitoring Support
-
-Design Rules
-
-• Every Analog Input Uses The Same Protected Divider Network.
-• Final Output Positive And Negative Occupy The Remaining ADS1115 Channels.
-• ALERT Output Shall Drive A 5V Opto-Isolated Relay Module.
-• ADS1115 ALERT Shall Never Drive A Relay Coil Directly.
-
-Verification
-
-□ Divider Ratios Correct
-□ TVS Installed
-□ ADS Addresses Verified
-□ I2C Communication Verified
-□ ALERT Output Verified
-□ All Eight Analog Channels Verified
 
 ============================================================
 
@@ -84,9 +67,6 @@ Analog-To-Digital Converter
 Manufacturer Part Number
 ADS1115
 
-Quantity
-3
-
 Interface
 I²C
 
@@ -109,7 +89,7 @@ ALERT Wired And Available
 
 ------------------------------------------------------------
 
-Board 2 — 0x49 jumper directly between ADDR Pin To 5v+ VDD
+Board 2 — 0x49 jumper directly between ADDR Pin To VDD
 
 A0 = B5 Pack Positive +
 A1 = CDS/light sensor
@@ -133,7 +113,7 @@ Address Assignment Method:
 ============================================================
 
 Board 1 = 0x48 jumper directly between ADDR Pin To SYS GND
-Board 2 = 0x49 jumper directly between ADDR Pin To 5v+ VDD
+Board 2 = 0x49 jumper directly between ADDR Pin To VDD
 Board 3 = 0x4A jumper directly between ADDR Pin To SDA
 Board 4 = 0x4B jumper directly between ADDR Pin To SCL
 
@@ -141,8 +121,7 @@ Board 4 = 0x4B jumper directly between ADDR Pin To SCL
 INPUT PROTECTION
 ============================================================
 
-Every Voltage Measurement Channel Uses The Same
-Protection Network.
+Every Voltage Measurement Channel Uses A Protection Network.
 
 Components
 
@@ -176,14 +155,9 @@ measurement ranges.
 
 P6KE18A TVS Diode
 
-47kΩ 1W Series Resistor
-
-18kΩ Divider Resistor
-
 100nF Filter Capacitor
 
-This Network Is Used For Every Battery And Output
-Voltage Measurement Channel.
+Every Voltage Measurement Channel Uses A Protection/Filtering Network.
 
 ============================================================
 CURRENT SENSOR INPUT
@@ -225,7 +199,7 @@ System Performance Under Load
 I²C INTERFACE
 ============================================================
 
-Both ADS1115 Boards Operate On The Shared I²C Bus 3.3v Only
+ADS1115 Boards Operate On The Shared I²C Bus 3.3v Only
 
 ============================================================
 ALERT OUTPUT
@@ -238,15 +212,6 @@ AITRIP 5V Opto-Isolated Relay Module
 The Relay Module Interrupts The Contactor pos+
 Authorization Circuit During Hardware Fault
 Conditions.
-
-============================================================
-DESIGN REQUIREMENTS
-============================================================
-
-All Voltage Inputs Shall Use Identical Protection
-Networks.
-
-Only 3.3v Protected Signals Shall Enter The ADS1115.
 
 ============================================================
 END OF SPECIFICATION
