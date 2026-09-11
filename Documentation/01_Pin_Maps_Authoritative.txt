@@ -30,11 +30,12 @@ A1 = B2
 A2 = B3
 A3 = B4
 this is all 4 cells that make 12v on one board
+
 ALERT Wired And Available
 
 ------------------------------------------------------------
 
-Board 2 — 0x49 jumper directly between ADDR Pin To 5v+ VDD
+Board 2 — 0x49 jumper directly between ADDR Pin To VDD
 A0 = B5 Pack Positive +
 A1 = CDS/light sensor
 A2 = OTC Current
@@ -52,7 +53,7 @@ two spare channels remaining
 ALERT Wired And Available
 
 Board 1 = 0x48 Jumper Directly Between ADDR Pin To SYS GND
-Board 2 = 0x49 Jumper Directly Between ADDR Pin To 5v+ VDD
+Board 2 = 0x49 Jumper Directly Between ADDR Pin To VDD
 Board 3 = 0x4A Jumper Directly Between ADDR Pin To SDA
 Board 4 = 0x4B Jumper Directly Between ADDR Pin To SCL
 
@@ -62,7 +63,7 @@ Voltage Divider For 1s, 2s, 3s, BMS Taps
 
                TVS Protection Shield
                     +    |  \/      +  \/ No Polarity \/ Concerns Here                              
-BMS TAP ─| |───────────●──────────────────►[ 47kΩ Resistor ] <───●─WIRE/HOLE────────► To ADS1115 Pin
+BMS TAP ─| |───────────●──────────────────►[ 47kΩ Resistor ] <───●─WIRE/HOLE────────► To ADS1115
           |            │\                /                      │\                /
           |           +│ * SAME HOLE AS *                       │ * SAME HOLE AS *                                  
           |            │(Stripe To Pos)                         │     < - < - No Polarity Concerns Here
@@ -80,7 +81,7 @@ SYSTEM GND ────────────┴──────────
 Voltage Divider For 4s, 5s, and 24volt Rail Monitor
 
                     +                         +
-24V RAIL ─────────────────────●─────────────────► [100kΩ] ─────●──────────► ADS1115 Board 3 / A0p
+24V RAIL ─────────────────────●─────────────────► [100kΩ] ─────●──────────► ADS1115
                               │                                │/\
                               │                                │
             SAME HOLE AS      │+                               │SAME HOLE AS
@@ -100,7 +101,7 @@ Regulated 3.3V
      |
  [ GL5528 ]   < - < - No Polarity Concerns Here
      |
-     --------------------> ADS1115 Board 3 / A1
+     --------------------> ADS1115
      |
    [ 10kΩ ]   < - < - No Polarity Concerns Here
      |
