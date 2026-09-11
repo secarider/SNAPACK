@@ -102,6 +102,8 @@ Temperature Bus
 
 OneWire
 
+DS2484 Interface
+
 Used For:
 
 DS18B20 Temperature Sensors
