@@ -77,8 +77,6 @@ The Primary 5-Volt Rail Powers:
 
 • Display Assembly
 
-• ADS1115 Modules
-
 • Voltage Divider Isolation Relay Module
 
 • AMS1117 5v to 3.3v Regulator
@@ -95,9 +93,11 @@ Voltage Regulator Module Powered From The Existing
 
 The 3.3V Rail Powers:
 
+• DS2484 I2C-to-1-Wire bridge operational at 0x18.
+
 • DS18B20 Temperature Sensors
 
-• OneWire Pull-Up Resistor
+• ADS1115 Modules
 
 • Future 3.3V Logic Inputs
 
