@@ -118,13 +118,9 @@ Not Used During Normal Operation.
 POWER
 ============================================================
 
-Display Power
+5V Regulated Supply For Display Power And 3.3V Internal Logic
 
-5V Regulated Supply
-
-Logic Voltage
-
-3.3V Internal Logic
+9V Regulated Supply For OTC Current Clamp
 
 ============================================================
 DISPLAY FUNCTIONS
@@ -160,7 +156,9 @@ Displays
 
 • Temperature
 
-• System Status
+• System Status = Diagnostics
+
+• All Three OEM Screens
 
 ------------------------------------------------------------
 
@@ -192,6 +190,7 @@ Yellow = Warning
 Red = Fault
 
 Animated Effects May Be Used During Startup Or Normal Operation.
+Ignored During High Current Events.
 
 ============================================================
 MECHANICAL NOTES
