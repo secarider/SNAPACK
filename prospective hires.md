@@ -1,24 +1,184 @@
-To: Prospective Hires / Interested Developers
+============================================================
+PROSPECTIVE HIRES
+=================
 
-A brief update for anyone who has been following this project or reviewing the repository:
+SNAPACK remains an active hardware and firmware development project.
 
-I had selected a candidate and attempted to begin the contract through Upwork. Unfortunately, an account-verification issue prevented the transaction from being completed, and I have decided not to continue using that platform.
+This file is maintained as an open invitation to embedded developers,
+engineers, and other technically experienced people who may be interested
+in reviewing the project, contributing expertise, or discussing possible
+paid development work.
 
-This was an issue between myself and the hiring platform and had nothing to do with the candidates or their proposals.
+The project has progressed substantially, but outside technical review
+remains welcome. A fresh set of experienced eyes can identify weaknesses,
+suggest better approaches, or provide expertise in areas where additional
+specialization would be valuable.
 
-The SNAPACK firmware project is still active, and I am still interested in hiring a qualified embedded developer.
+============================================================
+PROJECT STATUS
+==============
 
-The documentation in this repository continues to be revised and improved. Recent work has clarified the hardware pin mapping, sensor architecture, safety behavior, diagnostic requirements, and the separation between application logic and the LVGL/SquareLine presentation layer.
+SNAPACK is a high-current battery system built around an ESP32-S3
+controller and display.
 
-The immediate goal remains Tier 1: establish the permanent production firmware architecture using a deliberately simple diagnostic interface. This is not intended to be throwaway prototype code. Later presentation work should build upon the same underlying measurement, safety, storage, and hardware-control architecture.
+The project combines:
 
-Experience with ESP32-S3, LVGL/SquareLine, PlatformIO/Arduino, sensor integration, and embedded hardware/firmware development would be particularly relevant.
+• Battery cell and system-voltage monitoring
 
-If you previously discussed this project with me through Upwork and happen to see this update, my interest in working with you has not changed. The inability to proceed there was solely the result of the platform/account issue.
+• Bidirectional current measurement
 
-Likewise, if you have simply discovered this repository and believe the project fits your experience, you are welcome to contact me.
+• Temperature monitoring
+
+• Contactor and output control
+
+• Hardware-assisted fault response
+
+• Charging and operating-state supervision
+
+• Persistent configuration and calibration
+
+• Touchscreen / rotary user interface
+
+• Diagnostic and service functions
+
+Development has included both the physical hardware and functioning
+firmware on the actual ESP32-S3 display hardware.
+
+The repository documentation is actively maintained as the hardware
+architecture is refined. Experimental arrangements are progressively
+being separated from decisions intended for the permanent system.
+
+============================================================
+CURRENT FIRMWARE OBJECTIVE
+==========================
+
+The immediate objective is the permanent Tier 1 firmware architecture.
+
+Tier 1 deliberately emphasizes function and diagnostics over elaborate
+presentation.
+
+The purpose is to establish a reliable production-quality foundation for:
+
+• Hardware initialization
+
+• Sensor acquisition
+
+• Measurement processing
+
+• Fault detection and response
+
+• Contactor and hardware-control logic
+
+• Configuration and calibration
+
+• Persistent storage
+
+• Diagnostics
+
+• Display and operator interaction
+
+The simple Tier 1 interface should not be interpreted as disposable
+prototype software.
+
+Later graphical development is intended to build upon the same underlying
+measurement, safety, storage, diagnostic, and hardware-control
+architecture rather than replacing it.
+
+Presentation and application logic should remain sufficiently separated
+that the LVGL/SquareLine interface can evolve without requiring the
+authoritative machine-control system to be rewritten.
+
+============================================================
+RELEVANT EXPERIENCE
+===================
+
+Experience in any combination of the following areas may be useful:
+
+• ESP32-S3 embedded development
+
+• C / C++
+
+• Arduino or PlatformIO
+
+• LVGL
+
+• SquareLine Studio
+
+• I2C hardware and firmware
+
+• ADS1115 ADC integration
+
+• 1-Wire devices and interfaces
+
+• Battery monitoring systems
+
+• Current and voltage measurement
+
+• Contactors, relays, and hardware interlocks
+
+• Embedded fault detection and fail-safe design
+
+• Nonvolatile configuration and calibration storage
+
+• Hardware/firmware integration and debugging
+
+Experience with every item is not required.
+
+============================================================
+TECHNICAL REVIEW IS WELCOME
+===========================
+
+Interest does not need to begin with a proposal to take over the entire
+firmware project.
+
+Constructive technical review is welcome.
+
+If you see an architectural problem, questionable assumption, overlooked
+failure mode, cleaner implementation, or a better way to accomplish
+something documented in this repository, that information is useful.
+
+Likewise, developers interested in a particular portion of the system are
+welcome to make contact even if they are not interested in undertaking
+the complete project.
+
+The purpose of maintaining detailed project documentation is not only to
+support development, but also to make meaningful independent technical
+review possible.
+
+============================================================
+POSSIBLE DEVELOPMENT WORK
+=========================
+
+I remain interested in working with qualified embedded developers where
+additional experience or development capacity would benefit the project.
+
+The existing project should be reviewed before proposing major
+architectural changes. A considerable amount of hardware testing and
+incremental development has already occurred, and many decisions recorded
+in the documentation are the result of physical testing rather than
+theoretical design alone.
+
+At the same time, documented decisions are not immune from technical
+challenge. If there is a demonstrably better or safer solution, it should
+be discussed.
+
+The objective is a dependable finished system, not preservation of a
+particular implementation merely because it was developed first.
+
+============================================================
+CONTACT
+=======
+
+Questions, technical observations, development proposals, and expressions
+of interest are welcome.
 
 Contact:
-secarider@protonmail.com
 
-Thank you for your interest in SNAPACK.
+[secarider@protonmail.com](mailto:secarider@protonmail.com)
+
+Please include enough information about your relevant experience or
+technical observation to provide context for the discussion.
+
+============================================================
+SNAPACK
+=======
