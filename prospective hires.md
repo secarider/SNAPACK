@@ -13,9 +13,7 @@ remains welcome. A fresh set of experienced eyes can identify weaknesses,
 suggest better approaches, or provide expertise in areas where additional
 specialization would be valuable.
 
-==============
 PROJECT STATUS
-==============
 
 SNAPACK is a high-current battery system built around an ESP32-S3
 controller and display.
@@ -47,9 +45,7 @@ The repository documentation is actively maintained as the hardware
 architecture is refined. Experimental arrangements are progressively
 being separated from decisions intended for the permanent system.
 
-==========================
 CURRENT FIRMWARE OBJECTIVE
-==========================
 
 The immediate objective is the permanent Tier 1 firmware architecture.
 
@@ -87,9 +83,7 @@ Presentation and application logic should remain sufficiently separated
 that the LVGL/SquareLine interface can evolve without requiring the
 authoritative machine-control system to be rewritten.
 
-===================
 RELEVANT EXPERIENCE
-===================
 
 Experience in any combination of the following areas may be useful:
 
@@ -123,9 +117,7 @@ Experience in any combination of the following areas may be useful:
 
 Experience with every item is not required.
 
-===========================
 TECHNICAL REVIEW IS WELCOME
-===========================
 
 Interest does not need to begin with a proposal to take over the entire
 firmware project.
@@ -144,9 +136,7 @@ The purpose of maintaining detailed project documentation is not only to
 support development, but also to make meaningful independent technical
 review possible.
 
-=========================
 POSSIBLE DEVELOPMENT WORK
-=========================
 
 I remain interested in working with qualified embedded developers where
 additional experience or development capacity would benefit the project.
@@ -164,9 +154,7 @@ be discussed.
 The objective is a dependable finished system, not preservation of a
 particular implementation merely because it was developed first.
 
-=======
 CONTACT
-=======
 
 Questions, technical observations, development proposals, and expressions
 of interest are welcome.
@@ -178,6 +166,4 @@ Contact:
 Please include enough information about your relevant experience or
 technical observation to provide context for the discussion.
 
-============================================================
 SNAPACK
-=======
