@@ -8,7 +8,7 @@
   <img src="images/headway_38120.png" width="340">
 </p>
 
-# SNAPACK All documentation remains in a state of flux. Active development is ongoing and hardware is being assembled and changes are many.
+# All documentation remains in a state of flux. Active development is ongoing and hardware is being assembled and changes are many.
 
 ## Intelligent 12V / 16V LiFePO4 - Jump Pack Monitor
 
