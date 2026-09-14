@@ -1,6 +1,5 @@
-============================================================
+
 PROSPECTIVE HIRES
-=================
 
 SNAPACK remains an active hardware and firmware development project.
 
@@ -14,7 +13,7 @@ remains welcome. A fresh set of experienced eyes can identify weaknesses,
 suggest better approaches, or provide expertise in areas where additional
 specialization would be valuable.
 
-============================================================
+==============
 PROJECT STATUS
 ==============
 
@@ -48,7 +47,7 @@ The repository documentation is actively maintained as the hardware
 architecture is refined. Experimental arrangements are progressively
 being separated from decisions intended for the permanent system.
 
-============================================================
+==========================
 CURRENT FIRMWARE OBJECTIVE
 ==========================
 
@@ -88,7 +87,7 @@ Presentation and application logic should remain sufficiently separated
 that the LVGL/SquareLine interface can evolve without requiring the
 authoritative machine-control system to be rewritten.
 
-============================================================
+===================
 RELEVANT EXPERIENCE
 ===================
 
@@ -124,7 +123,7 @@ Experience in any combination of the following areas may be useful:
 
 Experience with every item is not required.
 
-============================================================
+===========================
 TECHNICAL REVIEW IS WELCOME
 ===========================
 
@@ -145,7 +144,7 @@ The purpose of maintaining detailed project documentation is not only to
 support development, but also to make meaningful independent technical
 review possible.
 
-============================================================
+=========================
 POSSIBLE DEVELOPMENT WORK
 =========================
 
@@ -165,7 +164,7 @@ be discussed.
 The objective is a dependable finished system, not preservation of a
 particular implementation merely because it was developed first.
 
-============================================================
+=======
 CONTACT
 =======
 
