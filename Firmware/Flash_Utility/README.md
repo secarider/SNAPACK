@@ -108,6 +108,16 @@ SnapFlash requires exactly one ZIP in that directory for a release installation.
 
 The managed sketch and external UI source are backed up before replacement. Installation and compilation failures are designed to stop before flashing, with source restoration attempted where applicable.
 
+### Avoid modifying project files while SnapFlash is running
+
+Do not create, delete, move, rename, or edit files within the SNAPACK project/source directories while SnapFlash is compiling, archiving, or validating a release.
+
+During testing, a SnapFlash operation correctly stopped after files were manually deleted in the background while its source-snapshot/verification process was running. The concurrent directory change caused GNU `tar` to report that a file or directory had changed while it was being read.
+
+This is an intentional safety failure: SnapFlash will not assume that a source snapshot is trustworthy if the files or directory being examined change during the operation.
+
+If this occurs, leave the project files untouched and run the operation again.
+
 ## Full 16 MiB device images
 
 SnapFlash can capture and restore a raw 16 MiB ESP32-S3 flash image as a separate recovery artifact.
