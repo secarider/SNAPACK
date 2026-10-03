@@ -1,0 +1,49 @@
+SNAPFLASH STEP91Y INTEGRATION REQUIREMENTS
+==========================================
+
+STEP91Y introduces a second flash payload. Treat the application, generated
+partition table, boot_app0/bootloader components already produced by the normal
+build, and assets/snapack_assets.bin as one indivisible release.
+
+Required preflight before any device write
+
+1. Require assets/snapack_assets.bin and assets/ASSET_MANIFEST_SHA256.txt.
+2. Verify the asset SHA-256 exactly as packaged.
+3. Require sketch-root partitions.csv and compile with it staged in the
+   isolated sketch root.
+4. Decode/verify generated partitions.bin and require exactly:
+   - nvs:     offset 0x009000, size 0x005000
+   - otadata: offset 0x00E000, size 0x002000
+   - app0:    offset 0x010000, size 0x9F0000, APP/OTA_0
+   - assets:  offset 0xA00000, size 0x600000, DATA subtype 0x40
+5. Require the application image to fit entirely below 0xA00000.
+6. Require snapack_assets.bin to be no larger than 0x600000 bytes.
+7. Validate the asset header before flashing:
+   - bytes 0..7: `SNAPAS1` plus NUL
+   - little-endian version: 1
+   - entry count: 8
+   - total package bytes: 3141632
+8. Complete every validation and archive copy/hash check before permitting the
+   first flash write. A failure must leave the controller untouched.
+
+Flash behavior
+
+- Preserve the established no-stub flashing method and existing validated
+  bootloader/application offsets.
+- Flash generated partitions.bin at the established partition-table offset.
+- Flash snapack_assets.bin at 0xA00000.
+- Flash the application at 0x10000.
+- A successful compile remains a waiting flash; do not auto-flash.
+- Resume Verified Build must retain and reverify the exact asset image selected
+  during compilation rather than rediscovering a different file.
+
+Archive behavior
+
+Archive snapack_assets.bin, its SHA manifest, partitions.csv, generated
+partitions.bin, application binary, and the other established build artifacts
+under the same release/timestamp. Record the asset flash offset and verified
+SHA-256 in the release report.
+
+Packaged asset SHA-256
+
+9b7b7ba1eb12ed39d585b88bb9ad867c11e502ae6270d06f07efe0d0c5a469ca
