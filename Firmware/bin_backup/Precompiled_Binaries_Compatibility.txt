@@ -1,0 +1,11 @@
+Precompiled Firmware Binaries
+
+The archived BIN packages contain the complete set of precompiled firmware images used to flash SNAPACK 
+onto the specific Elecrow 2.1-inch ESP32-S3 display hardware for which they were built and tested. 
+These binaries can be flashed directly with esptool at the documented addresses; 
+Arduino IDE, the SNAPACK source code, libraries, and original compilation environment are not required. 
+Because these are hardware-specific compiled images, compatibility should not be assumed for different 
+Elecrow models, ESP32 variants, flash configurations, or materially different hardware revisions. 
+In short, the source archive preserves the instructions needed to build the firmware, 
+while the BIN archive preserves the already-built firmware needed to reproduce a tested release 
+directly on compatible hardware.
