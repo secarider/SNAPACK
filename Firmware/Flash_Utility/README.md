@@ -108,15 +108,21 @@ SnapFlash requires exactly one ZIP in that directory for a release installation.
 
 The managed sketch and external UI source are backed up before replacement. Installation and compilation failures are designed to stop before flashing, with source restoration attempted where applicable.
 
-### Avoid modifying project files while SnapFlash is running
+### Do Not “Help” SnapFlash by Cleaning Up While It Is Running
 
-Do not create, delete, move, rename, or edit files within the SNAPACK project/source directories while SnapFlash is compiling, archiving, or validating a release.
+Leave the files alone while SnapFlash is working.
 
-During testing, a SnapFlash operation correctly stopped after files were manually deleted in the background while its source-snapshot/verification process was running. The concurrent directory change caused GNU `tar` to report that a file or directory had changed while it was being read.
+During development, several apparently mysterious SnapFlash failures were eventually traced to an overly fastidious operator who decided that the middle of an active compile/archive/verification operation was an excellent time to go back and tidy up old files and temporary clutter.
 
-This is an intentional safety failure: SnapFlash will not assume that a source snapshot is trustworthy if the files or directory being examined change during the operation.
+It was not.
 
-If this occurs, leave the project files untouched and run the operation again.
+SnapFlash was examining and snapshotting those directories at the same time the user was enthusiastically cleaning them. The resulting directory changes correctly triggered GNU `tar` and SnapFlash's source-integrity safeguards, stopping the operation because the source being verified had changed underneath it.
+
+Several minutes of investigation later, SnapFlash was exonerated. **The user did it.**
+
+Therefore: once SnapFlash begins an operation, resist the urge to organize, clean, rename, move, delete, or otherwise improve anything in the SNAPACK project/source directories until SnapFlash finishes.
+
+If SnapFlash reports that a file or directory changed while it was being read—and you were “just cleaning up a few things”—stop cleaning, leave everything alone, and run it again.
 
 ## Full 16 MiB device images
 
