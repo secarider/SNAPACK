@@ -10,19 +10,6 @@ SnapFlash utility, and historical binary backups are not
 interchangeable. Each directory exists to answer a different recovery or
 development need.
 
-## Directory Overview
-
-``` text
-Firmware/
-├── Current Working Firmware/
-├── Flash Utility/
-├── Known Good Elecrow Baseline/
-└── BIN Backup/
-```
-
-Names and capitalization may vary slightly in the repository, but these
-are the four principal firmware areas.
-
 ------------------------------------------------------------------------
 
 ## Current Working Firmware
@@ -35,7 +22,7 @@ state of SNAPACK development. Expect this area to contain the current
 source/configuration, release or checkpoint documentation, and recovery
 material associated with useful working firmware states.
 
-This area may include:
+This area includes:
 
 -   current or recently accepted SNAPACK source/configuration;
 -   release/checkpoint README files and validation information;
@@ -84,10 +71,8 @@ Expect this directory to contain items such as:
     retained.
 
 SnapFlash contains deliberate safety gates. A stopped flash, archive,
-compile, or validation operation should be investigated rather than
-bypassed simply to make the process continue.
-
-Also: once SnapFlash is working, leave the project files alone.
+compile, or validation operation should be investigated.
+once SnapFlash is working, leave the project files alone.
 Cleaning, moving, renaming, or deleting files in directories SnapFlash
 is actively snapshotting or validating can correctly trigger its
 integrity safeguards.
@@ -109,24 +94,11 @@ It is intentionally separate from Current Working Firmware. Current
 Working Firmware moves forward; the Known-Good Elecrow Baseline should
 remain a preserved reference.
 
-Expect this area to contain the source, configuration, documentation,
+This area contains the source, configuration, documentation,
 library/build information, or other material needed to understand and
 reproduce the known-good Elecrow starting state.
 
-Use this area when:
-
--   comparing current behavior against the original working display
-    environment;
--   investigating whether a problem was introduced during SNAPACK
-    development;
--   recovering development assumptions, library versions, partition
-    information, or hardware configuration from the proven starting
-    point;
--   rebuilding from a stable reference rather than from a newer
-    experimental checkpoint.
-
-Do not casually update this directory merely to make it resemble the
-current firmware. Its value comes from remaining a **known-good
+Its value comes from remaining a **known-good
 baseline**.
 
 ------------------------------------------------------------------------
@@ -159,50 +131,11 @@ Depending on the age and type of the backup, expect to find:
     full-device recovery backups.
 
 A normal firmware archive and a **full 16 MB device image** are
-different recovery artifacts. Do not assume every BIN backup is a
-complete raw-device image.
+different recovery artifacts.
+Do not assume every BIN backup is a complete raw-device image.
 
 When restoring an archive, use its recorded flash layout and
-accompanying documentation rather than guessing addresses from a
-different firmware generation.
-
-------------------------------------------------------------------------
-
-## How the Four Areas Relate
-
-The simplest way to think about the firmware directory is:
-
-  -----------------------------------------------------------------------
-  Directory                           Role
-  ----------------------------------- -----------------------------------
-  **Current Working Firmware**        What SNAPACK development is working
-                                      from now, plus selected preserved
-                                      developer/reference checkpoints
-
-  **Flash Utility**                   The tooling used to archive,
-                                      validate, flash, and restore
-                                      firmware safely
-
-  **Known-Good Elecrow Baseline**     The preserved original proven
-                                      starting point
-
-  **BIN Backup**                      Compiled recovery history and
-                                      previously saved firmware images
-  -----------------------------------------------------------------------
-
-They intentionally overlap in some information, but they do not serve
-the same purpose.
-
-A source package answers **"What code produced this firmware?"**
-
-A normal BIN archive answers **"Can I restore this compiled firmware
-state?"**
-
-The Known-Good Elecrow Baseline answers **"What proven environment did
-SNAPACK start from?"**
-
-SnapFlash answers **"How do I archive, verify, flash, or restore these
-states safely?"**
+accompanying documentation
 
 ------------------------------------------------------------------------
 
@@ -241,39 +174,7 @@ recovery.
 5.  **SnapFlash** provides the controlled workflow used to verify,
     archive, flash, and restore these artifacts.
 
-Do not overwrite a proven recovery artifact merely because a newer
-firmware revision exists. A newer revision belongs in the development
-history; it does not invalidate the older recovery point.
-
-------------------------------------------------------------------------
-
-## Where to Start
-
-For current SNAPACK firmware development, begin with:
-
-``` text
-Current Working Firmware/
-```
-
-For flashing, archive management, or restoration procedures, begin with:
-
-``` text
-Flash Utility/README.md
-```
-
-For the original known-good display baseline, use:
-
-``` text
-Known Good Elecrow Baseline/
-```
-
-For previously compiled recovery images, use:
-
-``` text
-BIN Backup/
-```
-
-Then read the README, release notes, archive notes, manifests, and
+Read the README, release notes, archive notes, manifests, and
 checksum files that accompany the specific artifact before modifying or
 flashing it.
 
